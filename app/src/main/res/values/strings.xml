@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">TwinMax</string>
+
+    <string name="drawer_launch">Acquisition</string>
+    <string name="drawer_settings">Paramètres</string>
+    <string name="drawer_history">Historique</string>
+    <string name="drawer_instruction">Mode d\'emploi</string>
+    <string name="drawer_home">Accueil</string>
 </resources>

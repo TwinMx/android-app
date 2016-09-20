@@ -12,11 +12,14 @@ import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import fr.isen.twinmx.R;
+import fr.isen.twinmx.Util.TMDrawer;
 
 public class MainActivity extends AppCompatActivity {
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
+
+    private TMDrawer drawer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,13 +31,8 @@ public class MainActivity extends AppCompatActivity {
         this.setSupportActionBar(this.toolbar);
         this.setTitle(R.string.app_name);
 
-        //create the drawer and remember the `Drawer` result object
-        Drawer result = new DrawerBuilder()
-                .withActivity(this)
-                .withToolbar(toolbar)
-                .build();
+        this.drawer = new TMDrawer(savedInstanceState, this, this.toolbar);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-        result.getActionBarDrawerToggle().setDrawerIndicatorEnabled(true);
     }
 }
