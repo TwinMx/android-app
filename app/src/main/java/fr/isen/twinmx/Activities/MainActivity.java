@@ -10,6 +10,7 @@ import com.mikepenz.materialdrawer.DrawerBuilder;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 import fr.isen.twinmx.R;
 
 public class MainActivity extends AppCompatActivity {
@@ -22,7 +23,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        ButterKnife.bind(this);
+
         this.setSupportActionBar(this.toolbar);
+        this.setTitle(R.string.app_name);
 
         //create the drawer and remember the `Drawer` result object
         Drawer result = new DrawerBuilder()
