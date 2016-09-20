@@ -23,7 +23,7 @@ public class TMDrawer implements Drawer.OnDrawerItemClickListener {
     AccountHeader accountHeader;
     Drawer drawer;
 
-    Activity activity;
+    Activity callback;
     Toolbar toolbar;
     Bundle savedInstanceState;
 
@@ -31,7 +31,7 @@ public class TMDrawer implements Drawer.OnDrawerItemClickListener {
 
     public TMDrawer(Bundle savedInstanceState, Activity activity, Toolbar toolbar) {
         this.savedInstanceState = savedInstanceState;
-        this.activity = activity;
+        this.callback = activity;
         this.toolbar = toolbar;
 
         this.initDrawer();
@@ -45,7 +45,7 @@ public class TMDrawer implements Drawer.OnDrawerItemClickListener {
 
         //create the drawer and remember the `Drawer` result object
         this.drawer = new DrawerBuilder()
-                .withActivity(this.activity)
+                .withActivity(this.callback)
                 .withRootView(R.id.drawer_container)
                 .withToolbar(this.toolbar)
                 .withTranslucentStatusBar(false)
@@ -64,7 +64,7 @@ public class TMDrawer implements Drawer.OnDrawerItemClickListener {
     {
         // Create the AccountHeader
         this.accountHeader = new AccountHeaderBuilder()
-                .withActivity(this.activity)
+                .withActivity(this.callback)
                 .withSelectionListEnabled(false)
                 .withSelectionListEnabledForSingleProfile(false)
                 .withOnAccountHeaderListener(new AccountHeader.OnAccountHeaderListener() {
@@ -80,14 +80,19 @@ public class TMDrawer implements Drawer.OnDrawerItemClickListener {
 
     private void initDrawerItems()
     {
-        addDrawerItem(R.string.drawer_home);
-        addDrawerItem(R.string.drawer_launch);
-        addDrawerItem(R.string.drawer_history);
+        this.addDrawerItemWithIcon(R.string.drawer_home, R.drawable.ic_home_black_24dp);
+        this.addDrawerItemWithIcon(R.string.drawer_launch, R.drawable.ic_launch_black_24dp);
+        this.addDrawerItemWithIcon(R.string.drawer_history,  R.drawable.ic_history_black_24dp);
 
         this.items.add(new DividerDrawerItem());
 
-        addDrawerItem(R.string.drawer_instruction);
-        addDrawerItem(R.string.drawer_settings);
+        this.addDrawerItem(R.string.drawer_instruction);
+        this.addDrawerItem(R.string.drawer_settings);
+    }
+
+    private void addDrawerItemWithIcon(int resId, int iconId)
+    {
+        this.items.add(new PrimaryDrawerItem().withName(resId).withIcon(iconId));
     }
 
     private void addDrawerItem(int resId)
@@ -98,7 +103,19 @@ public class TMDrawer implements Drawer.OnDrawerItemClickListener {
     @Override
     public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
         drawer.closeDrawer();
-       //TODO
-        return true;
+        final OnMenuItemClickCallback callback = (OnMenuItemClickCallback) this.callback;
+        if (callback != null)
+        {
+            callback.onMenuItemClick(position);
+            return true;
+        }
+        return false;
+    }
+
+    public interface OnMenuItemClickCallback {
+        /**
+         * Called when a menu item has been clicked
+         */
+        void onMenuItemClick(int position);
     }
 }

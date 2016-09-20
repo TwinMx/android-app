@@ -4,6 +4,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.Toast;
 
 import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.DrawerBuilder;
@@ -14,7 +15,7 @@ import butterknife.ButterKnife;
 import fr.isen.twinmx.R;
 import fr.isen.twinmx.Util.TMDrawer;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements TMDrawer.OnMenuItemClickCallback {
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -34,5 +35,10 @@ public class MainActivity extends AppCompatActivity {
         this.drawer = new TMDrawer(savedInstanceState, this, this.toolbar);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+    }
+
+    @Override
+    public void onMenuItemClick(int position) {
+        //TODO launchActivity
     }
 }
