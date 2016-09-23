@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">TwinMax</string>
+    <string name="wait_logo">(Waiting for a logo)</string>
 
     <string name="drawer_launch">Acquisition</string>
     <string name="drawer_settings">Settings</string>
