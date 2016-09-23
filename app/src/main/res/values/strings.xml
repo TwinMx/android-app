@@ -2,9 +2,15 @@
 <resources>
     <string name="app_name">TwinMax</string>
 
+    <!-- Drawer menu -->
     <string name="drawer_launch">Acquisition</string>
     <string name="drawer_settings">Paramètres</string>
     <string name="drawer_history">Historique</string>
     <string name="drawer_instruction">Mode d\'emploi</string>
     <string name="drawer_home">Accueil</string>
+
+    <!-- BLUETOOTH -->
+    <string name="start_bt">Activer le bluetooth</string>
+    <string name="disconnect_bt">Déconnexion</string>
+    <string name="connected_to">Connecté à {name}</string>
 </resources>
