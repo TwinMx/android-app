@@ -20,6 +20,9 @@ import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import fr.isen.twinmx.Fragments.BluetoothFragment;
+import fr.isen.twinmx.Fragments.HelpFragment;
+import fr.isen.twinmx.Fragments.HistoryFragment;
+import fr.isen.twinmx.Fragments.SettingsFragment;
 import fr.isen.twinmx.R;
 import fr.isen.twinmx.Util.TMBottomNavigation;
 import fr.isen.twinmx.Util.TMDrawer;
@@ -46,7 +49,7 @@ public class MainActivity extends AppCompatActivity implements TMBottomNavigatio
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
-        this.launchAcquisition();
+        this.launchFragment(new BluetoothFragment());
     }
 
     @Override
@@ -54,16 +57,16 @@ public class MainActivity extends AppCompatActivity implements TMBottomNavigatio
         switch (position)
         {
             case 0:
-                this.launchAcquisition();
+                this.launchFragment(new BluetoothFragment());
                 break;
             case 1:
-                this.launchHistory();
+                this.launchFragment(new HistoryFragment());
                 break;
             case 2:
-                this.launchHelp();
+                this.launchFragment(new HelpFragment());
                 break;
             case 3:
-                this.launchSettings();
+                this.launchFragment(new SettingsFragment());
                 break;
             default:
                 return false;
@@ -71,27 +74,10 @@ public class MainActivity extends AppCompatActivity implements TMBottomNavigatio
         return true;
     }
 
-    private void launchAcquisition()
+    private void launchFragment(Fragment fragment)
     {
-        final BluetoothFragment bluetoothFragment = new BluetoothFragment();
         final FragmentTransaction transaction = this.getFragmentManager().beginTransaction();
-        transaction.replace(R.id.mainActivityContainer, bluetoothFragment);
-        transaction.addToBackStack(null);
+        transaction.replace(R.id.mainActivityContainer, fragment);
         transaction.commit();
-    }
-
-    private void launchHistory()
-    {
-
-    }
-
-    private void launchHelp()
-    {
-
-    }
-
-    private void launchSettings()
-    {
-
     }
 }
