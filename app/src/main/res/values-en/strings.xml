@@ -6,10 +6,12 @@
     <string name="bnav_acquisition">Acquisition</string>
     <string name="bnav_settings">Settings</string>
     <string name="bnav_history">History</string>
-    <string name="bnav_instruction">Instruction manual</string>
+    <string name="bnav_instruction">Help</string>
 
     <!-- BLUETOOTH -->
     <string name="start_bt">Enable bluetooth</string>
     <string name="disconnect_bt">Unplug</string>
     <string name="connected_to">Connected to {name}</string>
+
+    <string name="no_history">No history found</string>
 </resources>

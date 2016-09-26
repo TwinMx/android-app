@@ -20,11 +20,14 @@ import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import fr.isen.twinmx.Fragments.BluetoothFragment;
+import fr.isen.twinmx.Fragments.HelpFragment;
+import fr.isen.twinmx.Fragments.HistoryFragment;
+import fr.isen.twinmx.Fragments.SettingsFragment;
 import fr.isen.twinmx.R;
 import fr.isen.twinmx.Util.TMBottomNavigation;
 import fr.isen.twinmx.Util.TMDrawer;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements TMBottomNavigation.THBottomNavigationCallback {
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -46,15 +49,35 @@ public class MainActivity extends AppCompatActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
-        this.launchHome();
+        this.launchFragment(new BluetoothFragment());
     }
 
-    private void launchHome()
+    @Override
+    public boolean onTabSelected(int position) {
+        switch (position)
+        {
+            case 0:
+                this.launchFragment(new BluetoothFragment());
+                break;
+            case 1:
+                this.launchFragment(new HistoryFragment());
+                break;
+            case 2:
+                this.launchFragment(new HelpFragment());
+                break;
+            case 3:
+                this.launchFragment(new SettingsFragment());
+                break;
+            default:
+                return false;
+        }
+        return true;
+    }
+
+    private void launchFragment(Fragment fragment)
     {
-        final BluetoothFragment bluetoothFragment = new BluetoothFragment();
         final FragmentTransaction transaction = this.getFragmentManager().beginTransaction();
-        transaction.replace(R.id.mainActivityContainer, bluetoothFragment);
-        transaction.addToBackStack(null);
+        transaction.replace(R.id.mainActivityContainer, fragment);
         transaction.commit();
     }
 }
