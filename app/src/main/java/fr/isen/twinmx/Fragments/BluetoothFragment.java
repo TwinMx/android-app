@@ -41,7 +41,7 @@ public class BluetoothFragment extends Fragment {
 
         ButterKnife.bind(this.getActivity());
 
-        ((AppCompatActivity) this.getActivity()).getSupportActionBar().setTitle(getString(R.string.drawer_home));
+        ((AppCompatActivity) this.getActivity()).getSupportActionBar().setTitle(getString(R.string.bnav_acquisition));
 
         return this.rootview;
     }

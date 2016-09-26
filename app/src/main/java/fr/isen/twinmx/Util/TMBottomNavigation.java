@@ -34,10 +34,10 @@ public class TMBottomNavigation implements AHBottomNavigation.OnTabSelectedListe
     public void initNavigation()
     {
         // Create items
-        final AHBottomNavigationItem acquisition = new AHBottomNavigationItem(R.string.drawer_launch, R.drawable.ic_assessment_black_24dp, R.color.colorAccent);
-        final AHBottomNavigationItem history = new AHBottomNavigationItem(R.string.drawer_history, R.drawable.ic_history_black_24dp, R.color.colorAccent);
-        final AHBottomNavigationItem instruction = new AHBottomNavigationItem(R.string.drawer_instruction, R.drawable.ic_help_black_24dp, R.color.colorAccent);
-        final AHBottomNavigationItem settings = new AHBottomNavigationItem(R.string.drawer_settings, R.drawable.ic_settings_applications_black_24dp, R.color.colorAccent);
+        final AHBottomNavigationItem acquisition = new AHBottomNavigationItem(R.string.bnav_acquisition, R.drawable.ic_assessment_black_24dp, R.color.colorAccent);
+        final AHBottomNavigationItem history = new AHBottomNavigationItem(R.string.bnav_history, R.drawable.ic_history_black_24dp, R.color.colorAccent);
+        final AHBottomNavigationItem instruction = new AHBottomNavigationItem(R.string.bnav_instruction, R.drawable.ic_help_black_24dp, R.color.colorAccent);
+        final AHBottomNavigationItem settings = new AHBottomNavigationItem(R.string.bnav_settings, R.drawable.ic_settings_applications_black_24dp, R.color.colorAccent);
 
         // Add items
         this.navigation.addItem(acquisition);

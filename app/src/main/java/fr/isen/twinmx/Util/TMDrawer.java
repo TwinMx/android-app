@@ -83,14 +83,12 @@ public class TMDrawer implements Drawer.OnDrawerItemClickListener {
 
     private void initDrawerItems()
     {
-        this.addDrawerItemWithIcon(R.string.drawer_home, R.drawable.ic_home_black_24dp);
-        this.addDrawerItemWithIcon(R.string.drawer_launch, R.drawable.ic_launch_black_24dp);
-        this.addDrawerItemWithIcon(R.string.drawer_history,  R.drawable.ic_history_black_24dp);
+        this.addDrawerItemWithIcon(R.string.bnav_history,  R.drawable.ic_history_black_24dp);
 
         this.items.add(new DividerDrawerItem());
 
-        this.addDrawerItem(R.string.drawer_instruction);
-        this.addDrawerItem(R.string.drawer_settings);
+        this.addDrawerItem(R.string.bnav_instruction);
+        this.addDrawerItem(R.string.bnav_settings);
     }
 
     private void addDrawerItemWithIcon(int resId, int iconId)

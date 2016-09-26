@@ -43,7 +43,6 @@ public class MainActivity extends AppCompatActivity {
         this.setTitle(R.string.app_name);
 
         final TMBottomNavigation nav = new TMBottomNavigation(this.navigation, savedInstanceState, this, this.toolbar);
-        //nav.initNavigation();
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
