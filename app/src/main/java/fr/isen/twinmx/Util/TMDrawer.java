@@ -20,12 +20,14 @@ import fr.isen.twinmx.R;
 
 
 public class TMDrawer implements Drawer.OnDrawerItemClickListener {
-    AccountHeader accountHeader;
-    Drawer drawer;
+    private AccountHeader accountHeader;
+    private Drawer drawer;
 
-    Activity callback;
-    Toolbar toolbar;
-    Bundle savedInstanceState;
+    private Activity callback;
+    private Toolbar toolbar;
+    private Bundle savedInstanceState;
+
+    private int currentPosition;
 
     private ArrayList<IDrawerItem> items = new ArrayList<>();
 
@@ -58,6 +60,7 @@ public class TMDrawer implements Drawer.OnDrawerItemClickListener {
                 .build();
 
         this.drawer.getActionBarDrawerToggle().setDrawerIndicatorEnabled(true);
+        this.currentPosition = 1;
     }
 
     private void setAccountHeader()
@@ -80,14 +83,12 @@ public class TMDrawer implements Drawer.OnDrawerItemClickListener {
 
     private void initDrawerItems()
     {
-        this.addDrawerItemWithIcon(R.string.drawer_home, R.drawable.ic_home_black_24dp);
-        this.addDrawerItemWithIcon(R.string.drawer_launch, R.drawable.ic_launch_black_24dp);
-        this.addDrawerItemWithIcon(R.string.drawer_history,  R.drawable.ic_history_black_24dp);
+        this.addDrawerItemWithIcon(R.string.bnav_history,  R.drawable.ic_history_black_24dp);
 
         this.items.add(new DividerDrawerItem());
 
-        this.addDrawerItem(R.string.drawer_instruction);
-        this.addDrawerItem(R.string.drawer_settings);
+        this.addDrawerItem(R.string.bnav_instruction);
+        this.addDrawerItem(R.string.bnav_settings);
     }
 
     private void addDrawerItemWithIcon(int resId, int iconId)
@@ -106,7 +107,8 @@ public class TMDrawer implements Drawer.OnDrawerItemClickListener {
         final OnMenuItemClickCallback callback = (OnMenuItemClickCallback) this.callback;
         if (callback != null)
         {
-            callback.onMenuItemClick(position);
+            callback.onMenuItemClick(position, this.currentPosition);
+            this.currentPosition = position;
             return true;
         }
         return false;
@@ -116,6 +118,6 @@ public class TMDrawer implements Drawer.OnDrawerItemClickListener {
         /**
          * Called when a menu item has been clicked
          */
-        void onMenuItemClick(int position);
+        void onMenuItemClick(int position, int actualPos);
     }
 }
