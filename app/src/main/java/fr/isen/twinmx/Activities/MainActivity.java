@@ -10,6 +10,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Toast;
 
+import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
+import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
 import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.DrawerBuilder;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
@@ -25,6 +27,9 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.toolbar)
     Toolbar toolbar;
 
+    @BindView(R.id.bottom_navigation)
+    AHBottomNavigation navigation;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,6 +41,18 @@ public class MainActivity extends AppCompatActivity {
         this.setTitle(R.string.app_name);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+
+        // Create items
+        AHBottomNavigationItem acquisition = new AHBottomNavigationItem(R.string.drawer_launch, R.drawable.ic_launch_black_24dp, R.color.colorAccent);
+        AHBottomNavigationItem history = new AHBottomNavigationItem(R.string.drawer_history, R.drawable.ic_history_black_24dp, R.color.colorAccent);
+        AHBottomNavigationItem instruction = new AHBottomNavigationItem(R.string.drawer_instruction, R.drawable.ic_help_black_24dp, R.color.colorAccent);
+        AHBottomNavigationItem settings = new AHBottomNavigationItem(R.string.drawer_settings, R.drawable.ic_settings_applications_black_24dp, R.color.colorAccent);
+
+        // Add items
+        navigation.addItem(acquisition);
+        navigation.addItem(history);
+        navigation.addItem(instruction);
+        navigation.addItem(settings);
 
         this.launchHome();
     }
