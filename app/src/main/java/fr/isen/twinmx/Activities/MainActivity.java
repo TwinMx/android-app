@@ -24,7 +24,7 @@ import fr.isen.twinmx.R;
 import fr.isen.twinmx.Util.TMBottomNavigation;
 import fr.isen.twinmx.Util.TMDrawer;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements TMBottomNavigation.THBottomNavigationCallback {
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -46,15 +46,52 @@ public class MainActivity extends AppCompatActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
-        this.launchHome();
+        this.launchAcquisition();
     }
 
-    private void launchHome()
+    @Override
+    public boolean onTabSelected(int position) {
+        switch (position)
+        {
+            case 0:
+                this.launchAcquisition();
+                break;
+            case 1:
+                this.launchHistory();
+                break;
+            case 2:
+                this.launchHelp();
+                break;
+            case 3:
+                this.launchSettings();
+                break;
+            default:
+                return false;
+        }
+        return true;
+    }
+
+    private void launchAcquisition()
     {
         final BluetoothFragment bluetoothFragment = new BluetoothFragment();
         final FragmentTransaction transaction = this.getFragmentManager().beginTransaction();
         transaction.replace(R.id.mainActivityContainer, bluetoothFragment);
         transaction.addToBackStack(null);
         transaction.commit();
+    }
+
+    private void launchHistory()
+    {
+
+    }
+
+    private void launchHelp()
+    {
+
+    }
+
+    private void launchSettings()
+    {
+
     }
 }

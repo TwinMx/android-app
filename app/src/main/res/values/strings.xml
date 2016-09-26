@@ -6,7 +6,7 @@
     <string name="bnav_acquisition">Acquisition</string>
     <string name="bnav_settings">Paramètres</string>
     <string name="bnav_history">Historique</string>
-    <string name="bnav_instruction">Mode d\'emploi</string>
+    <string name="bnav_instruction">Aide</string>
 
     <!-- BLUETOOTH -->
     <string name="start_bt">Activer le bluetooth</string>
