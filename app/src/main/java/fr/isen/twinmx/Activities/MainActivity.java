@@ -20,12 +20,10 @@ import fr.isen.twinmx.Fragments.BluetoothFragment;
 import fr.isen.twinmx.R;
 import fr.isen.twinmx.Util.TMDrawer;
 
-public class MainActivity extends AppCompatActivity implements TMDrawer.OnMenuItemClickCallback {
+public class MainActivity extends AppCompatActivity {
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
-
-    private TMDrawer drawer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,48 +35,9 @@ public class MainActivity extends AppCompatActivity implements TMDrawer.OnMenuIt
         this.setSupportActionBar(this.toolbar);
         this.setTitle(R.string.app_name);
 
-        this.drawer = new TMDrawer(savedInstanceState, this, this.toolbar);
-
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
         this.launchHome();
-    }
-
-    /**
-     * 1 : Home
-     * 2 : Acquisition
-     * 3 : History
-     * 4 : Instruction manual
-     * 5 : Settings
-     * @param position
-     */
-    @Override
-    public void onMenuItemClick(int position, int actualPos) {
-        if (position == actualPos)
-        {
-            return;
-        }
-
-        switch(position)
-        {
-            case 1:
-                this.launchHome();
-                break;
-            case 2:
-                Toast.makeText(this, "Acquisition", Toast.LENGTH_SHORT).show();
-                break;
-            case 3:
-                Toast.makeText(this, "History", Toast.LENGTH_SHORT).show();
-                break;
-            case 4:
-                Toast.makeText(this, "IM", Toast.LENGTH_SHORT).show();
-                break;
-            case 5:
-                Toast.makeText(this, "Settings", Toast.LENGTH_SHORT).show();
-                break;
-            default:
-                break;
-        }
     }
 
     private void launchHome()
