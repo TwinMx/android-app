@@ -1,33 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:id="@+id/bluetoothContainer"
+    android:layout_marginTop="?android:attr/actionBarSize">
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/start_bt"
-        android:id="@+id/start_bt"
-        android:visibility="gone"/>
-
-    <TextView
+    <!--<LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/bt_connected_to"
-        android:text="@string/connected_to"
-        android:visibility="gone"/>
+        android:padding="5dp"
+        android:background="@color/blue500"
+        android:elevation="4dp"
+        android:weightSum="10">
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/disconnect_bt"
-        android:text="@string/disconnect_bt"
-        android:visibility="gone"/>
+        <TextView
+            android:layout_weight="9"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:text="Activer le bluetooth ?"/>
+        <Button android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Ok"
+            android:layout_weight="1"
+            android:padding="0dp"
+            android:textColor="@color/white"/>
+    </LinearLayout>-->
 
-    <android.support.v7.widget.RecyclerView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/bt_list"
-        android:visibility="gone">
-    </android.support.v7.widget.RecyclerView>
-
-</RelativeLayout>
+</android.support.design.widget.CoordinatorLayout>

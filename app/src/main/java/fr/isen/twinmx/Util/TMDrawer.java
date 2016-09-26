@@ -46,7 +46,7 @@ public class TMDrawer implements Drawer.OnDrawerItemClickListener {
         this.setAccountHeader();
 
         //create the drawer and remember the `Drawer` result object
-        this.drawer = new DrawerBuilder()
+      /*  this.drawer = new DrawerBuilder()
                 .withActivity(this.callback)
                 .withRootView(R.id.drawer_container)
                 .withToolbar(this.toolbar)
@@ -60,7 +60,7 @@ public class TMDrawer implements Drawer.OnDrawerItemClickListener {
                 .build();
 
         this.drawer.getActionBarDrawerToggle().setDrawerIndicatorEnabled(true);
-        this.currentPosition = 1;
+        this.currentPosition = 1;*/
     }
 
     private void setAccountHeader()
