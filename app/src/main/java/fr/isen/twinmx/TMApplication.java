@@ -12,10 +12,11 @@ public class TMApplication extends Application {
 
     private static Context context;
 
+    @Override
     public void onCreate()
     {
-        super.onCreate();
         context = this.getApplicationContext();
+        super.onCreate();
     }
 
     public static Context getContext()

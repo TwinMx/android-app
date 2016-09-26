@@ -8,6 +8,9 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
+import android.text.SpannableStringBuilder;
+import android.text.style.DynamicDrawableSpan;
+import android.text.style.ImageSpan;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,7 +21,9 @@ import android.widget.TextView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import fr.isen.twinmx.Activities.MainActivity;
 import fr.isen.twinmx.R;
+import fr.isen.twinmx.Util.TMSnackBar;
 
 /**
  * Created by pierredfc.
@@ -45,28 +50,13 @@ public class BluetoothFragment extends Fragment {
 
         CoordinatorLayout coordinatorLayout = (CoordinatorLayout) this.getActivity().findViewById(R.id.bluetoothContainer);
 
-        Snackbar snackbar = Snackbar
-                .make(coordinatorLayout, "Activer le bluetooth ?", Snackbar.LENGTH_INDEFINITE)
-                .setAction("Oui", new View.OnClickListener() {
+        Snackbar snackbar = TMSnackBar
+                .makeBluetooth(this.getActivity().getApplicationContext(), coordinatorLayout, new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                     }
                 });
 
-        View view = snackbar.getView();
-        CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) view.getLayoutParams();
-        params.gravity = Gravity.TOP;
-        view.setLayoutParams(params);
-
-        snackbar.getView().setBackgroundColor(getResources().getColor(R.color.blue500));
-
-    // Changing message text color
-        snackbar.setActionTextColor(Color.WHITE);
-
-    // Changing action button text color
-        View sbView = snackbar.getView();
-        TextView textView = (TextView) sbView.findViewById(android.support.design.R.id.snackbar_text);
-        textView.setTextColor(Color.WHITE);
         snackbar.show();
     }
 }
