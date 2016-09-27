@@ -26,8 +26,10 @@ import fr.isen.twinmx.Fragments.SettingsFragment;
 import fr.isen.twinmx.R;
 import fr.isen.twinmx.Util.TMBottomNavigation;
 import fr.isen.twinmx.Util.TMDrawer;
+import fr.isen.twinmx.model.History;
+import fr.isen.twinmx.ui.listeners.ClickListener;
 
-public class MainActivity extends AppCompatActivity implements TMBottomNavigation.THBottomNavigationCallback {
+public class MainActivity extends AppCompatActivity implements TMBottomNavigation.THBottomNavigationCallback, ClickListener {
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -79,5 +81,10 @@ public class MainActivity extends AppCompatActivity implements TMBottomNavigatio
         final FragmentTransaction transaction = this.getFragmentManager().beginTransaction();
         transaction.replace(R.id.mainActivityContainer, fragment);
         transaction.commit();
+    }
+
+    @Override
+    public void onItemClick(History history) {
+        Toast.makeText(this, history.getName(), Toast.LENGTH_SHORT).show();
     }
 }
