@@ -52,6 +52,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryHolder> {
                 holder.date.setText(currentHistory.getDate());
 
                 Picasso.with(TMApplication.getContext())
+                        .load(currentHistory.getImage())
                         .placeholder(R.drawable.ic_motorcycle_black_24dp)
                         .into(holder.image);
             }
