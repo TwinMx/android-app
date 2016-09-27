@@ -33,6 +33,8 @@ dependencies {
     apt 'com.jakewharton:butterknife-compiler:8.2.1'
 
     compile 'com.aurelhubert:ahbottomnavigation:1.4.0'
+    compile 'io.palaima:smoothbluetooth:0.1.0'
+    compile 'com.afollestad.material-dialogs:core:0.9.0.2'
 }
 
 buildscript {
