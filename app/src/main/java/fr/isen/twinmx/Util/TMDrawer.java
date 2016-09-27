@@ -1,4 +1,4 @@
-package fr.isen.twinmx.Util;
+package fr.isen.twinmx.util;
 
 import android.app.Activity;
 import android.os.Bundle;

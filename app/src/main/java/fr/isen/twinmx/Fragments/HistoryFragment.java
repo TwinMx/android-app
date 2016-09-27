@@ -1,4 +1,4 @@
-package fr.isen.twinmx.Fragments;
+package fr.isen.twinmx.fragments;
 
 import android.app.Fragment;
 import android.os.Bundle;
@@ -11,11 +11,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
-import fr.isen.twinmx.Activities.MainActivity;
+import fr.isen.twinmx.activities.MainActivity;
 import fr.isen.twinmx.R;
 import fr.isen.twinmx.TMApplication;
 import fr.isen.twinmx.async.GetHistoryAyncTask;

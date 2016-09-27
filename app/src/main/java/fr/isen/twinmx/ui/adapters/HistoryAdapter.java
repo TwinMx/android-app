@@ -52,7 +52,6 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryHolder> {
                 holder.date.setText(currentHistory.getDate());
 
                 Picasso.with(TMApplication.getContext())
-                        .load("http://taxi-moto-roissy-cdg.fr/wp-content/uploads/2016/02/Taxi-Moto-Roissy-Paris-2016-1.png")
                         .placeholder(R.drawable.ic_motorcycle_black_24dp)
                         .into(holder.image);
             }

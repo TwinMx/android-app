@@ -1,4 +1,4 @@
-package fr.isen.twinmx.Util;
+package fr.isen.twinmx.util;
 
 /**
  * Created by pierredfc.
