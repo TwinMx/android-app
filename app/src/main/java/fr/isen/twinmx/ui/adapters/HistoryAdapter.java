@@ -55,6 +55,8 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryHolder> {
                         .load(currentHistory.getImage())
                         .placeholder(R.drawable.ic_motorcycle_black_24dp)
                         .into(holder.image);
+
+                holder.setView(currentHistory, this.listener);
             }
         }
     }

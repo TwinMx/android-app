@@ -62,11 +62,14 @@ public class HistoryFragment extends Fragment implements RequestListener {
 
     @Override
     public void onResponseReceived(List<History> results) {
-        if (results.size() == 0) {
-            this.noHistoryView.setVisibility(View.VISIBLE);
-        } else {
+        if (results != null && results.size() != 0)
+        {
             this.historyAdapter = new HistoryAdapter(results, (MainActivity) getActivity());
             this.historyView.setAdapter(this.historyAdapter);
+        }
+        else
+        {
+            this.noHistoryView.setVisibility(View.VISIBLE);
         }
     }
 }
