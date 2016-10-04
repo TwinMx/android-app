@@ -1,31 +1,26 @@
 package fr.isen.twinmx.activities;
 
 import android.app.Fragment;
-import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.content.Intent;
-import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
-import android.widget.Toast;
 
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
-import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
-import com.mikepenz.materialdrawer.Drawer;
-import com.mikepenz.materialdrawer.DrawerBuilder;
-import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import fr.isen.twinmx.database.RealmHelper;
+import fr.isen.twinmx.database.TMMigration;
+import fr.isen.twinmx.database.TMRealmModule;
 import fr.isen.twinmx.fragments.BluetoothFragment;
 import fr.isen.twinmx.fragments.HelpFragment;
 import fr.isen.twinmx.fragments.HistoryFragment;
 import fr.isen.twinmx.fragments.SettingsFragment;
 import fr.isen.twinmx.R;
 import fr.isen.twinmx.util.TMBottomNavigation;
-import fr.isen.twinmx.util.TMDrawer;
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
 
 public class MainActivity extends AppCompatActivity implements TMBottomNavigation.THBottomNavigationCallback {
 
@@ -48,6 +43,15 @@ public class MainActivity extends AppCompatActivity implements TMBottomNavigatio
         final TMBottomNavigation nav = new TMBottomNavigation(this.navigation, savedInstanceState, this, this.toolbar);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+
+        //instantiate the realm and do migration (compulsory)
+        final RealmConfiguration configuration = new RealmConfiguration.Builder(this)
+                .name("TwinMax")
+                .schemaVersion(0)
+                .migration(new TMMigration())
+                .modules(new TMRealmModule())
+                .build();
+        RealmHelper.setRealm(Realm.getInstance(configuration));
 
         this.launchFragment(new BluetoothFragment());
     }

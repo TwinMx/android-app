@@ -1,19 +1,21 @@
 package fr.isen.twinmx.database.model;
 
-import java.io.Serializable;
-
 import io.realm.RealmList;
-import io.realm.RealmModel;
 import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
+import io.realm.annotations.Required;
 
 /**
  * Created by pierredfc.
  */
-public class Moto extends RealmObject implements Serializable {
+public class Moto extends RealmObject {
 
+    @PrimaryKey
     private String name;
-    private RealmList<Maintenance> maintenances;
+    @Required
     private String date;
+    private String image;
+    private RealmList<Maintenance> maintenances;
 
     public Moto() {
         this.maintenances = new RealmList<>();
@@ -49,4 +51,8 @@ public class Moto extends RealmObject implements Serializable {
     public void setDate(String date) {
         this.date = date;
     }
+
+    public String getImage() { return this.image; }
+
+    public void setImage(String image) { this.image = image;}
 }
