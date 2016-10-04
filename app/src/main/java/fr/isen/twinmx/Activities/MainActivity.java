@@ -6,23 +6,31 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 
+import android.widget.Toast;
+
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
 import fr.isen.twinmx.database.RealmHelper;
 import fr.isen.twinmx.database.TMMigration;
 import fr.isen.twinmx.database.TMRealmModule;
+
 import fr.isen.twinmx.fragments.BluetoothFragment;
 import fr.isen.twinmx.fragments.HelpFragment;
 import fr.isen.twinmx.fragments.HistoryFragment;
 import fr.isen.twinmx.fragments.SettingsFragment;
 import fr.isen.twinmx.R;
 import fr.isen.twinmx.util.TMBottomNavigation;
+
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 
-public class MainActivity extends AppCompatActivity implements TMBottomNavigation.THBottomNavigationCallback {
+import fr.isen.twinmx.model.History;
+import fr.isen.twinmx.ui.listeners.ClickListener;
+
+public class MainActivity extends AppCompatActivity implements TMBottomNavigation.THBottomNavigationCallback, ClickListener {
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -83,5 +91,10 @@ public class MainActivity extends AppCompatActivity implements TMBottomNavigatio
         final FragmentTransaction transaction = this.getFragmentManager().beginTransaction();
         transaction.replace(R.id.mainActivityContainer, fragment);
         transaction.commit();
+    }
+
+    @Override
+    public void onItemClick(History history) {
+        Toast.makeText(this, history.getName(), Toast.LENGTH_SHORT).show();
     }
 }
