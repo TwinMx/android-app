@@ -14,8 +14,7 @@ import android.widget.Toast;
 import java.util.List;
 import fr.isen.twinmx.activities.MainActivity;
 import fr.isen.twinmx.R;
-import fr.isen.twinmx.database.RealmHelper;
-import fr.isen.twinmx.database.listeners.CreateMotoListener;
+import fr.isen.twinmx.database.listeners.MotoListener;
 import fr.isen.twinmx.TMApplication;
 import fr.isen.twinmx.async.GetHistoryAyncTask;
 import fr.isen.twinmx.listeners.RequestListener;
@@ -27,7 +26,7 @@ import fr.isen.twinmx.ui.adapters.HistoryAdapter;
  * Created by pierredfc.
  */
 
-public class HistoryFragment extends Fragment implements CreateMotoListener.OnCreateMotoCallback, RequestListener {
+public class HistoryFragment extends Fragment implements MotoListener.OnCreateMotoCallback, RequestListener {
 
     private View rootview;
 

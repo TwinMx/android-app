@@ -2,7 +2,7 @@ package fr.isen.twinmx.database;
 
 import android.util.Log;
 
-import fr.isen.twinmx.database.listeners.CreateMotoListener;
+import fr.isen.twinmx.database.listeners.MotoListener;
 import fr.isen.twinmx.database.model.Moto;
 import io.realm.Realm;
 import io.realm.RealmResults;
@@ -11,7 +11,7 @@ import io.realm.RealmResults;
  * Created by pierredfc.
  */
 
-public class RealmHelper implements CreateMotoListener {
+public class RealmHelper implements MotoListener {
 
     private static Realm realm;
 
@@ -33,6 +33,28 @@ public class RealmHelper implements CreateMotoListener {
         if (callback != null)
         {
             callback.onSuccess();
+        }
+    }
+
+    @Override
+    public void deleteMoto(String name, OnDeleteMotoCallback callback) {
+        realm.beginTransaction();
+
+        RealmResults<Moto> result = realm.where(Moto.class).equalTo("name", name).findAll();
+        final boolean isSuccess = result.deleteAllFromRealm();
+
+        realm.commitTransaction();
+
+        if (callback != null)
+        {
+            if (isSuccess)
+            {
+                callback.onSuccess();
+            }
+            else
+            {
+                callback.onFailure();
+            }
         }
     }
 
