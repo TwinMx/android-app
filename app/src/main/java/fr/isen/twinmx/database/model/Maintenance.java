@@ -6,12 +6,15 @@ import java.util.ArrayList;
 import fr.isen.twinmx.database.measures.RealmMeasure;
 import io.realm.RealmList;
 import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
 
 /**
  * Created by pierredfc.
  */
 public class Maintenance extends RealmObject implements Serializable {
 
+    @PrimaryKey
+    private int id;
     private String date;
     private String note;
     private RealmList<RealmMeasure> measures;
@@ -58,4 +61,8 @@ public class Maintenance extends RealmObject implements Serializable {
     public void setMeasures(RealmList<RealmMeasure> measures) {
         this.measures = measures;
     }
+
+    public int getId() { return this.id;}
+
+    public void setId(int id) { this.id = id;}
 }

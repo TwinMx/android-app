@@ -11,7 +11,6 @@ public interface MotoListener {
     void createMoto(Moto moto, OnCreateMotoCallback callback);
     void deleteMoto(String name, OnDeleteMotoCallback callback);
 
-
     interface OnCreateMotoCallback
     {
         void onSuccess();
