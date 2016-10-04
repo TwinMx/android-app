@@ -15,5 +15,6 @@
     <!-- Snackbar -->
     <color name="blue500">#2196F3</color>
     <color name="blue900">#0D47A1</color>
+    <color name="ripple">#E0E0E0</color>
 </resources>
 

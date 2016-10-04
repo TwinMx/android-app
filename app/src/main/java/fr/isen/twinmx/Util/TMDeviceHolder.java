@@ -12,6 +12,7 @@ import io.palaima.smoothbluetooth.Device;
  */
 public class TMDeviceHolder extends RecyclerView.ViewHolder {
 
+    private Device device;
     private TextView name;
     private TextView mac;
 
@@ -22,7 +23,20 @@ public class TMDeviceHolder extends RecyclerView.ViewHolder {
     }
 
     public void bind(Device device) {
+        this.device = device;
         name.setText(device.getName());
         mac.setText(device.getAddress());
+    }
+
+    public Device getDevice() {
+        return device;
+    }
+
+    public String getName() {
+        return name.getText().toString();
+    }
+
+    public String getMac() {
+        return mac.getText().toString();
     }
 }

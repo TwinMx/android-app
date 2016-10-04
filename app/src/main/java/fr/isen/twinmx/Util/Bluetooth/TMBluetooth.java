@@ -19,5 +19,6 @@ public class TMBluetooth extends SmoothBluetooth {
     public TMBluetooth(BluetoothFragment bluetoothFragment, TMBluetoothListener listener) {
         super(bluetoothFragment.getActivity().getApplicationContext(), connectionTo, connectionType, listener);
         this.bluetoothListener = listener;
+        this.tryConnection();
     }
 }

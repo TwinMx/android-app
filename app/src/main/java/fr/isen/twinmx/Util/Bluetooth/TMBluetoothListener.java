@@ -77,7 +77,7 @@ public class TMBluetoothListener implements SmoothBluetooth.Listener {
             }
         }*/
 
-        mBluetoothFragment.promptPairedBluetoothDevices(deviceList);
+        mBluetoothFragment.promptPairedBluetoothDevices(deviceList, connectionCallback);
 
 
         //receives discovered devices list and connection callback

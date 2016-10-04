@@ -88,6 +88,7 @@ public class BluetoothFragment extends Fragment {
         TMBluetooth bluetooth = new TMBluetooth(this, new TMBluetoothListener(this));
         bluetooth.tryConnection();
 
+
         /*mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         if (mBluetoothAdapter != null) {
             // Device supports Bluetooth
@@ -140,16 +141,11 @@ public class BluetoothFragment extends Fragment {
         this.getActivity().registerReceiver(mBluetoothBroadcastReceiver, filter); // Don't forget to unregister during onDestroy
     }
 
-    public void promptPairedBluetoothDevices(List<Device> devices) {
+    public void promptPairedBluetoothDevices(List<Device> devices, SmoothBluetooth.ConnectionCallback connectionCallback) {
         MaterialDialog dialog = new MaterialDialog.Builder(this.getActivity())
                 .title("Choisissez un appareil Bluetooth")
-                .adapter(new TMBluetoothDialogAdapter(devices), null)
-                .itemsCallback(new MaterialDialog.ListCallback() {
-                    @Override
-                    public void onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
-                        Log.d("onSelection",text.toString());
-                    }
-                }).build();
+                .adapter(new TMBluetoothDialogAdapter(devices, connectionCallback), null)
+                .build();
                 dialog.show();
     }
 
