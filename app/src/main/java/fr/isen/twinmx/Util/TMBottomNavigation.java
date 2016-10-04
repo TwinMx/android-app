@@ -1,4 +1,4 @@
-package fr.isen.twinmx.Util;
+package fr.isen.twinmx.util;
 
 import android.app.Activity;
 import android.graphics.Color;
@@ -8,7 +8,7 @@ import android.support.v7.widget.Toolbar;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
 
-import fr.isen.twinmx.Activities.MainActivity;
+import fr.isen.twinmx.activities.MainActivity;
 import fr.isen.twinmx.R;
 
 /**
@@ -46,6 +46,8 @@ public class TMBottomNavigation implements AHBottomNavigation.OnTabSelectedListe
         this.navigation.addItem(settings);
 
         this.navigation.setAccentColor(Color.parseColor("#FF5722"));
+
+        this.navigation.setForceTitlesDisplay(true);
     }
 
     @Override
