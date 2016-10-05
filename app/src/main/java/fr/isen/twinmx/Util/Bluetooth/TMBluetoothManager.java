@@ -14,6 +14,8 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import java.util.List;
 import java.util.Set;
 
+import fr.isen.twinmx.R;
+import fr.isen.twinmx.TMApplication;
 import fr.isen.twinmx.Util.TMBluetoothDialogAdapter;
 import io.palaima.smoothbluetooth.Device;
 import io.palaima.smoothbluetooth.SmoothBluetooth;
@@ -81,7 +83,7 @@ public class TMBluetoothManager {
         if (bluetoothDevicesDialog == null || !bluetoothDevicesDialog.isShowing()) {
 
             bluetoothDevicesDialog = new MaterialDialog.Builder(this.activity)
-                    .title("Choisissez un appareil Bluetooth")
+                    .title(TMApplication.getContext().getResources().getString(R.string.select_bt_device))
                     .adapter(new TMBluetoothDialogAdapter(devices, connectionCallback), null)
                     .build();
 

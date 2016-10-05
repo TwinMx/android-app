@@ -4,7 +4,9 @@ import android.util.Log;
 
 import java.util.List;
 
+import fr.isen.twinmx.R;
 import fr.isen.twinmx.Receivers.BluetoothIconReceiver;
+import fr.isen.twinmx.TMApplication;
 import io.palaima.smoothbluetooth.Device;
 import io.palaima.smoothbluetooth.SmoothBluetooth;
 
@@ -33,7 +35,8 @@ public class TMBluetoothListener implements SmoothBluetooth.Listener {
     @Override
     public void onConnected(Device device) {
         Log.d("onConnected",device.getName());
-        BluetoothIconReceiver.sendStatusOk("Connected to " + device.getName());
+
+        BluetoothIconReceiver.sendStatusOk(String.format(TMApplication.getContext().getResources().getString(R.string.connected_to), device.getName()));
     }
 
     @Override
@@ -44,7 +47,7 @@ public class TMBluetoothListener implements SmoothBluetooth.Listener {
     @Override
     public void onConnectionFailed(Device device) {
         Log.d("onConFailed", device.getName());
-        BluetoothIconReceiver.sendStatusError("Connection failed to " + device.getName());
+        BluetoothIconReceiver.sendStatusError(String.format(TMApplication.getContext().getResources().getString(R.string.connection_failed_to),device.getName()));
     }
 
     @Override

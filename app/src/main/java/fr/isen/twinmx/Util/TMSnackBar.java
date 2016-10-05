@@ -45,8 +45,9 @@ public class TMSnackBar {
 
     public static Snackbar makeBluetooth(Context context, View view, View.OnClickListener listener) {
         if (bluetoothSnackBar == null) {
-            bluetoothSnackBar = make(view, "Activer le bluetooth ?", Snackbar.LENGTH_INDEFINITE, context.getResources().getColor(R.color.blue500), Color.WHITE, Color.WHITE, R.drawable.ic_settings_bluetooth_white_24dp);
-            bluetoothSnackBar.setAction("Oui",listener);
+            Resources r = TMApplication.getContext().getResources();
+            bluetoothSnackBar = make(view, r.getString(R.string.start_bt), Snackbar.LENGTH_INDEFINITE, context.getResources().getColor(R.color.blue500), Color.WHITE, Color.WHITE, R.drawable.ic_settings_bluetooth_white_24dp);
+            bluetoothSnackBar.setAction(r.getString(R.string.yes),listener);
         }
         return bluetoothSnackBar;
     }

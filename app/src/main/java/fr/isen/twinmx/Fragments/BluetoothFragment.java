@@ -2,34 +2,17 @@ package fr.isen.twinmx.Fragments;
 
 import android.app.Fragment;
 import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
-import com.afollestad.materialdialogs.MaterialDialog;
-
-import java.util.List;
-import java.util.Set;
-
-import butterknife.ButterKnife;
 import fr.isen.twinmx.R;
-import fr.isen.twinmx.Util.Bluetooth.TMBluetooth;
-import fr.isen.twinmx.Util.Bluetooth.TMBluetoothListener;
 import fr.isen.twinmx.Util.Bluetooth.TMBluetoothManager;
-import fr.isen.twinmx.Util.TMBluetoothDialogAdapter;
 import fr.isen.twinmx.Util.TMSnackBar;
-import io.palaima.smoothbluetooth.Device;
-import io.palaima.smoothbluetooth.SmoothBluetooth;
 
 /**
  * Created by pierredfc.
