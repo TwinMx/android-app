@@ -2,10 +2,9 @@ package fr.isen.twinmx.Util.Bluetooth;
 
 import android.util.Log;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import fr.isen.twinmx.Fragments.BluetoothFragment;
+import fr.isen.twinmx.Receivers.BluetoothIconReceiver;
 import io.palaima.smoothbluetooth.Device;
 import io.palaima.smoothbluetooth.SmoothBluetooth;
 
@@ -15,12 +14,6 @@ import io.palaima.smoothbluetooth.SmoothBluetooth;
 
 public class TMBluetoothListener implements SmoothBluetooth.Listener {
 
-    private BluetoothFragment mBluetoothFragment;
-
-    public TMBluetoothListener(BluetoothFragment bluetoothFragment) {
-        mBluetoothFragment = bluetoothFragment;
-    }
-
     @Override
     public void onBluetoothNotSupported() {
         // Too bad
@@ -28,7 +21,8 @@ public class TMBluetoothListener implements SmoothBluetooth.Listener {
 
     @Override
     public void onBluetoothNotEnabled() {
-        mBluetoothFragment.promptEnableBluetooth();
+        /*assert mBluetoothFragment != null;
+        mBluetoothFragment.promptEnableBluetooth();*/
     }
 
     @Override
@@ -39,6 +33,7 @@ public class TMBluetoothListener implements SmoothBluetooth.Listener {
     @Override
     public void onConnected(Device device) {
         Log.d("onConnected",device.getName());
+        BluetoothIconReceiver.sendStatusOk("Connected to " + device.getName());
     }
 
     @Override
@@ -49,6 +44,7 @@ public class TMBluetoothListener implements SmoothBluetooth.Listener {
     @Override
     public void onConnectionFailed(Device device) {
         Log.d("onConFailed", device.getName());
+        BluetoothIconReceiver.sendStatusError("Connection failed to " + device.getName());
     }
 
     @Override
@@ -69,17 +65,7 @@ public class TMBluetoothListener implements SmoothBluetooth.Listener {
     //Discovery
     @Override
     public void onDevicesFound(List<Device> deviceList, SmoothBluetooth.ConnectionCallback connectionCallback) {
-        /*ArrayList<String> names = new ArrayList<>(deviceList.size());
-        for(Device d : deviceList) {
-            Log.d("onDeviceFound",d.getName());
-            if (d.getName().startsWith("Twin")) {
-                connectionCallback.connectTo(d);
-            }
-        }*/
-
-        mBluetoothFragment.promptPairedBluetoothDevices(deviceList, connectionCallback);
-
-
+        TMBluetoothManager.getInstance().showBluetoothDevicesDialog(deviceList, connectionCallback);
         //receives discovered devices list and connection callback
         //you can filter devices list and connect to specific one
         //connectionCallback.connectTo(deviceList.get(position));

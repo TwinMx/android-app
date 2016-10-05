@@ -14,7 +14,18 @@
         android:layout_height="?android:attr/actionBarSize"
         android:background="@color/colorPrimary"
         app:titleTextColor="@color/white"
-        android:elevation="4dp" />
+        android:elevation="4dp" >
+        <ImageView
+            android:layout_gravity="end"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            app:srcCompat="@drawable/ic_settings_bluetooth_white_24dp"
+            android:id="@+id/bluetoothIcon"
+            android:background="@drawable/circular_image_view_red"
+            android:padding="5dp"
+            android:layout_marginEnd="20dp"
+            android:gravity="center_vertical|center_horizontal"/>
+    </android.support.v7.widget.Toolbar>
 
     <com.aurelhubert.ahbottomnavigation.AHBottomNavigationViewPager
         android:id="@+id/view_pager"

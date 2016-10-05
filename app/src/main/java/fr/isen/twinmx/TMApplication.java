@@ -15,8 +15,8 @@ public class TMApplication extends Application {
     @Override
     public void onCreate()
     {
-        context = this.getApplicationContext();
         super.onCreate();
+        context = this.getApplicationContext();
     }
 
     public static Context getContext()

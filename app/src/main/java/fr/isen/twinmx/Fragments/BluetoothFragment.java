@@ -7,37 +7,25 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.RecyclerView;
-import android.text.SpannableStringBuilder;
-import android.text.style.DynamicDrawableSpan;
-import android.text.style.ImageSpan;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.FrameLayout;
-import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import butterknife.BindView;
 import butterknife.ButterKnife;
-import fr.isen.twinmx.Activities.MainActivity;
 import fr.isen.twinmx.R;
 import fr.isen.twinmx.Util.Bluetooth.TMBluetooth;
 import fr.isen.twinmx.Util.Bluetooth.TMBluetoothListener;
+import fr.isen.twinmx.Util.Bluetooth.TMBluetoothManager;
 import fr.isen.twinmx.Util.TMBluetoothDialogAdapter;
 import fr.isen.twinmx.Util.TMSnackBar;
 import io.palaima.smoothbluetooth.Device;
@@ -54,27 +42,13 @@ public class BluetoothFragment extends Fragment {
 
     private final int REQUEST_ENABLE_BT = 1;
 
-    private BluetoothAdapter mBluetoothAdapter;
 
-    private final BroadcastReceiver mBluetoothBroadcastReceiver = new BroadcastReceiver() {
-        public void onReceive(Context context, Intent intent) {
-            String action = intent.getAction();
-            // When discovery finds a device
-            if (BluetoothDevice.ACTION_FOUND.equals(action)) {
-                // Get the BluetoothDevice object from the Intent
-                BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-                // Add the name and address to an array adapter to show in a ListView
-                Log.d("Discovered",device.getName() + " | " + device.getAddress());
-            }
-        }
-    };
+
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         this.rootview = inflater.inflate(R.layout.fragment_bluetooth, container, false);
-
-        ButterKnife.bind(this.getActivity());
 
         ((AppCompatActivity) this.getActivity()).getSupportActionBar().setTitle(getString(R.string.bnav_acquisition));
 
@@ -85,23 +59,27 @@ public class BluetoothFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
-        TMBluetooth bluetooth = new TMBluetooth(this, new TMBluetoothListener(this));
-        bluetooth.tryConnection();
+        //TMBluetooth bluetooth = new TMBluetooth(this, new TMBluetoothListener(this));
+        //bluetooth.tryConnection();
 
 
-        /*mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-        if (mBluetoothAdapter != null) {
+        BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        if (bluetoothAdapter != null) {
             // Device supports Bluetooth
-            if (!mBluetoothAdapter.isEnabled()) {
+            if (!bluetoothAdapter.isEnabled()) {
                 promptEnableBluetooth();
             }
             else {
+                TMBluetoothManager.getInstance().getBluetooth().tryConnection();
+            }
+            /*else {
                 //showPairedBluetoothDevices();
                 discoverBluetoothDevices();
             }
         } else {
             // Device does not support Bluetooth
-        }*/
+            */
+        }
 
 
     }
@@ -116,38 +94,14 @@ public class BluetoothFragment extends Fragment {
                                 Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
                                 startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
                                 //showPairedBluetoothDevices();
-                                discoverBluetoothDevices();
+                                //TMBluetoothManager.getInstance().discoverBluetoothDevices();
+                                TMBluetoothManager.getInstance().getBluetooth().tryConnection();
                             }
                         }))
                 .show();
     }
 
-    private void showPairedBluetoothDevices() {
-        Set<BluetoothDevice> pairedDevices = mBluetoothAdapter.getBondedDevices();
-        // If there are paired devices
-        if (pairedDevices.size() > 0) {
-            // Loop through paired devices
-            for (BluetoothDevice device : pairedDevices) {
-                Log.d("Device", device.getName());
-                // Add the name and address to an array adapter to show in a ListView
-                //mArrayAdapter.add(device.getName() + "\n" + device.getAddress());
-            }
-        }
-    }
 
-    private void discoverBluetoothDevices() {
-        // Register the BroadcastReceiver
-        IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
-        this.getActivity().registerReceiver(mBluetoothBroadcastReceiver, filter); // Don't forget to unregister during onDestroy
-    }
-
-    public void promptPairedBluetoothDevices(List<Device> devices, SmoothBluetooth.ConnectionCallback connectionCallback) {
-        MaterialDialog dialog = new MaterialDialog.Builder(this.getActivity())
-                .title("Choisissez un appareil Bluetooth")
-                .adapter(new TMBluetoothDialogAdapter(devices, connectionCallback), null)
-                .build();
-                dialog.show();
-    }
 
 
 }

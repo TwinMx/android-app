@@ -6,10 +6,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import fr.isen.twinmx.R;
+import fr.isen.twinmx.Util.Bluetooth.TMBluetoothManager;
 import io.palaima.smoothbluetooth.Device;
 import io.palaima.smoothbluetooth.SmoothBluetooth;
 
@@ -34,6 +34,7 @@ public class TMBluetoothDialogAdapter extends RecyclerView.Adapter<TMDeviceHolde
             @Override
             public void onClick(View v) {
                 Log.d("BTClick",holder.getName());
+                TMBluetoothManager.getInstance().hideBluetoothDevicesDialog();
                 connectionCallback.connectTo(holder.getDevice());
             }
         });

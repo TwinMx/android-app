@@ -3,6 +3,7 @@ package fr.isen.twinmx.Util.Bluetooth;
 import android.content.Context;
 
 import fr.isen.twinmx.Fragments.BluetoothFragment;
+import fr.isen.twinmx.TMApplication;
 import io.palaima.smoothbluetooth.SmoothBluetooth;
 
 /**
@@ -16,9 +17,8 @@ public class TMBluetooth extends SmoothBluetooth {
 
     private TMBluetoothListener bluetoothListener;
 
-    public TMBluetooth(BluetoothFragment bluetoothFragment, TMBluetoothListener listener) {
-        super(bluetoothFragment.getActivity().getApplicationContext(), connectionTo, connectionType, listener);
+    public TMBluetooth(TMBluetoothListener listener) {
+        super(TMApplication.getContext(), connectionTo, connectionType, listener);
         this.bluetoothListener = listener;
-        this.tryConnection();
     }
 }
