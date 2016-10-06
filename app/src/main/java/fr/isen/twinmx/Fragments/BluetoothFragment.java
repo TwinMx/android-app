@@ -5,11 +5,14 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+
+import com.afollestad.materialdialogs.MaterialDialog;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -44,5 +47,18 @@ public class BluetoothFragment extends Fragment {
         ((AppCompatActivity) this.getActivity()).getSupportActionBar().setTitle(getString(R.string.bnav_acquisition));
 
         return this.rootview;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        boolean wrapInScrollView = true;
+        new MaterialDialog.Builder(this.getActivity())
+                .title(R.string.bnav_acquisition)
+                .customView(R.layout.custom_form, wrapInScrollView)
+                .positiveText(R.string.form_save)
+                .negativeText(R.string.form_cancel)
+                .show();
     }
 }

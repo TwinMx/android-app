@@ -14,4 +14,12 @@
     <string name="connected_to">Connecté à {name}</string>
 
     <string name="no_history">Pas d\'historique</string>
+
+
+    <!-- Forms -->
+    <string name="form_name">Nom</string>
+    <string name="form_date">Date</string>
+    <string name="form_notes">Notes</string>
+    <string name="form_save">Sauvegarder</string>
+    <string name="form_cancel">Annuler</string>
 </resources>
