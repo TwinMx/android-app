@@ -1,4 +1,4 @@
-package fr.isen.twinmx.Util.Bluetooth;
+package fr.isen.twinmx.util.Bluetooth;
 
 import android.util.Log;
 

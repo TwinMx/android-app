@@ -1,4 +1,4 @@
-package fr.isen.twinmx.Util;
+package fr.isen.twinmx.util;
 
 import android.app.Activity;
 import android.graphics.Color;
@@ -8,12 +8,13 @@ import android.support.v7.widget.Toolbar;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
 
+import fr.isen.twinmx.activities.MainActivity;
 import fr.isen.twinmx.R;
 
 /**
  * Created by pierredfc.
  */
-public class TMBottomNavigation implements AHBottomNavigation.OnTabSelectedListener, AHBottomNavigation.OnNavigationPositionListener{
+public class TMBottomNavigation implements AHBottomNavigation.OnTabSelectedListener {
 
     private Activity callback;
     private Toolbar toolbar;
@@ -28,7 +29,6 @@ public class TMBottomNavigation implements AHBottomNavigation.OnTabSelectedListe
 
         this.initNavigation();
         this.navigation.setOnTabSelectedListener(this);
-        this.navigation.setOnNavigationPositionListener(this);
     }
 
     public void initNavigation()
@@ -45,16 +45,19 @@ public class TMBottomNavigation implements AHBottomNavigation.OnTabSelectedListe
         this.navigation.addItem(instruction);
         this.navigation.addItem(settings);
 
-        this.navigation.setAccentColor(Color.parseColor("#FFAB40"));
-    }
-    @Override
-    public void onPositionChange(int y) {
-        //@TODO
+        this.navigation.setAccentColor(Color.parseColor("#FF5722"));
+
+        this.navigation.setForceTitlesDisplay(true);
     }
 
     @Override
-    public boolean onTabSelected(int position, boolean wasSelected) {
-        //@TODO
-        return true;
+    public boolean onTabSelected(int position, boolean wasSelected)
+    {
+        return !wasSelected && this.callback instanceof  MainActivity && ((MainActivity) this.callback).onTabSelected(position);
+    }
+
+    public interface THBottomNavigationCallback
+    {
+        boolean onTabSelected(int position);
     }
 }

@@ -1,4 +1,4 @@
-package fr.isen.twinmx.Util.Bluetooth;
+package fr.isen.twinmx.util.Bluetooth;
 
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
@@ -16,7 +16,7 @@ import java.util.Set;
 
 import fr.isen.twinmx.R;
 import fr.isen.twinmx.TMApplication;
-import fr.isen.twinmx.Util.TMBluetoothDialogAdapter;
+import fr.isen.twinmx.util.TMBluetoothDialogAdapter;
 import io.palaima.smoothbluetooth.Device;
 import io.palaima.smoothbluetooth.SmoothBluetooth;
 

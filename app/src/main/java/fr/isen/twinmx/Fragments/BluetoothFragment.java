@@ -1,4 +1,4 @@
-package fr.isen.twinmx.Fragments;
+package fr.isen.twinmx.fragments;
 
 import android.app.Fragment;
 import android.bluetooth.BluetoothAdapter;
@@ -11,8 +11,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import fr.isen.twinmx.R;
-import fr.isen.twinmx.Util.Bluetooth.TMBluetoothManager;
-import fr.isen.twinmx.Util.TMSnackBar;
+import fr.isen.twinmx.util.Bluetooth.TMBluetoothManager;
+import fr.isen.twinmx.util.TMSnackBar;
 
 /**
  * Created by pierredfc.
@@ -24,8 +24,6 @@ public class BluetoothFragment extends Fragment {
     private CoordinatorLayout coordinatorLayout;
 
     private final int REQUEST_ENABLE_BT = 1;
-
-
 
 
     @Nullable

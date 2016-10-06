@@ -1,4 +1,4 @@
-package fr.isen.twinmx.Util;
+package fr.isen.twinmx.util;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;

@@ -1,4 +1,4 @@
-package fr.isen.twinmx.Util;
+package fr.isen.twinmx.util;
 
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import java.util.List;
 
 import fr.isen.twinmx.R;
-import fr.isen.twinmx.Util.Bluetooth.TMBluetoothManager;
+import fr.isen.twinmx.util.Bluetooth.TMBluetoothManager;
 import io.palaima.smoothbluetooth.Device;
 import io.palaima.smoothbluetooth.SmoothBluetooth;
 

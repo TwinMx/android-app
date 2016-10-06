@@ -1,13 +1,9 @@
-package fr.isen.twinmx.Activities;
+package fr.isen.twinmx.activities;
 
 import android.app.Fragment;
-import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Color;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -17,21 +13,22 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
-import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
-import com.mikepenz.materialdrawer.Drawer;
-import com.mikepenz.materialdrawer.DrawerBuilder;
-import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import fr.isen.twinmx.Fragments.BluetoothFragment;
+import fr.isen.twinmx.fragments.BluetoothFragment;
+import fr.isen.twinmx.fragments.HelpFragment;
+import fr.isen.twinmx.fragments.HistoryFragment;
+import fr.isen.twinmx.fragments.SettingsFragment;
 import fr.isen.twinmx.R;
 import fr.isen.twinmx.Receivers.BluetoothIconReceiver;
-import fr.isen.twinmx.Util.Bluetooth.TMBluetoothManager;
-import fr.isen.twinmx.Util.TMBottomNavigation;
-import fr.isen.twinmx.Util.TMDrawer;
+import fr.isen.twinmx.util.Bluetooth.TMBluetoothManager;
+import fr.isen.twinmx.util.TMBottomNavigation;
+import fr.isen.twinmx.model.History;
+import fr.isen.twinmx.ui.listeners.ClickListener;
 
-public class MainActivity extends AppCompatActivity {
+
+public class MainActivity extends AppCompatActivity implements TMBottomNavigation.THBottomNavigationCallback, ClickListener {
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -63,8 +60,6 @@ public class MainActivity extends AppCompatActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
-        this.launchHome();
-
         this.bluetoothManager = TMBluetoothManager.makeInstance(this);
         bluetoothIconReceiver = new BluetoothIconReceiver(bluetoothIcon, viewPager);
 
@@ -75,6 +70,12 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        this.launchFragment(new BluetoothFragment());
     }
 
     @Override
@@ -89,12 +90,37 @@ public class MainActivity extends AppCompatActivity {
         unregisterReceiver(bluetoothIconReceiver);
     }
 
-    private void launchHome()
+    @Override
+    public boolean onTabSelected(int position) {
+        switch (position)
+        {
+            case 0:
+                this.launchFragment(new BluetoothFragment());
+                break;
+            case 1:
+                this.launchFragment(new HistoryFragment());
+                break;
+            case 2:
+                this.launchFragment(new HelpFragment());
+                break;
+            case 3:
+                this.launchFragment(new SettingsFragment());
+                break;
+            default:
+                return false;
+        }
+        return true;
+    }
+
+    private void launchFragment(Fragment fragment)
     {
-        final BluetoothFragment bluetoothFragment = new BluetoothFragment();
         final FragmentTransaction transaction = this.getFragmentManager().beginTransaction();
-        transaction.replace(R.id.mainActivityContainer, bluetoothFragment);
-        transaction.addToBackStack(null);
+        transaction.replace(R.id.mainActivityContainer, fragment);
         transaction.commit();
+    }
+
+    @Override
+    public void onItemClick(History history) {
+        Toast.makeText(this, history.getName(), Toast.LENGTH_SHORT).show();
     }
 }
