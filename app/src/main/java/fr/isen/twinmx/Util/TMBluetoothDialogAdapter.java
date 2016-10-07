@@ -1,7 +1,6 @@
 package fr.isen.twinmx.util;
 
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,12 +27,11 @@ public class TMBluetoothDialogAdapter extends RecyclerView.Adapter<TMDeviceHolde
 
     @Override
     public TMDeviceHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_view_device_item, parent, false);
+        final View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_view_device_item, parent, false);
         final TMDeviceHolder holder = new TMDeviceHolder(view);
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("BTClick",holder.getName());
                 TMBluetoothManager.getInstance().hideBluetoothDevicesDialog();
                 connectionCallback.connectTo(holder.getDevice());
             }
@@ -43,11 +41,11 @@ public class TMBluetoothDialogAdapter extends RecyclerView.Adapter<TMDeviceHolde
 
     @Override
     public void onBindViewHolder(TMDeviceHolder holder, int position) {
-        holder.bind(mDevices.get(position));
+        holder.bind(this.mDevices.get(position));
     }
 
     @Override
     public int getItemCount() {
-        return mDevices.size();
+        return this.mDevices.size();
     }
 }

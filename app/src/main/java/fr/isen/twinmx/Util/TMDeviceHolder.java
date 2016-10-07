@@ -18,22 +18,22 @@ public class TMDeviceHolder extends RecyclerView.ViewHolder {
 
     public TMDeviceHolder(View itemView) {
         super(itemView);
-        name = (TextView) itemView.findViewById(R.id.recycler_view_device_item_name);
-        mac = (TextView) itemView.findViewById(R.id.recycler_view_device_item_mac);
+        this.name = (TextView) itemView.findViewById(R.id.recycler_view_device_item_name);
+        this.mac = (TextView) itemView.findViewById(R.id.recycler_view_device_item_mac);
     }
 
     public void bind(Device device) {
         this.device = device;
-        name.setText(device.getName());
-        mac.setText(device.getAddress());
+        this.name.setText(device.getName());
+        this.mac.setText(device.getAddress());
     }
 
     public Device getDevice() {
-        return device;
+        return this.device;
     }
 
     public String getName() {
-        return name.getText().toString();
+        return this.name.getText().toString();
     }
 
     public String getMac() {

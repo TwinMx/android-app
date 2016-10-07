@@ -40,26 +40,15 @@ public class BluetoothFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
-        //TMBluetooth bluetooth = new TMBluetooth(this, new TMBluetoothListener(this));
-        //bluetooth.tryConnection();
-
-
-        BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        final BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         if (bluetoothAdapter != null) {
             // Device supports Bluetooth
             if (!bluetoothAdapter.isEnabled()) {
-                promptEnableBluetooth();
+                promptEnableBluetooth(); //Prompt to enable bluetooth. Once bluetooth is enabled, displays list of devices
             }
-            else {
+            else { //Display list of devices
                 TMBluetoothManager.getInstance().getBluetooth().tryConnection();
             }
-            /*else {
-                //showPairedBluetoothDevices();
-                discoverBluetoothDevices();
-            }
-        } else {
-            // Device does not support Bluetooth
-            */
         }
 
 

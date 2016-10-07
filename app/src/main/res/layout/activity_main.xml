@@ -17,13 +17,13 @@
         android:elevation="4dp" >
         <ImageView
             android:layout_gravity="end"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="@dimen/toolbar_bluetooth_icon_size"
+            android:layout_height="@dimen/toolbar_bluetooth_icon_size"
             app:srcCompat="@drawable/ic_settings_bluetooth_white_24dp"
             android:id="@+id/bluetoothIcon"
             android:background="@drawable/circular_image_view_red"
-            android:padding="5dp"
-            android:layout_marginEnd="20dp"
+            android:padding="@dimen/toolbar_bluetooth_padding"
+            android:layout_marginEnd="@dimen/toolbar_last_icon_margin_end"
             android:gravity="center_vertical|center_horizontal"/>
     </android.support.v7.widget.Toolbar>
 

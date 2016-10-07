@@ -35,7 +35,7 @@ public class BluetoothIconReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         if (intent.getAction().equals(ACTION)) {
-            String status = intent.getStringExtra(EXTRA_STATUS);
+            final String status = intent.getStringExtra(EXTRA_STATUS);
             if (status.equals(EXTRA_STATUS_OK)) {
                 assert bluetoothIcon != null;
                 bluetoothIcon.setBackground(TMApplication.getContext().getResources().getDrawable(R.drawable.circular_image_view_green));
@@ -45,32 +45,32 @@ public class BluetoothIconReceiver extends BroadcastReceiver {
                 bluetoothIcon.setBackground(TMApplication.getContext().getResources().getDrawable(R.drawable.circular_image_view_red));
             }
 
-            String message = intent.getStringExtra(EXTRA_MESSAGE);
+            final String message = intent.getStringExtra(EXTRA_MESSAGE);
             if (message != null && !message.isEmpty()) {
                 inform(message);
             }
         }
     }
 
-    private void inform(String message) {
+    private void inform(final String message) {
         assert container != null;
-        Snackbar snack = Snackbar.make(container, message, Snackbar.LENGTH_SHORT);
+        final Snackbar snack = Snackbar.make(container, message, Snackbar.LENGTH_SHORT);
         snack.show();
 
     }
 
-    private static void sendStatus(Context context, String statusCode, String message) {
-        Intent intent = new Intent(ACTION);
+    private static void sendStatus(Context context, final String statusCode, final String message) {
+        final Intent intent = new Intent(ACTION);
         intent.putExtra(EXTRA_STATUS, statusCode);
         intent.putExtra(EXTRA_MESSAGE, message);
         context.sendBroadcast(intent);
     }
 
-    public static void sendStatusOk(String message) {
+    public static void sendStatusOk(final String message) {
         sendStatus(TMApplication.getContext(), EXTRA_STATUS_OK, message);
     }
 
-    public static void sendStatusError(String message) {
+    public static void sendStatusError(final String message) {
         sendStatus(TMApplication.getContext(), EXTRA_STATUS_ERROR, message);
 
     }

@@ -1,8 +1,5 @@
 package fr.isen.twinmx.util.Bluetooth;
 
-import android.content.Context;
-
-import fr.isen.twinmx.fragments.BluetoothFragment;
 import fr.isen.twinmx.TMApplication;
 import io.palaima.smoothbluetooth.SmoothBluetooth;
 

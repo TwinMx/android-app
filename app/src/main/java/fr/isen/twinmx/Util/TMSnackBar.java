@@ -20,10 +20,10 @@ public class TMSnackBar {
 
     private static Snackbar bluetoothSnackBar = null;
 
-    public static Snackbar make(View view, CharSequence charSequence, int duration, int background, int textColor, int actionColor, int drawable) {
-        Snackbar snackbar = Snackbar.make(view, charSequence, duration);
-        View snackView = snackbar.getView();
-        CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) snackView.getLayoutParams();
+    private static Snackbar makeTop(View view, CharSequence charSequence, int duration, int background, int textColor, int actionColor, int drawable) {
+        final Snackbar snackbar = Snackbar.make(view, charSequence, duration);
+        final View snackView = snackbar.getView();
+        final CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) snackView.getLayoutParams();
         params.gravity = Gravity.TOP;
         snackView.setLayoutParams(params);
 
@@ -33,8 +33,8 @@ public class TMSnackBar {
         snackbar.setActionTextColor(textColor);
 
         // Changing action button text color
-        View sbView = snackbar.getView();
-        TextView textView = (TextView) sbView.findViewById(android.support.design.R.id.snackbar_text);
+        final View sbView = snackbar.getView();
+        final TextView textView = (TextView) sbView.findViewById(android.support.design.R.id.snackbar_text);
         textView.setCompoundDrawablesWithIntrinsicBounds(drawable, 0, 0, 0);
         textView.setTextColor(actionColor);
         textView.setGravity(Gravity.CENTER_VERTICAL);
@@ -44,11 +44,9 @@ public class TMSnackBar {
     }
 
     public static Snackbar makeBluetooth(Context context, View view, View.OnClickListener listener) {
-        if (bluetoothSnackBar == null) {
-            Resources r = TMApplication.getContext().getResources();
-            bluetoothSnackBar = make(view, r.getString(R.string.start_bt), Snackbar.LENGTH_INDEFINITE, context.getResources().getColor(R.color.blue500), Color.WHITE, Color.WHITE, R.drawable.ic_settings_bluetooth_white_24dp);
-            bluetoothSnackBar.setAction(r.getString(R.string.yes),listener);
-        }
-        return bluetoothSnackBar;
+        final Resources r = TMApplication.getContext().getResources();
+        TMSnackBar.bluetoothSnackBar = makeTop(view, r.getString(R.string.start_bt), Snackbar.LENGTH_INDEFINITE, context.getResources().getColor(R.color.blue500), Color.WHITE, Color.WHITE, R.drawable.ic_settings_bluetooth_white_24dp);
+        TMSnackBar.bluetoothSnackBar.setAction(r.getString(R.string.yes),listener);
+        return TMSnackBar.bluetoothSnackBar;
     }
 }

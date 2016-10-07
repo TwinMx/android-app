@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity implements TMBottomNavigatio
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
         this.bluetoothManager = TMBluetoothManager.makeInstance(this);
-        bluetoothIconReceiver = new BluetoothIconReceiver(bluetoothIcon, viewPager);
+        this.bluetoothIconReceiver = new BluetoothIconReceiver(bluetoothIcon, viewPager);
 
         this.bluetoothIcon.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -81,13 +81,13 @@ public class MainActivity extends AppCompatActivity implements TMBottomNavigatio
     @Override
     protected void onResume() {
         super.onResume();
-        registerReceiver(bluetoothIconReceiver, new IntentFilter(BluetoothIconReceiver.ACTION));
+        this.registerReceiver(bluetoothIconReceiver, new IntentFilter(BluetoothIconReceiver.ACTION));
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        unregisterReceiver(bluetoothIconReceiver);
+        this.unregisterReceiver(bluetoothIconReceiver);
     }
 
     @Override
