@@ -2,6 +2,7 @@ package fr.isen.twinmx.activities;
 
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.bluetooth.BluetoothAdapter;
 import android.content.BroadcastReceiver;
 import android.content.IntentFilter;
 import android.support.v4.view.ViewPager;
@@ -10,6 +11,7 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
@@ -42,6 +44,9 @@ public class MainActivity extends AppCompatActivity implements TMBottomNavigatio
     @BindView(R.id.view_pager)
     ViewPager viewPager;
 
+    @BindView(R.id.bluetoothProgressIcon)
+    ProgressBar bluetoothProgressBar;
+
     private BroadcastReceiver bluetoothIconReceiver;
 
     private TMBluetoothManager bluetoothManager; //Keep a pointer to avoid GC
@@ -61,14 +66,9 @@ public class MainActivity extends AppCompatActivity implements TMBottomNavigatio
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
         this.bluetoothManager = TMBluetoothManager.makeInstance(this);
-        this.bluetoothIconReceiver = new BluetoothIconReceiver(bluetoothIcon, viewPager);
+        this.bluetoothIconReceiver = new BluetoothIconReceiver(bluetoothIcon, bluetoothProgressBar, viewPager);
 
-        this.bluetoothIcon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                TMBluetoothManager.getInstance().getBluetooth().tryConnection();
-            }
-        });
+
 
     }
 
@@ -82,6 +82,7 @@ public class MainActivity extends AppCompatActivity implements TMBottomNavigatio
     protected void onResume() {
         super.onResume();
         this.registerReceiver(bluetoothIconReceiver, new IntentFilter(BluetoothIconReceiver.ACTION));
+        this.registerReceiver(bluetoothIconReceiver, new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED));
     }
 
     @Override
@@ -122,5 +123,11 @@ public class MainActivity extends AppCompatActivity implements TMBottomNavigatio
     @Override
     public void onItemClick(History history) {
         Toast.makeText(this, history.getName(), Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        TMBluetoothManager.getInstance().getBluetooth().stop();
     }
 }

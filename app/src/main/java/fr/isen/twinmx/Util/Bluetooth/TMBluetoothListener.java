@@ -16,6 +16,13 @@ import io.palaima.smoothbluetooth.SmoothBluetooth;
 
 public class TMBluetoothListener implements SmoothBluetooth.Listener {
 
+    private TMBluetooth bluetooth;
+
+    public void setBluetooth(TMBluetooth bluetooth) {
+        this.bluetooth = bluetooth;
+    }
+
+
     @Override
     public void onBluetoothNotSupported() {
         // Too bad
@@ -35,13 +42,14 @@ public class TMBluetoothListener implements SmoothBluetooth.Listener {
     @Override
     public void onConnected(Device device) {
         Log.d("onConnected",device.getName());
-
+        this.bluetooth.setConnectedDevice(device);
         BluetoothIconReceiver.sendStatusOk(String.format(TMApplication.getContext().getResources().getString(R.string.connected_to), device.getName()));
     }
 
     @Override
     public void onDisconnected() {
         Log.d("onDisco","disconnected");
+        this.bluetooth.setConnectedDevice(null);
     }
 
     @Override

@@ -11,6 +11,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import fr.isen.twinmx.R;
+import fr.isen.twinmx.Receivers.BluetoothIconReceiver;
+import fr.isen.twinmx.util.Bluetooth.TMBluetooth;
 import fr.isen.twinmx.util.Bluetooth.TMBluetoothManager;
 import fr.isen.twinmx.util.TMSnackBar;
 
@@ -23,7 +25,6 @@ public class BluetoothFragment extends Fragment {
 
     private CoordinatorLayout coordinatorLayout;
 
-    private final int REQUEST_ENABLE_BT = 1;
 
 
     @Nullable
@@ -47,7 +48,10 @@ public class BluetoothFragment extends Fragment {
                 promptEnableBluetooth(); //Prompt to enable bluetooth. Once bluetooth is enabled, displays list of devices
             }
             else { //Display list of devices
-                TMBluetoothManager.getInstance().getBluetooth().tryConnection();
+                final TMBluetooth bt = TMBluetoothManager.getInstance().getBluetooth();
+                if (!bt.isConnected()) {
+                    bt.tryConnection();
+                }
             }
         }
 
@@ -61,11 +65,7 @@ public class BluetoothFragment extends Fragment {
                         new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-                                startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
-                                //showPairedBluetoothDevices();
-                                //TMBluetoothManager.getInstance().discoverBluetoothDevices();
-                                TMBluetoothManager.getInstance().getBluetooth().tryConnection();
+                                TMBluetoothManager.getInstance().enableBluetooth();
                             }
                         }))
                 .show();
