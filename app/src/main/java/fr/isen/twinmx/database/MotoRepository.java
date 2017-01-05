@@ -1,10 +1,13 @@
 package fr.isen.twinmx.database;
 
 import java.util.List;
+import java.util.concurrent.Callable;
 
 import fr.isen.twinmx.database.exceptions.MotoRepositoryException;
+import fr.isen.twinmx.database.exceptions.RepositoryException;
 import fr.isen.twinmx.database.listeners.MotoListener;
 import fr.isen.twinmx.database.model.Moto;
+import fr.isen.twinmx.database.model.Repository;
 import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmQuery;
@@ -15,106 +18,40 @@ import io.realm.exceptions.RealmPrimaryKeyConstraintException;
  * Created by Clement on 05/01/2017.
  */
 
-public class MotoRepository {
+public class MotoRepository extends Repository<Moto> {
 
 
     private static MotoRepository instance = null;
+
     public static MotoRepository getInstance() {
         if (instance == null) {
-            instance = new MotoRepository(RealmHelper.getRealm());
+            instance = new MotoRepository();
         }
         return instance;
     }
 
-    private final Realm realm;
-
-    private MotoRepository(Realm realm) {
-        this.realm = realm;
+    private MotoRepository() {
+        super(Moto.class);
     }
 
-    private RealmQuery<Moto> getRepository() {
-        return this.realm.where(Moto.class);
-    }
-
-    private void begin() {
-        this.realm.beginTransaction();
-    }
-
-    private void end() {
-        this.realm.commitTransaction();
-    }
-
-    public Moto create(Moto moto) throws MotoRepositoryException {
-        try {
-            begin();
-            moto = this.realm.copyToRealm(moto);
-            end();
-            return moto;
-        }
-        catch(Exception ex) {
-            throw new MotoRepositoryException("create", ex);
-        }
-    }
-
-
-    public void deleteAll() throws MotoRepositoryException {
-        try {
-            begin();
-            this.realm.deleteAll();
-            end();
-        }
-        catch(Exception ex) {
-            throw new MotoRepositoryException("deleteAll", ex);
-        }
-    }
-
-    public void deleteAllAsync() {
-        this.realm.executeTransactionAsync(new Realm.Transaction() {
-            @Override
-            public void execute(Realm realm) {
-                try {
-                    deleteAll();
-                } catch (MotoRepositoryException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-    }
-
-    public void delete(Moto moto) throws MotoRepositoryException {
-        try {
-            begin();
-            moto.deleteFromRealm();
-            end();
-        }
-        catch(IllegalStateException ex) {
-            throw new MotoRepositoryException("delete", ex);
-        }
-    }
-
-    public boolean deleteByName(String name) throws MotoRepositoryException {
+    public boolean deleteByName(final String name) throws RepositoryException {
         try {
             begin();
             this.delete(this.getRepository().equalTo("name", name).findAll().first());
             end();
             return true;
-        }
-        catch(NullPointerException | ArrayIndexOutOfBoundsException ex) {
+        } catch (NullPointerException | ArrayIndexOutOfBoundsException ex) {
             throw new MotoRepositoryException("deleteByName", ex);
         }
     }
 
-    public List<Moto> findAll() {
-        begin();
-        List<Moto> motos = this.getRepository().findAll();
-        end();
-        return motos;
+    public void deleteByNameAsync(final String name) throws RepositoryException {
+        runAsync(this.realm, new Callable<Boolean>() {
+            @Override
+            public Boolean call() throws Exception {
+                return deleteByName(name);
+            }
+        });
     }
 
-    public RealmResults<Moto> findAllAsync(RealmChangeListener<RealmResults<Moto>> changeListener) {
-        RealmResults<Moto> results = this.getRepository().findAllAsync();
-        if (changeListener != null) results.addChangeListener(changeListener);
-        return results;
-    }
-    
 }

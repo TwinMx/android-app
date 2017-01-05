@@ -21,6 +21,7 @@ import fr.isen.twinmx.activities.MainActivity;
 import fr.isen.twinmx.R;
 import fr.isen.twinmx.database.MotoRepository;
 import fr.isen.twinmx.database.exceptions.MotoRepositoryException;
+import fr.isen.twinmx.database.exceptions.RepositoryException;
 import fr.isen.twinmx.database.listeners.MotoListener;
 import fr.isen.twinmx.TMApplication;
 import fr.isen.twinmx.database.model.Moto;
@@ -141,14 +142,14 @@ public class HistoryFragment extends Fragment implements MotoListener.OnCreateMo
     public void demo(MotoRepository repository) {
         try {
             repository.deleteAll();
-        } catch (MotoRepositoryException e) {
+        } catch (RepositoryException e) {
             e.printStackTrace();
         }
 
         for (int i = 1; i < 40; i++) {
             try {
                 repository.create(new Moto("Moto"+i));
-            } catch (MotoRepositoryException e) {
+            } catch (RepositoryException e) {
                 e.printStackTrace();
             }
         }
