@@ -30,6 +30,8 @@
 
                 <CheckBox
                     android:id="@+id/box1"
+                    android:tag="0"
+                    android:checked="true"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
 
@@ -39,6 +41,8 @@
 
                 <CheckBox
                     android:id="@+id/box2"
+                    android:tag="1"
+                    android:checked="true"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
 
@@ -48,6 +52,8 @@
 
                 <CheckBox
                     android:id="@+id/box3"
+                    android:tag="2"
+                    android:checked="true"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
 
@@ -57,6 +63,8 @@
 
                 <CheckBox
                     android:id="@+id/box4"
+                    android:tag="3"
+                    android:checked="true"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
 
@@ -70,7 +78,7 @@
 
         <com.github.mikephil.charting.charts.LineChart
             android:layout_width="match_parent"
-            android:layout_height="250dp"
+            android:layout_height="300dp"
             android:padding="10dp"
             android:layout_margin="5dp"
             android:id="@+id/graph">

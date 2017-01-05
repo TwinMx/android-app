@@ -18,12 +18,12 @@ import fr.isen.twinmx.database.RealmHelper;
 import fr.isen.twinmx.database.TMMigration;
 import fr.isen.twinmx.database.TMRealmModule;
 
-import fr.isen.twinmx.fragments.BluetoothFragment;
+import fr.isen.twinmx.fragments.AcquisitionFragment;
 import fr.isen.twinmx.fragments.ChartFragment;
 import fr.isen.twinmx.fragments.HelpFragment;
 import fr.isen.twinmx.fragments.HistoryFragment;
-import fr.isen.twinmx.fragments.SettingsFragment;
 import fr.isen.twinmx.R;
+import fr.isen.twinmx.fragments.SettingsFragment;
 import fr.isen.twinmx.util.TMBottomNavigation;
 
 import io.realm.Realm;
@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity implements TMBottomNavigatio
         ButterKnife.bind(this);
 
         this.setSupportActionBar(this.toolbar);
-        this.setTitle(R.string.app_name);
+        this.setTitle(R.string.bnav_acquisition);
 
         final TMBottomNavigation nav = new TMBottomNavigation(this.navigation, savedInstanceState, this, this.toolbar);
 
@@ -63,7 +63,8 @@ public class MainActivity extends AppCompatActivity implements TMBottomNavigatio
                 .build();
         RealmHelper.setRealm(Realm.getInstance(configuration));
 
-        this.launchFragment(new BluetoothFragment());
+        final ChartFragment chartFragment = ChartFragment.newInstance(this, new LineData());
+        this.launchFragment(chartFragment);
     }
 
     @Override
@@ -71,7 +72,8 @@ public class MainActivity extends AppCompatActivity implements TMBottomNavigatio
         switch (position)
         {
             case 0:
-                this.launchFragment(new BluetoothFragment());
+                final ChartFragment chartFragment = ChartFragment.newInstance(this, new LineData());
+                this.launchFragment(chartFragment);
                 break;
             case 1:
                 this.launchFragment(new HistoryFragment());
@@ -80,9 +82,7 @@ public class MainActivity extends AppCompatActivity implements TMBottomNavigatio
                 this.launchFragment(new HelpFragment());
                 break;
             case 3:
-                //this.launchFragment(new SettingsFragment());
-                final ChartFragment chartFragment = ChartFragment.newInstance(this, new LineData());
-                this.launchFragment(chartFragment);
+                this.launchFragment(new SettingsFragment());
                 break;
             default:
                 return false;

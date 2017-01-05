@@ -8,10 +8,12 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.Entry;
@@ -25,7 +27,12 @@ import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.Utils;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 import fr.isen.twinmx.R;
 
 /**
@@ -37,6 +44,19 @@ public class ChartFragment extends Fragment implements OnChartGestureListener, O
     private Context context;
     private LineData lineData;
 
+    @OnClick({R.id.box1, R.id.box2, R.id.box3, R.id.box4})
+    public void onBoxClick(View view)
+    {
+        Integer index = Integer.valueOf((String) view.getTag());
+
+        if (((CheckBox) view).isChecked()) {
+            chart.getLineData().getDataSetByIndex(index).setVisible(true);
+        } else {
+            chart.getLineData().getDataSetByIndex(index).setVisible(false);
+        }
+
+        chart.invalidate();
+    }
 
     public static ChartFragment newInstance(Context context, LineData lineData) {
         final ChartFragment chartFragment = new ChartFragment();
@@ -50,106 +70,54 @@ public class ChartFragment extends Fragment implements OnChartGestureListener, O
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View rootView = inflater.inflate(R.layout.fragment_chart, container, false);
 
-//        this.chart = new LineChart(this.context);
+        ButterKnife.bind(this, rootView);
+
+        ((AppCompatActivity) this.getActivity()).getSupportActionBar().setTitle(getString(R.string.bnav_acquisition));
+
         this.chart = (LineChart) rootView.findViewById(R.id.graph);
 
-        this.chart.setData(this.lineData);
+        LineDataSet l1 = getLine(100, Color.RED);
+        LineDataSet l2 = getLine(100, Color.GREEN);
+        LineDataSet l3 = getLine(100, Color.BLUE);
+        LineDataSet l4 = getLine(100, Color.YELLOW);
 
-        //options data0
-        this.setupChart(0, Color.rgb(237, 127, 16));
-        //options data1
-        this.setupChart(1, Color.rgb(58, 142, 186));
-        //options data2
-        this.setupChart(2, Color.rgb(127, 221, 76));
-        //options data3
-        this.setupChart(3, Color.rgb(247, 35, 12));
+        LineData lineData = new LineData(l1, l2, l3, l4);
+        this.chart.setData(lineData);
 
-        return rootView;
-    }
-
-    private void setupChart(int index, int color)
-    {
-        if (this.chart.getLineData().getDataSetByIndex(index) instanceof LineDataSet)
-        {
-            final LineDataSet lineDataSet = (LineDataSet) this.chart.getLineData().getDataSetByIndex(index);
-
-            //lineDataSet.setDrawCubic(true);
-            lineDataSet.setValueTextSize(0);
-            lineDataSet.setDrawCircles(false);
-            lineDataSet.setColor(color);
-        }
+        this.chart.getAxisRight().setEnabled(false);
+        this.chart.getAxisLeft().setDrawGridLines(false);
+        this.chart.getXAxis().setDrawGridLines(false);
+        this.chart.setTouchEnabled(true);
 
         this.chart.setOnChartGestureListener(this);
         this.chart.setOnChartValueSelectedListener(this);
         this.chart.setDrawGridBackground(false);
 
-        // enable touch gestures
-        this.chart.setTouchEnabled(true);
-
-        // enable scaling and dragging
-        this.chart.setDragEnabled(true);
-
-
-        // if disabled, scaling can be done on x- and y-axis separately
-        this.chart.setPinchZoom(true);
-
-        this.setData(45, 100);
+        return rootView;
     }
 
-    private void setData(int count, float range) {
+    public LineDataSet getLine(int n, int color) {
+        LineDataSet dataSet = new LineDataSet(getRandomEntries(n), "Moto");
+        dataSet.setColor(color);
+        dataSet.setDrawCircles(false);
+        dataSet.setValueTextSize(0);
+        dataSet.setValueTextColor(color);
+        dataSet.setCircleColor(color);
+        return dataSet;
+     }
 
-        ArrayList<Entry> values = new ArrayList<Entry>();
-
-        for (int i = 0; i < count; i++) {
-
-            float val = (float) (Math.random() * range) + 3;
-            values.add(new Entry(i, val));
+    public List<Entry> getRandomEntries(int n) {
+        List<Entry> entries = new ArrayList<>(n);
+        Random random = new Random();
+        int previousVal = 0;
+        for (int i = 0; i < n; i++) {
+            // turn your data into Entry objects
+            int val = previousVal + random.nextInt(10) - 5;
+            previousVal = val;
+            entries.add(new Entry(i, val));
         }
-
-        LineDataSet set1;
-
-        if (this.chart.getData() != null &&
-                this.chart.getData().getDataSetCount() > 0) {
-            set1 = (LineDataSet)this.chart.getData().getDataSetByIndex(0);
-            set1.setValues(values);
-            this.chart.getData().notifyDataChanged();
-            this.chart.notifyDataSetChanged();
-        } else {
-            // create a dataset and give it a type
-            set1 = new LineDataSet(values, "DataSet 1");
-
-            // set the line to be drawn like this "- - - - - -"
-            set1.setColor(Color.BLACK);
-            set1.setCircleColor(Color.BLACK);
-            set1.setLineWidth(1f);
-            set1.setCircleRadius(3f);
-            set1.setDrawCircleHole(false);
-            set1.setValueTextSize(9f);
-
-           /* set1.setFormLineWidth(1f);
-            set1.setFormLineDashEffect(new DashPathEffect(new float[]{10f, 5f}, 0f));
-            set1.setFormSize(15.f);*/
-
-            if (Utils.getSDKInt() >= 18) {
-                // fill drawable only supported on api level 18 and above
-                Drawable drawable = ContextCompat.getDrawable(this.getActivity(), R.drawable.material_drawer_badge);
-                set1.setFillDrawable(drawable);
-            }
-            else {
-                set1.setFillColor(Color.BLACK);
-            }
-
-            ArrayList<ILineDataSet> dataSets = new ArrayList<ILineDataSet>();
-            dataSets.add(set1); // add the datasets
-
-            // create a data object with the datasets
-            LineData data = new LineData(dataSets);
-
-            // set data
-            this.chart.setData(data);
-        }
+        return entries;
     }
-
 
     @Override
     public void onChartGestureStart(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {

@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.github.mikephil.charting.data.LineData;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -21,7 +22,7 @@ import fr.isen.twinmx.R;
 /**
  * Created by pierredfc.
  */
-public class BluetoothFragment extends Fragment {
+public class AcquisitionFragment extends Fragment {
 
     @BindView(R.id.bt_list)
     RecyclerView recyclerView;
@@ -52,13 +53,5 @@ public class BluetoothFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        boolean wrapInScrollView = true;
-        new MaterialDialog.Builder(this.getActivity())
-                .title(R.string.bnav_acquisition)
-                .customView(R.layout.custom_form, wrapInScrollView)
-                .positiveText(R.string.form_save)
-                .negativeText(R.string.form_cancel)
-                .show();
     }
 }
