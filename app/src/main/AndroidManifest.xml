@@ -20,7 +20,8 @@
         </activity>
 
 
-        <activity android:name=".activities.MainActivity">
+        <activity android:name=".activities.MainActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize">
 
         </activity>
     </application>

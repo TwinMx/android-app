@@ -9,6 +9,7 @@ import android.support.v7.widget.Toolbar;
 import android.widget.Toast;
 
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
+import com.github.mikephil.charting.data.LineData;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -18,6 +19,7 @@ import fr.isen.twinmx.database.TMMigration;
 import fr.isen.twinmx.database.TMRealmModule;
 
 import fr.isen.twinmx.fragments.BluetoothFragment;
+import fr.isen.twinmx.fragments.ChartFragment;
 import fr.isen.twinmx.fragments.HelpFragment;
 import fr.isen.twinmx.fragments.HistoryFragment;
 import fr.isen.twinmx.fragments.SettingsFragment;
@@ -78,7 +80,9 @@ public class MainActivity extends AppCompatActivity implements TMBottomNavigatio
                 this.launchFragment(new HelpFragment());
                 break;
             case 3:
-                this.launchFragment(new SettingsFragment());
+                //this.launchFragment(new SettingsFragment());
+                final ChartFragment chartFragment = ChartFragment.newInstance(this, new LineData());
+                this.launchFragment(chartFragment);
                 break;
             default:
                 return false;
