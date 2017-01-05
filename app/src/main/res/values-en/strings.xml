@@ -23,4 +23,5 @@
     <string name="form_cancel">Cancel</string>
 
     <string name="pressure">Pressure (mBar)</string>
+    <string name="cylinder">Cylinder %d</string>
 </resources>

@@ -40,6 +40,8 @@ public class MainActivity extends AppCompatActivity implements TMBottomNavigatio
     @BindView(R.id.bottom_navigation)
     AHBottomNavigation navigation;
 
+    private static RealmConfiguration realmConfiguration;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,13 +57,17 @@ public class MainActivity extends AppCompatActivity implements TMBottomNavigatio
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
         //instantiate the realm and do migration (compulsory)
-        final RealmConfiguration configuration = new RealmConfiguration.Builder(this)
-                .name("TwinMax")
-                .schemaVersion(0)
-                .migration(new TMMigration())
-                .modules(new TMRealmModule())
-                .build();
-        RealmHelper.setRealm(Realm.getInstance(configuration));
+        if (this.realmConfiguration == null)
+        {
+            this.realmConfiguration = new RealmConfiguration.Builder(this)
+                    .name("TwinMax")
+                    .schemaVersion(0)
+                    .migration(new TMMigration())
+                    .modules(new TMRealmModule())
+                    .build();
+        }
+
+        RealmHelper.setRealm(Realm.getInstance(this.realmConfiguration));
 
         final ChartFragment chartFragment = ChartFragment.newInstance(this, new LineData());
         this.launchFragment(chartFragment);

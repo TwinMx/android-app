@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
@@ -76,17 +77,15 @@ public class ChartFragment extends Fragment implements OnChartGestureListener, O
 
         this.chart = (LineChart) rootView.findViewById(R.id.graph);
 
-        LineDataSet l1 = getLine(100, Color.RED);
-        LineDataSet l2 = getLine(100, Color.GREEN);
-        LineDataSet l3 = getLine(100, Color.BLUE);
-        LineDataSet l4 = getLine(100, Color.YELLOW);
+        LineDataSet l1 = getLine(100, 1, ContextCompat.getColor(this.context, R.color.chartBlue));
+        LineDataSet l2 = getLine(100, 2, ContextCompat.getColor(this.context, R.color.chartGreen));
+        LineDataSet l3 = getLine(100, 3, ContextCompat.getColor(this.context, R.color.chartBrown));
+        LineDataSet l4 = getLine(100, 4, ContextCompat.getColor(this.context, R.color.chartRed));
 
         LineData lineData = new LineData(l1, l2, l3, l4);
         this.chart.setData(lineData);
 
         this.chart.getAxisRight().setEnabled(false);
-        this.chart.getAxisLeft().setDrawGridLines(false);
-        this.chart.getXAxis().setDrawGridLines(false);
         this.chart.setTouchEnabled(true);
 
         this.chart.setOnChartGestureListener(this);
@@ -96,8 +95,8 @@ public class ChartFragment extends Fragment implements OnChartGestureListener, O
         return rootView;
     }
 
-    public LineDataSet getLine(int n, int color) {
-        LineDataSet dataSet = new LineDataSet(getRandomEntries(n), "Moto");
+    public LineDataSet getLine(int n, int index, int color) {
+        LineDataSet dataSet = new LineDataSet(getRandomEntries(n), getString(R.string.cylinder, index));
         dataSet.setColor(color);
         dataSet.setDrawCircles(false);
         dataSet.setValueTextSize(0);
