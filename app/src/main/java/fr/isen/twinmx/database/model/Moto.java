@@ -1,5 +1,7 @@
 package fr.isen.twinmx.database.model;
 
+import java.util.Date;
+
 import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
@@ -21,15 +23,15 @@ public class Moto extends RealmObject {
         this.maintenances = new RealmList<>();
     }
 
+    public Moto(String name) {
+        this(name, new Date().toString());
+    }
+
     public Moto(String name, String date)
     {
         this();
         this.name = name;
         this.date = date;
-    }
-
-    public Moto(String name) {
-        this.name = name;
     }
 
     public String getName() {
