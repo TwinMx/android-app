@@ -3,6 +3,9 @@ package fr.isen.twinmx;
 import android.app.Application;
 import android.content.Context;
 
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
+
 /**
  * Created by pierredfc.
  */
@@ -16,6 +19,9 @@ public class TMApplication extends Application {
     {
         super.onCreate();
         context = this.getApplicationContext();
+
+        final RealmConfiguration configuration = new RealmConfiguration.Builder(context).build();
+        Realm.setDefaultConfiguration(configuration);
     }
 
     public static Context getContext()
