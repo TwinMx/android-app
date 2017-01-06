@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginTop="?android:attr/actionBarSize"
@@ -28,8 +28,8 @@
             android:padding="10dp"
             android:layout_margin="5dp"
             android:layout_gravity="center"
-            card_view:cardCornerRadius="4dp"
-            card_view:cardElevation="2dp">
+            app:cardCornerRadius="4dp"
+            app:cardElevation="2dp">
 
             <GridLayout
                 android:layout_width="match_parent"
@@ -38,45 +38,49 @@
                 android:rowCount="2"
                 android:orientation="vertical">
 
-                <CheckBox
+                <android.support.v7.widget.AppCompatCheckBox
                     android:id="@+id/box1"
                     android:tag="0"
                     android:checked="true"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:buttonTint="@color/chartBlue"/>
 
                 <TextView
                     android:text="1"
                     android:layout_gravity="center"/>
 
-                <CheckBox
+                <android.support.v7.widget.AppCompatCheckBox
                     android:id="@+id/box2"
                     android:tag="1"
                     android:checked="true"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:buttonTint="@color/chartGreen"/>
 
                 <TextView
                     android:text="2"
                     android:layout_gravity="center"/>
 
-                <CheckBox
+                <android.support.v7.widget.AppCompatCheckBox
                     android:id="@+id/box3"
                     android:tag="2"
                     android:checked="true"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:buttonTint="@color/chartBrown"/>
 
                 <TextView
                     android:text="3"
                     android:layout_gravity="center"/>
 
-                <CheckBox
+                <android.support.v7.widget.AppCompatCheckBox
                     android:id="@+id/box4"
                     android:tag="3"
                     android:checked="true"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:buttonTint="@color/chartRed"/>
 
                 <TextView
                     android:text="4"
@@ -86,17 +90,47 @@
 
         </android.support.v7.widget.CardView>
 
-
-        <android.support.v7.widget.CardView
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:layout_margin="5dp"
+            android:orientation="horizontal"
             android:layout_gravity="center"
-            card_view:cardCornerRadius="4dp"
-            card_view:cardElevation="2dp">
+            android:layout_margin="25dp"
+            android:weightSum="4">
 
-        </android.support.v7.widget.CardView>
+            <com.hookedonplay.decoviewlib.DecoView
+                android:layout_width="0dp"
+                android:layout_height="80dp"
+                android:layout_weight="2"
+                android:id="@+id/motorLifeCycle" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_weight="2"
+                android:gravity="center">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/match_start_pause"
+                    android:tint="@color/colorAccent"
+                    android:background="@drawable/ripple"
+                    android:src="@drawable/ic_pause_white_24dp"
+                    android:padding="10dp" />
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/save"
+                    android:id="@+id/save_acquisition"
+                    android:theme="@style/MyButton"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
 
 
     </LinearLayout>

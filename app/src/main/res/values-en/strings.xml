@@ -24,4 +24,6 @@
 
     <string name="pressure">Pressure (mBar)</string>
     <string name="cylinder">Cylinder %d</string>
+
+    <string name="save">Save</string>
 </resources>

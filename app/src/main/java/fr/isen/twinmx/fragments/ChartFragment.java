@@ -8,12 +8,15 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
+import android.support.v7.widget.AppCompatCheckBox;
+import android.widget.Button;
+import android.widget.ImageView;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Legend;
@@ -26,6 +29,8 @@ import com.github.mikephil.charting.listener.ChartTouchListener;
 import com.github.mikephil.charting.listener.OnChartGestureListener;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.Utils;
+import com.hookedonplay.decoviewlib.DecoView;
+import com.hookedonplay.decoviewlib.charts.SeriesItem;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,7 +55,7 @@ public class ChartFragment extends Fragment implements OnChartGestureListener, O
     {
         Integer index = Integer.valueOf((String) view.getTag());
 
-        if (((CheckBox) view).isChecked()) {
+        if (((AppCompatCheckBox) view).isChecked()) {
             chart.getLineData().getDataSetByIndex(index).setVisible(true);
         } else {
             chart.getLineData().getDataSetByIndex(index).setVisible(false);
@@ -58,6 +63,38 @@ public class ChartFragment extends Fragment implements OnChartGestureListener, O
 
         chart.invalidate();
     }
+
+    private boolean isStarted;
+
+    @OnClick(R.id.match_start_pause)
+    public void onControlsClick(View view)
+    {
+        ImageView image = (ImageView) view;
+
+        if (this.isStarted)
+        {
+            image.setImageDrawable(ContextCompat.getDrawable(this.context, R.drawable.ic_play_arrow_white_24dp));
+        }
+        else
+        {
+            image.setImageDrawable(ContextCompat.getDrawable(this.context, R.drawable.ic_pause_white_24dp));
+        }
+
+        this.isStarted = !this.isStarted;
+    }
+
+    @OnClick(R.id.save_acquisition)
+    public void onSave(View view)
+    {
+        // TODO
+    }
+
+    @BindView(R.id.motorLifeCycle)
+    DecoView motorLifeCycle;
+
+    private int serie1Index;
+    private int maxValue = 5000;
+    private int minValue = 0;
 
     public static ChartFragment newInstance(Context context, LineData lineData) {
         final ChartFragment chartFragment = new ChartFragment();
@@ -92,7 +129,15 @@ public class ChartFragment extends Fragment implements OnChartGestureListener, O
         this.chart.setOnChartValueSelectedListener(this);
         this.chart.setDrawGridBackground(false);
 
+        this.setMotorLifeCycle();
+
         return rootView;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        this.isStarted = true;
     }
 
     public LineDataSet getLine(int n, int index, int color) {
@@ -116,6 +161,25 @@ public class ChartFragment extends Fragment implements OnChartGestureListener, O
             entries.add(new Entry(i, val));
         }
         return entries;
+    }
+
+    private void setMotorLifeCycle()
+    {
+        this.motorLifeCycle.addSeries(new SeriesItem.Builder(ContextCompat.getColor(this.context, R.color.colorAccent))
+                .setRange(minValue, maxValue, maxValue)
+                .setInitialVisibility(true)
+                .setLineWidth(10f)
+                .setDrawAsPoint(false)
+                .build());
+
+        this.motorLifeCycle.configureAngles(280, 0);
+
+        final SeriesItem seriesItem1 = new SeriesItem.Builder(Color.argb(255, 64, 255, 64), Color.argb(255, 255, 0, 0))
+                .setRange(minValue, maxValue, minValue)
+                .setLineWidth(6f)
+                .build();
+
+        serie1Index = this.motorLifeCycle.addSeries(seriesItem1);
     }
 
     @Override

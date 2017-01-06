@@ -25,4 +25,6 @@
 
     <string name="pressure">Pression (mBar)</string>
     <string name="cylinder">Cylindre %d</string>
+
+    <string name="save">Enregistrer</string>
 </resources>
