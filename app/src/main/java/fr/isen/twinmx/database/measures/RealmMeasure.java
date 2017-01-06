@@ -1,13 +1,19 @@
 package fr.isen.twinmx.database.measures;
 
-import java.io.Serializable;
-
+import fr.isen.twinmx.database.interfaces.AutoIncrement;
 import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
+import io.realm.annotations.Required;
 
 /**
  * Created by pierredfc.
  */
-public class RealmMeasure extends RealmObject implements Serializable {
+public class RealmMeasure extends RealmObject implements AutoIncrement {
+
+    public static final String DB_TYPE = "RealmMeasure";
+
+    @PrimaryKey @Required
+    private Long id;
 
     private int c0;
     private int c1;
@@ -28,6 +34,7 @@ public class RealmMeasure extends RealmObject implements Serializable {
     {
         this(measure.getC0(), measure.getC1(), measure.getC2(), measure.getC3());
     }
+
 
     public int getC0() {
         return this.c0;
@@ -59,5 +66,15 @@ public class RealmMeasure extends RealmObject implements Serializable {
 
     public void setC3(int c3) {
         this.c3 = c3;
+    }
+
+    @Override
+    public Long getId() {
+        return id;
+    }
+
+    @Override
+    public void setId(Long id) {
+        this.id = id;
     }
 }

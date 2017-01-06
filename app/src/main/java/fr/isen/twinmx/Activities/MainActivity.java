@@ -55,8 +55,9 @@ public class MainActivity extends AppCompatActivity implements TMBottomNavigatio
         //instantiate the realm and do migration (compulsory)
         final RealmConfiguration configuration = new RealmConfiguration.Builder(this)
                 .name("TwinMax")
-                .schemaVersion(0)
-                .migration(new TMMigration())
+                .schemaVersion(3)
+                //.migration(new TMMigration())
+                .deleteRealmIfMigrationNeeded()
                 .modules(new TMRealmModule())
                 .build();
         RealmHelper.setRealm(Realm.getInstance(configuration));

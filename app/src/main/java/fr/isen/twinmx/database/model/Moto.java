@@ -2,6 +2,7 @@ package fr.isen.twinmx.database.model;
 
 import java.util.Date;
 
+import fr.isen.twinmx.database.interfaces.AutoIncrement;
 import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
@@ -10,11 +11,15 @@ import io.realm.annotations.Required;
 /**
  * Created by pierredfc.
  */
-public class Moto extends RealmObject {
+public class Moto extends RealmObject implements AutoIncrement {
 
-    @PrimaryKey
-    private String name;
+    public static final String DB_TYPE = "Moto";
+
+    @PrimaryKey @Required
+    private Long id = null;
+
     @Required
+    private String name;
     private String date;
     private String image;
     private RealmList<Maintenance> maintenances;
@@ -32,6 +37,16 @@ public class Moto extends RealmObject {
         this();
         this.name = name;
         this.date = date;
+    }
+
+    @Override
+    public Long getId() {
+        return this.id;
+    }
+
+    @Override
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getName() {

@@ -5,9 +5,9 @@ import java.util.concurrent.Callable;
 
 import fr.isen.twinmx.database.RealmHelper;
 import fr.isen.twinmx.database.exceptions.RepositoryException;
+import fr.isen.twinmx.database.interfaces.AutoIncrement;
 import io.realm.Realm;
 import io.realm.RealmChangeListener;
-import io.realm.RealmModel;
 import io.realm.RealmObject;
 import io.realm.RealmQuery;
 import io.realm.RealmResults;
@@ -54,6 +54,7 @@ public abstract class Repository<T extends RealmObject> {
     public T create(final T t) throws RepositoryException {
         try {
             begin();
+            if (t instanceof AutoIncrement) generateId((AutoIncrement) t);
             T item = this.realm.copyToRealm(t);
             end();
             return item;
@@ -61,6 +62,10 @@ public abstract class Repository<T extends RealmObject> {
         catch(Exception ex) {
             throw new RepositoryException("create", ex);
         }
+    }
+
+    private void generateId(AutoIncrement t) {
+        if (t.getId() == null) t.setId(this.getMaxId()+1);
     }
 
     public void createAsync(final T t) throws RepositoryException {
@@ -118,6 +123,11 @@ public abstract class Repository<T extends RealmObject> {
         List<T> items = getRepository().findAll();
         end();
         return items;
+    }
+
+    public long getMaxId() {
+        Number n = realm.where(clazz).max("id");
+        return n != null ? n.longValue() : -1;
     }
 
     public RealmResults<T> findAllAsync(RealmChangeListener<RealmResults<T>> changeListener) {

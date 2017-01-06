@@ -58,9 +58,6 @@ public class HistoryFragment extends Fragment implements MotoListener.OnCreateMo
     {
         this.rootview = inflater.inflate(R.layout.fragment_history, container, false);
 
-/*        this.historyView = (RecyclerView) this.rootview.findViewById(R.id.history_recycler);
-        this.noHistoryView = (TextView) this.rootview.findViewById(R.id.no_history_text);*/
-
         ButterKnife.bind(this, rootview);
 
         ((AppCompatActivity) this.getActivity()).getSupportActionBar().setTitle(getString(R.string.bnav_history));
