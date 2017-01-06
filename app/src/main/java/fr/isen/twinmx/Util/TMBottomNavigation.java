@@ -3,7 +3,9 @@ package fr.isen.twinmx.util;
 import android.app.Activity;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
 
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
@@ -47,7 +49,7 @@ public class TMBottomNavigation implements AHBottomNavigation.OnTabSelectedListe
 
         this.navigation.setAccentColor(Color.parseColor("#FF5722"));
 
-        this.navigation.setForceTitlesDisplay(true);
+        this.navigation.setTitleState(AHBottomNavigation.TitleState.ALWAYS_SHOW);
     }
 
     @Override

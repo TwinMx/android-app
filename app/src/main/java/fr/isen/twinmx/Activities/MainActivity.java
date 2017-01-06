@@ -2,10 +2,13 @@ package fr.isen.twinmx.activities;
 
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.support.design.widget.FloatingActionButton;
+import android.support.transition.Visibility;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 
+import android.view.View;
 import android.widget.Toast;
 
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
@@ -38,6 +41,9 @@ public class MainActivity extends AppCompatActivity implements TMBottomNavigatio
     @BindView(R.id.bottom_navigation)
     AHBottomNavigation navigation;
 
+    @BindView(R.id.fab)
+    FloatingActionButton floatingActionButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,9 +53,8 @@ public class MainActivity extends AppCompatActivity implements TMBottomNavigatio
 
         this.setSupportActionBar(this.toolbar);
         this.setTitle(R.string.app_name);
-
         final TMBottomNavigation nav = new TMBottomNavigation(this.navigation, savedInstanceState, this, this.toolbar);
-
+        this.navigation.manageFloatingActionButtonBehavior(this.floatingActionButton);
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
         //instantiate the realm and do migration (compulsory)
@@ -62,24 +67,25 @@ public class MainActivity extends AppCompatActivity implements TMBottomNavigatio
                 .build();
         RealmHelper.setRealm(Realm.getInstance(configuration));
 
-        this.launchFragment(new BluetoothFragment());
+        this.launchFragment(new BluetoothFragment(), false);
     }
 
     @Override
     public boolean onTabSelected(int position) {
+        this.floatingActionButton.setOnClickListener(null);
         switch (position)
         {
             case 0:
-                this.launchFragment(new BluetoothFragment());
+                this.launchFragment(new BluetoothFragment(), false);
                 break;
             case 1:
-                this.launchFragment(new HistoryFragment());
+                this.launchFragment(HistoryFragment.newInstance(this.floatingActionButton), true);
                 break;
             case 2:
-                this.launchFragment(new HelpFragment());
+                this.launchFragment(new HelpFragment(), false);
                 break;
             case 3:
-                this.launchFragment(new SettingsFragment());
+                this.launchFragment(new SettingsFragment(), false);
                 break;
             default:
                 return false;
@@ -87,11 +93,12 @@ public class MainActivity extends AppCompatActivity implements TMBottomNavigatio
         return true;
     }
 
-    private void launchFragment(Fragment fragment)
+    private void launchFragment(Fragment fragment, boolean isFab)
     {
         final FragmentTransaction transaction = this.getFragmentManager().beginTransaction();
         transaction.replace(R.id.mainActivityContainer, fragment);
         transaction.commit();
+        this.floatingActionButton.setVisibility(!isFab ? View.INVISIBLE : View.VISIBLE);
     }
 
     @Override

@@ -3,14 +3,18 @@ package fr.isen.twinmx.fragments;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +41,7 @@ import io.realm.RealmResults;
  * Created by pierredfc.
  */
 
-public class HistoryFragment extends Fragment implements MotoListener.OnCreateMotoCallback, RequestListener {
+public class HistoryFragment extends Fragment implements MotoListener.OnCreateMotoCallback, RequestListener, View.OnClickListener {
 
     private View rootview;
 
@@ -47,10 +51,17 @@ public class HistoryFragment extends Fragment implements MotoListener.OnCreateMo
     @BindView(R.id.no_history_text)
     TextView noHistoryView;
 
-
     private HistoryAdapter historyAdapter;
     private MotosAdapter motosAdapter;
     private RealmResults<Moto> motoFinder;
+    private MainActivity activity;
+
+    public static HistoryFragment newInstance(MainActivity activity, FloatingActionButton fab) {
+        HistoryFragment f = new HistoryFragment();
+        f.activity = activity;
+        fab.setOnClickListener(f);
+        return f;
+    }
 
     @Nullable
     @Override
@@ -69,17 +80,6 @@ public class HistoryFragment extends Fragment implements MotoListener.OnCreateMo
         return this.rootview;
     }
 
-    @Override
-    public void onStart()
-    {
-        super.onStart();
-
-        MotoRepository repository = MotoRepository.getInstance();
-
-        demo(repository);
-
-
-    }
 
     @Override
     public void onResume() {
@@ -150,5 +150,10 @@ public class HistoryFragment extends Fragment implements MotoListener.OnCreateMo
                 e.printStackTrace();
             }
         }
+    }
+
+    @Override
+    public void onClick(View view) {
+
     }
 }
