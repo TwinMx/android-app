@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.support.v7.widget.AppCompatCheckBox;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Legend;
@@ -89,6 +90,9 @@ public class ChartFragment extends Fragment implements OnChartGestureListener, O
         // TODO
     }
 
+    @BindView(R.id.motorLifeCycleValue)
+    TextView motorLifeCycleValue;
+
     @BindView(R.id.motorLifeCycle)
     DecoView motorLifeCycle;
 
@@ -114,10 +118,10 @@ public class ChartFragment extends Fragment implements OnChartGestureListener, O
 
         this.chart = (LineChart) rootView.findViewById(R.id.graph);
 
-        LineDataSet l1 = getLine(100, 1, ContextCompat.getColor(this.context, R.color.chartBlue));
-        LineDataSet l2 = getLine(100, 2, ContextCompat.getColor(this.context, R.color.chartGreen));
-        LineDataSet l3 = getLine(100, 3, ContextCompat.getColor(this.context, R.color.chartBrown));
-        LineDataSet l4 = getLine(100, 4, ContextCompat.getColor(this.context, R.color.chartRed));
+        LineDataSet l1 = getLine(100, 1, ContextCompat.getColor(this.getActivity(), R.color.chartBlue));
+        LineDataSet l2 = getLine(100, 2, ContextCompat.getColor(this.getActivity(), R.color.chartGreen));
+        LineDataSet l3 = getLine(100, 3, ContextCompat.getColor(this.getActivity(), R.color.chartBrown));
+        LineDataSet l4 = getLine(100, 4, ContextCompat.getColor(this.getActivity(), R.color.chartRed));
 
         LineData lineData = new LineData(l1, l2, l3, l4);
         this.chart.setData(lineData);
@@ -165,7 +169,7 @@ public class ChartFragment extends Fragment implements OnChartGestureListener, O
 
     private void setMotorLifeCycle()
     {
-        this.motorLifeCycle.addSeries(new SeriesItem.Builder(ContextCompat.getColor(this.context, R.color.colorAccent))
+        this.motorLifeCycle.addSeries(new SeriesItem.Builder(ContextCompat.getColor(this.getActivity(), R.color.white))
                 .setRange(minValue, maxValue, maxValue)
                 .setInitialVisibility(true)
                 .setLineWidth(10f)
@@ -174,8 +178,8 @@ public class ChartFragment extends Fragment implements OnChartGestureListener, O
 
         this.motorLifeCycle.configureAngles(280, 0);
 
-        final SeriesItem seriesItem1 = new SeriesItem.Builder(Color.argb(255, 64, 255, 64), Color.argb(255, 255, 0, 0))
-                .setRange(minValue, maxValue, minValue)
+        final SeriesItem seriesItem1 = new SeriesItem.Builder(ContextCompat.getColor(this.getActivity(), R.color.colorPrimary), ContextCompat.getColor(this.getActivity(), R.color.colorAccent))
+                .setRange(minValue, maxValue, (minValue+maxValue)/2)
                 .setLineWidth(6f)
                 .build();
 
