@@ -82,10 +82,21 @@ public class ChartFragment extends Fragment implements OnChartGestureListener, O
         }
 
         this.isStarted = !this.isStarted;
+
+        // TODO
+    }
+
+    @OnClick(R.id.auto_focus)
+    public void onAutoFocusClick(View view)
+    {
+        if (this.chart != null)
+        {
+            this.chart.fitScreen();
+        }
     }
 
     @OnClick(R.id.save_acquisition)
-    public void onSave(View view)
+    public void onSaveClick(View view)
     {
         // TODO
     }
