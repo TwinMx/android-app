@@ -15,6 +15,8 @@ public class Moto extends RealmObject implements AutoIncrement {
 
     public static final String DB_TYPE = "Moto";
 
+    public static int INDEX = 0;
+
     @PrimaryKey @Required
     private Long id = null;
 
@@ -37,6 +39,10 @@ public class Moto extends RealmObject implements AutoIncrement {
         this();
         this.name = name;
         this.date = date;
+    }
+
+    public static int getIndex() {
+        return INDEX++;
     }
 
     @Override

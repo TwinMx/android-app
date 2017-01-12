@@ -1,6 +1,7 @@
 package fr.isen.twinmx.fragments;
 
 import android.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -23,6 +24,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import fr.isen.twinmx.activities.MainActivity;
 import fr.isen.twinmx.R;
+import fr.isen.twinmx.activities.MotoFormActivity;
 import fr.isen.twinmx.database.MotoRepository;
 import fr.isen.twinmx.database.exceptions.MotoRepositoryException;
 import fr.isen.twinmx.database.exceptions.RepositoryException;
@@ -84,6 +86,7 @@ public class HistoryFragment extends Fragment implements MotoListener.OnCreateMo
     @Override
     public void onResume() {
         super.onResume();
+        //demo(MotoRepository.getInstance());
         if (this.motoFinder != null) this.motoFinder.removeChangeListeners();
         this.motoFinder = MotoRepository.getInstance().findAllAsync(new RealmChangeListener<RealmResults<Moto>>() {
             @Override
@@ -145,15 +148,22 @@ public class HistoryFragment extends Fragment implements MotoListener.OnCreateMo
 
         for (int i = 1; i < 40; i++) {
             try {
-                repository.create(new Moto("Moto"+i));
+                repository.create(new Moto("Moto"+Moto.getIndex()));
             } catch (RepositoryException e) {
                 e.printStackTrace();
             }
         }
     }
 
+    // On Floating Action Button click
     @Override
     public void onClick(View view) {
+        MotoRepository rep = MotoRepository.getInstance();
 
+        try {
+            rep.create(new Moto("NewMoto"+Moto.getIndex()));
+        } catch (RepositoryException e) {
+            e.printStackTrace();
+        }
     }
 }
