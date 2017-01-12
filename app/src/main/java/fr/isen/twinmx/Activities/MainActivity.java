@@ -9,7 +9,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -18,6 +17,11 @@ import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import fr.isen.twinmx.database.RealmHelper;
+import fr.isen.twinmx.database.TMMigration;
+import fr.isen.twinmx.database.TMRealmModule;
+
 import fr.isen.twinmx.fragments.BluetoothFragment;
 import fr.isen.twinmx.fragments.HelpFragment;
 import fr.isen.twinmx.fragments.HistoryFragment;
@@ -26,6 +30,10 @@ import fr.isen.twinmx.R;
 import fr.isen.twinmx.Receivers.BluetoothIconReceiver;
 import fr.isen.twinmx.util.Bluetooth.TMBluetoothManager;
 import fr.isen.twinmx.util.TMBottomNavigation;
+
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
+
 import fr.isen.twinmx.model.History;
 import fr.isen.twinmx.ui.listeners.ClickListener;
 
@@ -67,14 +75,20 @@ public class MainActivity extends AppCompatActivity implements TMBottomNavigatio
 
         this.bluetoothManager = TMBluetoothManager.makeInstance(this);
         this.bluetoothIconReceiver = new BluetoothIconReceiver(bluetoothIcon, bluetoothProgressBar, viewPager);
-
-
-
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+        //instantiate the realm and do migration (compulsory)
+        final RealmConfiguration configuration = new RealmConfiguration.Builder(this)
+                .name("TwinMax")
+                .schemaVersion(0)
+                .migration(new TMMigration())
+                .modules(new TMRealmModule())
+                .build();
+        RealmHelper.setRealm(Realm.getInstance(configuration));
+
         this.launchFragment(new BluetoothFragment());
     }
 

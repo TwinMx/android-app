@@ -18,4 +18,11 @@
     <string name="connection_failed_to">Connection failed to %s</string>
 
     <string name="no_history">No history found</string>
+
+    <!-- Forms -->
+    <string name="form_name">Name</string>
+    <string name="form_date">Date</string>
+    <string name="form_notes">Notes</string>
+    <string name="form_save">Save</string>
+    <string name="form_cancel">Cancel</string>
 </resources>

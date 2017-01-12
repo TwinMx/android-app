@@ -10,22 +10,23 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
+import android.widget.Toast;
 import java.util.List;
-
 import fr.isen.twinmx.activities.MainActivity;
 import fr.isen.twinmx.R;
+import fr.isen.twinmx.database.listeners.MotoListener;
 import fr.isen.twinmx.TMApplication;
 import fr.isen.twinmx.async.GetHistoryAyncTask;
 import fr.isen.twinmx.listeners.RequestListener;
 import fr.isen.twinmx.model.History;
 import fr.isen.twinmx.ui.adapters.HistoryAdapter;
 
+
 /**
  * Created by pierredfc.
  */
 
-public class HistoryFragment extends Fragment implements RequestListener {
+public class HistoryFragment extends Fragment implements MotoListener.OnCreateMotoCallback, RequestListener {
 
     private View rootview;
 
@@ -54,14 +55,33 @@ public class HistoryFragment extends Fragment implements RequestListener {
     }
 
     @Override
-    public void onStart() {
+    public void onStart()
+    {
         super.onStart();
+
         final GetHistoryAyncTask getHistoryAyncTask = new GetHistoryAyncTask(this);
         getHistoryAyncTask.execute();
+
+     //   RealmHelper realmHelper = new RealmHelper();
+     //   realmHelper.getMotos();
+     //    realmHelper.createMoto(new Moto("Harley", new Date().toString()), this);
     }
 
     @Override
-    public void onResponseReceived(List<History> results) {
+    public void onSuccess()
+    {
+        Toast.makeText(this.getActivity(), "onSuccess", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onFailure()
+    {
+        Toast.makeText(this.getActivity(), "onFailure", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onResponseReceived(List<History> results)
+    {
         if (results != null && results.size() != 0)
         {
             this.historyAdapter = new HistoryAdapter(results, (MainActivity) getActivity());

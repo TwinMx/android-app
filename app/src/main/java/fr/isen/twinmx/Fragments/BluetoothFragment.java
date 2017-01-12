@@ -2,7 +2,6 @@ package fr.isen.twinmx.fragments;
 
 import android.app.Fragment;
 import android.bluetooth.BluetoothAdapter;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
@@ -10,8 +9,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 import fr.isen.twinmx.R;
-import fr.isen.twinmx.Receivers.BluetoothIconReceiver;
 import fr.isen.twinmx.util.Bluetooth.TMBluetooth;
 import fr.isen.twinmx.util.Bluetooth.TMBluetoothManager;
 import fr.isen.twinmx.util.TMSnackBar;
@@ -24,8 +23,6 @@ public class BluetoothFragment extends Fragment {
     private View rootview;
 
     private CoordinatorLayout coordinatorLayout;
-
-
 
     @Nullable
     @Override
@@ -71,7 +68,8 @@ public class BluetoothFragment extends Fragment {
                 .show();
     }
 
-
-
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
 
 }
