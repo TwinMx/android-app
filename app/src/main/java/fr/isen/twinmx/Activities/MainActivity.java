@@ -2,10 +2,15 @@ package fr.isen.twinmx.activities;
 
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.bluetooth.BluetoothAdapter;
+import android.content.BroadcastReceiver;
+import android.content.IntentFilter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-
+import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
@@ -22,6 +27,8 @@ import fr.isen.twinmx.fragments.HelpFragment;
 import fr.isen.twinmx.fragments.HistoryFragment;
 import fr.isen.twinmx.fragments.SettingsFragment;
 import fr.isen.twinmx.R;
+import fr.isen.twinmx.Receivers.BluetoothIconReceiver;
+import fr.isen.twinmx.util.Bluetooth.TMBluetoothManager;
 import fr.isen.twinmx.util.TMBottomNavigation;
 
 import io.realm.Realm;
@@ -30,6 +37,7 @@ import io.realm.RealmConfiguration;
 import fr.isen.twinmx.model.History;
 import fr.isen.twinmx.ui.listeners.ClickListener;
 
+
 public class MainActivity extends AppCompatActivity implements TMBottomNavigation.THBottomNavigationCallback, ClickListener {
 
     @BindView(R.id.toolbar)
@@ -37,6 +45,19 @@ public class MainActivity extends AppCompatActivity implements TMBottomNavigatio
 
     @BindView(R.id.bottom_navigation)
     AHBottomNavigation navigation;
+
+    @BindView(R.id.bluetoothIcon)
+    ImageView bluetoothIcon;
+
+    @BindView(R.id.view_pager)
+    ViewPager viewPager;
+
+    @BindView(R.id.bluetoothProgressIcon)
+    ProgressBar bluetoothProgressBar;
+
+    private BroadcastReceiver bluetoothIconReceiver;
+
+    private TMBluetoothManager bluetoothManager; //Keep a pointer to avoid GC
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +73,13 @@ public class MainActivity extends AppCompatActivity implements TMBottomNavigatio
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
+        this.bluetoothManager = TMBluetoothManager.makeInstance(this);
+        this.bluetoothIconReceiver = new BluetoothIconReceiver(bluetoothIcon, bluetoothProgressBar, viewPager);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
         //instantiate the realm and do migration (compulsory)
         final RealmConfiguration configuration = new RealmConfiguration.Builder(this)
                 .name("TwinMax")
@@ -62,6 +90,19 @@ public class MainActivity extends AppCompatActivity implements TMBottomNavigatio
         RealmHelper.setRealm(Realm.getInstance(configuration));
 
         this.launchFragment(new BluetoothFragment());
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        this.registerReceiver(bluetoothIconReceiver, new IntentFilter(BluetoothIconReceiver.ACTION));
+        this.registerReceiver(bluetoothIconReceiver, new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED));
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        this.unregisterReceiver(bluetoothIconReceiver);
     }
 
     @Override
@@ -96,5 +137,11 @@ public class MainActivity extends AppCompatActivity implements TMBottomNavigatio
     @Override
     public void onItemClick(History history) {
         Toast.makeText(this, history.getName(), Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        TMBluetoothManager.getInstance().getBluetooth().stop();
     }
 }

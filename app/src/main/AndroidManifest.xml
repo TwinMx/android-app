@@ -3,6 +3,7 @@
     package="fr.isen.twinmx">
 
     <uses-permission android:name="android.permission.BLUETOOTH"/>
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
 
     <application
         android:allowBackup="true"
@@ -23,5 +24,6 @@
         <activity android:name=".activities.MainActivity">
 
         </activity>
+
     </application>
 </manifest>
