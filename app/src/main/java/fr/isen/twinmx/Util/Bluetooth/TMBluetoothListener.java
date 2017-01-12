@@ -54,8 +54,11 @@ public class TMBluetoothListener implements SmoothBluetooth.Listener {
 
     @Override
     public void onConnectionFailed(Device device) {
-        Log.d("onConFailed", device.getName());
-        BluetoothIconReceiver.sendStatusError(String.format(TMApplication.getContext().getResources().getString(R.string.connection_failed_to),device.getName()));
+        if (device != null)
+        {
+            Log.d("onConFailed", device.getName());
+            BluetoothIconReceiver.sendStatusError(String.format(TMApplication.getContext().getResources().getString(R.string.connection_failed_to),device.getName()));
+        }
     }
 
     @Override
