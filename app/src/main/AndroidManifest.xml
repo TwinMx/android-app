@@ -3,6 +3,7 @@
     package="fr.isen.twinmx">
 
     <uses-permission android:name="android.permission.BLUETOOTH"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
     <application
         android:allowBackup="true"
@@ -21,6 +22,10 @@
 
 
         <activity android:name=".activities.MainActivity">
+
+        </activity>
+
+        <activity android:name=".activities.MotoFormActivity">
 
         </activity>
     </application>

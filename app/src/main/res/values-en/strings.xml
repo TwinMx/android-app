@@ -21,4 +21,7 @@
     <string name="form_notes">Notes</string>
     <string name="form_save">Save</string>
     <string name="form_cancel">Cancel</string>
+    <string name="create">Create</string>
+    <string name="moto_name">Moto\'s name</string>
+    <string name="no_photo_selected">No image selected</string>
 </resources>

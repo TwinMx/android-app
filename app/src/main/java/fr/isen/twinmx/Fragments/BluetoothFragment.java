@@ -52,13 +52,5 @@ public class BluetoothFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        boolean wrapInScrollView = true;
-        new MaterialDialog.Builder(this.getActivity())
-                .title(R.string.bnav_acquisition)
-                .customView(R.layout.custom_form, wrapInScrollView)
-                .positiveText(R.string.form_save)
-                .negativeText(R.string.form_cancel)
-                .show();
     }
 }

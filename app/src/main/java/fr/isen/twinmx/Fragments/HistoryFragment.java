@@ -158,14 +158,7 @@ public class HistoryFragment extends Fragment implements MotoListener.OnCreateMo
     // On Floating Action Button click
     @Override
     public void onClick(View view) {
-        MotoRepository rep = MotoRepository.getInstance();
-
-        try {
-            rep.create(new Moto("NewMoto"+Moto.getIndex()));
-        } catch (RepositoryException e) {
-            e.printStackTrace();
-        }
-
-        /// --> startActivity MotoFormActivity.class
+        Intent intent = new Intent(this.getActivity(), MotoFormActivity.class);
+        startActivity(intent);
     }
 }
