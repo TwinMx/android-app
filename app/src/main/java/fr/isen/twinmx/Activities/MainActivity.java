@@ -79,7 +79,7 @@ public class MainActivity extends AppCompatActivity implements TMBottomNavigatio
                 this.launchFragment(new BluetoothFragment(), false);
                 break;
             case 1:
-                this.launchFragment(HistoryFragment.newInstance(this.floatingActionButton), true);
+                this.launchFragment(HistoryFragment.newInstance(this, this.floatingActionButton), true);
                 break;
             case 2:
                 this.launchFragment(new HelpFragment(), false);
