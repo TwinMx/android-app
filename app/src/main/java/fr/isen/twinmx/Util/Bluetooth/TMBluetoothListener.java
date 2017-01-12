@@ -88,6 +88,6 @@ public class TMBluetoothListener implements SmoothBluetooth.Listener {
 
     @Override
     public void onDataReceived(int data) {
-        Log.d("Data", ((Integer)data).toString());
+        this.bluetooth.onDataReceived(data);
     }
 }
