@@ -3,13 +3,13 @@ package fr.isen.twinmx.model;
 /**
  * Created by Clement on 12/01/2017.
  */
-public class RawMeasure {
+public class RawData {
     private Integer msb;
     private Integer lsb;
 
     private static double CONVERSION_FACTOR = 1.837;
 
-    public RawMeasure() {
+    public RawData() {
     }
 
     private boolean isCorrectFrame(int b) {

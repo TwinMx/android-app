@@ -5,9 +5,14 @@ import android.support.design.widget.CoordinatorLayout;
 import android.util.Log;
 import android.view.View;
 
+import com.github.mikephil.charting.data.Entry;
+import com.mikepenz.materialize.color.Material;
+
+import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
+import fr.isen.twinmx.model.MeasuresList;
 import fr.isen.twinmx.util.Bluetooth.TMBluetooth;
 import fr.isen.twinmx.util.Bluetooth.TMBluetoothManager;
 import fr.isen.twinmx.util.TMSnackBar;
@@ -24,6 +29,10 @@ public abstract class BluetoothFragment extends Fragment implements Observer {
     private static boolean isFirstInit = true;
 
     public abstract CoordinatorLayout getCoordinatorLayout();
+
+    public BluetoothFragment() {
+        initObserver();
+    }
 
     private void initObserver() {
         if (tmBluetoothManager == null || tmBluetooth == null) {
@@ -61,15 +70,13 @@ public abstract class BluetoothFragment extends Fragment implements Observer {
 
     public void onResume() {
         super.onResume();
-        initObserver();
+
         checkBluetothState();
         BluetoothFragment.isFirstInit = false;
     }
 
-    @Override
-    public void update(Observable observable, Object o) {
-        int size = this.tmBluetoothManager.getDataManager().getData().size();
-        Log.d("Observer", "size: "+size);
+    public MeasuresList getMeasuresList() {
+        return this.tmBluetoothManager.getDataManager().getData();
     }
 
 }

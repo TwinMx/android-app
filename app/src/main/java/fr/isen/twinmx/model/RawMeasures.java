@@ -3,13 +3,13 @@ package fr.isen.twinmx.model;
 /**
  * Created by Clement on 12/01/2017.
  */
-public class Measures {
+public class RawMeasures {
 
     private int capacity;
     private int size;
     private int[] array;
 
-    public Measures(int capacity) {
+    public RawMeasures(int capacity) {
         this.array = new int[capacity];
         this.capacity = capacity;
         this.size = 0;

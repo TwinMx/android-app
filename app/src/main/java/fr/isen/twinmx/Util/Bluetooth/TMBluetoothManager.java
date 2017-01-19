@@ -67,7 +67,7 @@ public class TMBluetoothManager {
     }
 
     public void hideBluetoothDevicesDialog() {
-        this.bluetoothDevicesDialog.hide();
+        this.bluetoothDevicesDialog.dismiss();
         this.bluetoothDevicesDialog = null;
     }
 
