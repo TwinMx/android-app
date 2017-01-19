@@ -50,11 +50,9 @@ public class MotoHolder extends RecyclerView.ViewHolder implements View.OnClickL
     }
 
     public void bind(Moto moto) {
-        DateFormat df = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss", Locale.getDefault());
-
         this.moto = moto;
         this.name.setText(moto.getName());
-        this.date.setText(df.format(moto.getDate()));
+        this.date.setText(moto.getDate());
         Picasso.with(TMApplication.getContext())
                 .load(moto.getImage())
                 .transform(new CircleTransformation())
