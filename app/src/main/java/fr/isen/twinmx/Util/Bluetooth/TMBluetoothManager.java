@@ -7,6 +7,7 @@ import android.content.Intent;
 import com.afollestad.materialdialogs.MaterialDialog;
 
 import java.util.List;
+import java.util.Observable;
 
 import fr.isen.twinmx.R;
 import fr.isen.twinmx.Receivers.BluetoothIconReceiver;
@@ -22,8 +23,10 @@ import io.palaima.smoothbluetooth.SmoothBluetooth;
 public class TMBluetoothManager {
 
     private final Activity activity;
+    private final TMBluetoothDataManager dataManager;
     private MaterialDialog bluetoothDevicesDialog;
     private TMBluetooth bluetooth;
+    @SuppressWarnings("FieldCanBeLocal")
     private TMBluetoothListener bluetoothListener; //Keep a pointer to avoid GC
 
     private final static int REQUEST_ENABLE_BT = 1;
@@ -40,7 +43,8 @@ public class TMBluetoothManager {
     private TMBluetoothManager(Activity activity) {
         this.activity = activity;
         this.bluetoothListener = new TMBluetoothListener();
-        this.bluetooth = new TMBluetooth(this.bluetoothListener);
+        this.dataManager = new TMBluetoothDataManager();
+        this.bluetooth = new TMBluetooth(this.dataManager, this.bluetoothListener);
     }
 
 
@@ -75,5 +79,11 @@ public class TMBluetoothManager {
         Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
         this.activity.startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
         TMBluetoothManager.getInstance().getBluetooth().tryConnection();
+    }
+
+
+
+    public TMBluetoothDataManager getDataManager() {
+        return dataManager;
     }
 }

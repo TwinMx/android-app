@@ -17,16 +17,16 @@ public class TMBluetooth extends SmoothBluetooth {
     private static final ConnectionTo connectionTo = ConnectionTo.OTHER_DEVICE;
     private static final Connection connectionType = Connection.INSECURE;
 
-    private static int HEADER = 128;
+    private final TMBluetoothDataManager dataManager;
 
     private Device connectedDevice = null;
 
-    private RawMeasure currentRawMeasure = new RawMeasure();
-    private Measures measures = new Measures(4);
 
 
-    public TMBluetooth(TMBluetoothListener listener) {
+
+    public TMBluetooth(TMBluetoothDataManager dataManager, TMBluetoothListener listener) {
         super(TMApplication.getContext(), connectionTo, connectionType, listener);
+        this.dataManager = dataManager;
         listener.setBluetooth(this);
     }
 
@@ -42,26 +42,8 @@ public class TMBluetooth extends SmoothBluetooth {
     }
 
     public void onDataReceived(int data) {
-        if (data == HEADER) {
-            this.measures.clear();
-            return;
-        }
-
-        this.currentRawMeasure.add(data);
-        if (this.currentRawMeasure.isComplete()) {
-            onMeasureReceived(this.currentRawMeasure.popMeasure());
-        }
+        this.dataManager.addRawData(data);
     }
 
-    public void onMeasureReceived(double measure) {
-        this.measures.add(measure);
-        if (this.measures.isComplete()) {
-            String values = "";
-            for(Integer v : this.measures.getValues()) {
-                values += v.toString() + " ";
-            }
-            Log.d("Measure", values);
-            this.measures.clear();
-        }
-    }
+
 }

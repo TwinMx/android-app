@@ -16,7 +16,7 @@ public class Measures {
     }
 
     public boolean add(double value) {
-        add((int)value);
+        return add((int)value);
     }
 
     public boolean add(int value) {

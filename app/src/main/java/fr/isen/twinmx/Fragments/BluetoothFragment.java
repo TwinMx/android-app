@@ -6,9 +6,13 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import java.util.Observable;
+import java.util.Observer;
 
 import fr.isen.twinmx.R;
 import fr.isen.twinmx.util.Bluetooth.TMBluetooth;
@@ -18,11 +22,13 @@ import fr.isen.twinmx.util.TMSnackBar;
 /**
  * Created by pierredfc.
  */
-public class BluetoothFragment extends Fragment {
+public class BluetoothFragment extends Fragment implements Observer {
 
     private View rootview;
-
     private CoordinatorLayout coordinatorLayout;
+
+    private TMBluetoothManager tmBluetoothManager;
+    private TMBluetooth tmBluetooth;
 
     @Nullable
     @Override
@@ -30,6 +36,10 @@ public class BluetoothFragment extends Fragment {
         this.rootview = inflater.inflate(R.layout.fragment_bluetooth, container, false);
 
         ((AppCompatActivity) this.getActivity()).getSupportActionBar().setTitle(getString(R.string.bnav_acquisition));
+
+        tmBluetoothManager = TMBluetoothManager.getInstance();
+        tmBluetooth = tmBluetoothManager.getBluetooth();
+        tmBluetoothManager.getDataManager().addObserver(this);
 
         return this.rootview;
     }
@@ -45,9 +55,8 @@ public class BluetoothFragment extends Fragment {
                 promptEnableBluetooth(); //Prompt to enable bluetooth. Once bluetooth is enabled, displays list of devices
             }
             else { //Display list of devices
-                final TMBluetooth bt = TMBluetoothManager.getInstance().getBluetooth();
-                if (!bt.isConnected()) {
-                    bt.tryConnection();
+                if (!tmBluetooth.isConnected()) {
+                    tmBluetooth.tryConnection();
                 }
             }
         }
@@ -72,4 +81,9 @@ public class BluetoothFragment extends Fragment {
         super.onCreate(savedInstanceState);
     }
 
+    @Override
+    public void update(Observable observable, Object o) {
+        int size = this.tmBluetoothManager.getDataManager().getData().size();
+        Log.d("Observer", "size: "+size);
+    }
 }
