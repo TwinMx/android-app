@@ -25,4 +25,8 @@
     <string name="create">Créer</string>
     <string name="moto_name">Nom de la moto</string>
     <string name="no_photo_selected">Pas de photo sélectionnée</string>
+
+    <!-- Moto detail -->
+    <string name="last_acquisitions">Dernières acquisitions</string>
+    <string name="menu_modify">Modifier</string>
 </resources>

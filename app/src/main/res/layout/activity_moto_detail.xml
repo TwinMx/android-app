@@ -16,7 +16,33 @@
         app:titleTextColor="@color/white"
         android:elevation="4dp" />
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_marginTop="?android:attr/actionBarSize">
 
+        <ImageView
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_margin="10dp"
+            android:id="@+id/moto_detail_photo"
+            android:layout_gravity="center_horizontal"/>
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAllCaps="true"
+            android:padding="10dp"
+            android:textSize="12sp"
+            android:textColor="@color/textPrimary"
+            android:text="@string/last_acquisitions"/>
+
+        <android.support.v7.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/history_recycler">
+        </android.support.v7.widget.RecyclerView>
+    </LinearLayout>
 
 </android.support.design.widget.CoordinatorLayout>
