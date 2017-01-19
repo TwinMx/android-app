@@ -24,6 +24,7 @@ public class Moto extends RealmObject implements AutoIncrement {
     private String name;
     private String date;
     private String image;
+
     private RealmList<Maintenance> maintenances;
 
     public Moto() {

@@ -2,6 +2,7 @@ package fr.isen.twinmx.activities;
 
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -18,11 +19,13 @@ import butterknife.ButterKnife;
 import fr.isen.twinmx.database.RealmHelper;
 import fr.isen.twinmx.database.TMRealmModule;
 
+import fr.isen.twinmx.database.model.Moto;
 import fr.isen.twinmx.fragments.BluetoothFragment;
 import fr.isen.twinmx.fragments.HelpFragment;
 import fr.isen.twinmx.fragments.HistoryFragment;
 import fr.isen.twinmx.fragments.SettingsFragment;
 import fr.isen.twinmx.R;
+import fr.isen.twinmx.listeners.OnMotoHistoryClickListener;
 import fr.isen.twinmx.util.TMBottomNavigation;
 
 import io.realm.Realm;
@@ -31,7 +34,7 @@ import io.realm.RealmConfiguration;
 import fr.isen.twinmx.model.History;
 import fr.isen.twinmx.ui.listeners.ClickListener;
 
-public class MainActivity extends AppCompatActivity implements TMBottomNavigation.THBottomNavigationCallback, ClickListener {
+public class MainActivity extends AppCompatActivity implements TMBottomNavigation.THBottomNavigationCallback, ClickListener, OnMotoHistoryClickListener {
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -105,5 +108,12 @@ public class MainActivity extends AppCompatActivity implements TMBottomNavigatio
     @Override
     public void onItemClick(History history) {
         Toast.makeText(this, history.getName(), Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onMotoHistoryClick(Moto moto) {
+        Intent intent = new Intent(this, MotoDetailActivity.class);
+        intent.putExtra("motoID", moto.getId());
+        startActivity(intent);
     }
 }

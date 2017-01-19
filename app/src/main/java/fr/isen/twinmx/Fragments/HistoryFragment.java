@@ -44,7 +44,7 @@ import io.realm.RealmResults;
  * Created by pierredfc.
  */
 
-public class HistoryFragment extends Fragment implements MotoListener.OnCreateMotoCallback, RequestListener, View.OnClickListener, OnMotoHistoryClickListener {
+public class HistoryFragment extends Fragment implements MotoListener.OnCreateMotoCallback, RequestListener, View.OnClickListener {
 
     private View rootview;
 
@@ -89,7 +89,7 @@ public class HistoryFragment extends Fragment implements MotoListener.OnCreateMo
         this.historyView.setHasFixedSize(true);
         final LinearLayoutManager layoutManager = new LinearLayoutManager(TMApplication.getContext());
         this.historyView.setLayoutManager(layoutManager);
-        this.historyView.setAdapter(this.motosAdapter = new MotosAdapter(new ArrayList<Moto>(0), this));
+        this.historyView.setAdapter(this.motosAdapter = new MotosAdapter(new ArrayList<Moto>(0), (MainActivity) this.getActivity()));
         return this.rootview;
     }
 
@@ -154,10 +154,5 @@ public class HistoryFragment extends Fragment implements MotoListener.OnCreateMo
     public void onClick(View view) {
         Intent intent = new Intent(this.getActivity(), MotoFormActivity.class);
         startActivity(intent);
-    }
-
-    @Override
-    public void onMotoHistoryClick(Moto moto) {
-        Toast.makeText(this.getActivity(), moto.getName(), Toast.LENGTH_SHORT).show();
     }
 }

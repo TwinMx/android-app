@@ -58,14 +58,13 @@ public abstract class Repository<T extends RealmObject> {
             T item = this.realm.copyToRealm(t);
             end();
             return item;
-        }
-        catch(Exception ex) {
+        } catch (Exception ex) {
             throw new RepositoryException("create", ex);
         }
     }
 
     private void generateId(AutoIncrement t) {
-        if (t.getId() == null) t.setId(this.getMaxId()+1);
+        if (t.getId() == null) t.setId(this.getMaxId() + 1);
     }
 
     public void createAsync(final T t) throws RepositoryException {
@@ -82,8 +81,7 @@ public abstract class Repository<T extends RealmObject> {
             begin();
             this.getRepository().findAll().deleteAllFromRealm();
             end();
-        }
-        catch(Exception ex) {
+        } catch (Exception ex) {
             throw new RepositoryException("deleteAll", ex);
         }
     }
@@ -103,7 +101,7 @@ public abstract class Repository<T extends RealmObject> {
             begin();
             t.deleteFromRealm();
             end();
-        } catch(Exception ex) {
+        } catch (Exception ex) {
             throw new RepositoryException("delete", ex);
         }
     }
@@ -136,5 +134,12 @@ public abstract class Repository<T extends RealmObject> {
         return results;
     }
 
+    public T findById(Long motoID) {
+        begin();
+        T result = getRepository().equalTo("id", motoID).findFirst();
+        end();
+
+        return result;
+    }
 
 }
