@@ -9,6 +9,10 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Locale;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import fr.isen.twinmx.R;
@@ -16,6 +20,7 @@ import fr.isen.twinmx.TMApplication;
 import fr.isen.twinmx.database.model.Moto;
 import fr.isen.twinmx.model.History;
 import fr.isen.twinmx.ui.listeners.ClickListener;
+import fr.isen.twinmx.util.CircleTransformation;
 
 /**
  * Created by Clement on 05/01/2017.
@@ -45,15 +50,16 @@ public class MotoHolder extends RecyclerView.ViewHolder implements View.OnClickL
     }
 
     public void bind(Moto moto) {
+        DateFormat df = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss", Locale.getDefault());
+
         this.moto = moto;
         this.name.setText(moto.getName());
-        this.date.setText(moto.getDate());
+        this.date.setText(df.format(moto.getDate()));
         Picasso.with(TMApplication.getContext())
                 .load(moto.getImage())
+                .transform(new CircleTransformation())
                 .placeholder(R.drawable.ic_motorcycle_black_24dp)
                 .into(this.image);
-
-
     }
 
     @Override

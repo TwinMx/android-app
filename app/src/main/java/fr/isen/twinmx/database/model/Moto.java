@@ -30,15 +30,21 @@ public class Moto extends RealmObject implements AutoIncrement {
         this.maintenances = new RealmList<>();
     }
 
-    public Moto(String name) {
-        this(name, new Date().toString());
+    public Moto(String name, String photo)
+    {
+        this(name, new Date().toString(), photo);
     }
 
-    public Moto(String name, String date)
+    public Moto(String name) {
+        this(name, new Date().toString(), null);
+    }
+
+    public Moto(String name, String date, String photo)
     {
         this();
         this.name = name;
         this.date = date;
+        this.image = photo;
     }
 
     public static int getIndex() {
