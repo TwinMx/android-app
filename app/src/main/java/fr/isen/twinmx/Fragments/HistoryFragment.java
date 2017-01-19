@@ -31,6 +31,7 @@ import fr.isen.twinmx.database.exceptions.RepositoryException;
 import fr.isen.twinmx.database.listeners.MotoListener;
 import fr.isen.twinmx.TMApplication;
 import fr.isen.twinmx.database.model.Moto;
+import fr.isen.twinmx.listeners.OnMotoHistoryClickListener;
 import fr.isen.twinmx.listeners.RequestListener;
 import fr.isen.twinmx.model.History;
 import fr.isen.twinmx.ui.adapters.HistoryAdapter;
@@ -43,7 +44,7 @@ import io.realm.RealmResults;
  * Created by pierredfc.
  */
 
-public class HistoryFragment extends Fragment implements MotoListener.OnCreateMotoCallback, RequestListener, View.OnClickListener {
+public class HistoryFragment extends Fragment implements MotoListener.OnCreateMotoCallback, RequestListener, View.OnClickListener, OnMotoHistoryClickListener {
 
     private View rootview;
 
@@ -57,6 +58,16 @@ public class HistoryFragment extends Fragment implements MotoListener.OnCreateMo
     private MotosAdapter motosAdapter;
     private RealmResults<Moto> motoFinder;
     private MainActivity activity;
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        if (savedInstanceState != null)
+        {
+            this.getActivity().findViewById(R.id.fab).setOnClickListener(this);
+        }
+    }
 
     public static HistoryFragment newInstance(MainActivity activity, FloatingActionButton fab) {
         HistoryFragment f = new HistoryFragment();
@@ -78,10 +89,9 @@ public class HistoryFragment extends Fragment implements MotoListener.OnCreateMo
         this.historyView.setHasFixedSize(true);
         final LinearLayoutManager layoutManager = new LinearLayoutManager(TMApplication.getContext());
         this.historyView.setLayoutManager(layoutManager);
-        this.historyView.setAdapter(this.motosAdapter = new MotosAdapter(new ArrayList<Moto>(0)));
+        this.historyView.setAdapter(this.motosAdapter = new MotosAdapter(new ArrayList<Moto>(0), this));
         return this.rootview;
     }
-
 
     @Override
     public void onResume() {
@@ -110,13 +120,13 @@ public class HistoryFragment extends Fragment implements MotoListener.OnCreateMo
     @Override
     public void onSuccess()
     {
-        Toast.makeText(this.getActivity(), "onSuccess", Toast.LENGTH_SHORT).show();
+
     }
 
     @Override
     public void onFailure()
     {
-        Toast.makeText(this.getActivity(), "onFailure", Toast.LENGTH_SHORT).show();
+
     }
 
     @Override
@@ -139,26 +149,15 @@ public class HistoryFragment extends Fragment implements MotoListener.OnCreateMo
         }
     }
 
-    public void demo(MotoRepository repository) {
-        try {
-            repository.deleteAll();
-        } catch (RepositoryException e) {
-            e.printStackTrace();
-        }
-
-        for (int i = 1; i < 40; i++) {
-            try {
-                repository.create(new Moto("Moto"+Moto.getIndex()));
-            } catch (RepositoryException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
     // On Floating Action Button click
     @Override
     public void onClick(View view) {
         Intent intent = new Intent(this.getActivity(), MotoFormActivity.class);
         startActivity(intent);
+    }
+
+    @Override
+    public void onMotoHistoryClick(Moto moto) {
+        Toast.makeText(this.getActivity(), moto.getName(), Toast.LENGTH_SHORT).show();
     }
 }

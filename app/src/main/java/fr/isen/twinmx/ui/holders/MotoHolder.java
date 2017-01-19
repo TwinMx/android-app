@@ -2,24 +2,18 @@ package fr.isen.twinmx.ui.holders;
 
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Locale;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import fr.isen.twinmx.R;
 import fr.isen.twinmx.TMApplication;
 import fr.isen.twinmx.database.model.Moto;
-import fr.isen.twinmx.model.History;
-import fr.isen.twinmx.ui.listeners.ClickListener;
+import fr.isen.twinmx.listeners.OnMotoHistoryClickListener;
 import fr.isen.twinmx.util.CircleTransformation;
 
 /**
@@ -40,11 +34,13 @@ public class MotoHolder extends RecyclerView.ViewHolder implements View.OnClickL
     @BindView(R.id.history_date)
     TextView date;
 
-
     private Moto moto;
 
-    public MotoHolder(View itemView) {
+    private OnMotoHistoryClickListener callback;
+
+    public MotoHolder(View itemView, OnMotoHistoryClickListener callback) {
         super(itemView);
+        this.callback = callback;
         itemView.setOnClickListener(this);
         ButterKnife.bind(this, itemView);
     }
@@ -63,6 +59,6 @@ public class MotoHolder extends RecyclerView.ViewHolder implements View.OnClickL
     @Override
     public void onClick(View view) {
         if (this.moto != null)
-            Log.d("MotoHolder", moto.getName());
+            this.callback.onMotoHistoryClick(moto);
     }
 }

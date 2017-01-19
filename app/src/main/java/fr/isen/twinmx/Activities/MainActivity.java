@@ -3,7 +3,6 @@ package fr.isen.twinmx.activities;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.support.design.widget.FloatingActionButton;
-import android.support.transition.Visibility;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -17,7 +16,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import fr.isen.twinmx.database.RealmHelper;
-import fr.isen.twinmx.database.TMMigration;
 import fr.isen.twinmx.database.TMRealmModule;
 
 import fr.isen.twinmx.fragments.BluetoothFragment;
@@ -67,7 +65,10 @@ public class MainActivity extends AppCompatActivity implements TMBottomNavigatio
                 .build();
         RealmHelper.setRealm(Realm.getInstance(configuration));
 
-        this.launchFragment(new BluetoothFragment(), false);
+        if (savedInstanceState == null)
+        {
+            this.launchFragment(new BluetoothFragment(), false);
+        }
     }
 
     @Override
