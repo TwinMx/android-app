@@ -47,7 +47,7 @@ public class TMBottomNavigation implements AHBottomNavigation.OnTabSelectedListe
 
         this.navigation.setAccentColor(Color.parseColor("#FF5722"));
 
-        this.navigation.setForceTitlesDisplay(true);
+        this.navigation.setTitleState(AHBottomNavigation.TitleState.ALWAYS_SHOW);
     }
 
     @Override

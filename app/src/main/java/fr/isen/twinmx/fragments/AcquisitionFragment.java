@@ -18,7 +18,7 @@ import fr.isen.twinmx.util.TMSnackBar;
 /**
  * Created by pierredfc.
  */
-public class BluetoothFragment extends Fragment {
+public class AcquisitionFragment extends Fragment {
 
     private View rootview;
 
@@ -34,7 +34,6 @@ public class BluetoothFragment extends Fragment {
         return this.rootview;
     }
 
-    @Override
     public void onResume() {
         super.onResume();
 
@@ -51,8 +50,6 @@ public class BluetoothFragment extends Fragment {
                 }
             }
         }
-
-
     }
 
     public void promptEnableBluetooth() {

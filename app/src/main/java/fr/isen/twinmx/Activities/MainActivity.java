@@ -14,6 +14,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
+import com.github.mikephil.charting.data.LineData;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -22,11 +23,13 @@ import fr.isen.twinmx.database.RealmHelper;
 import fr.isen.twinmx.database.TMMigration;
 import fr.isen.twinmx.database.TMRealmModule;
 
-import fr.isen.twinmx.fragments.BluetoothFragment;
+import fr.isen.twinmx.fragments.ChartFragment;
 import fr.isen.twinmx.fragments.HelpFragment;
 import fr.isen.twinmx.fragments.HistoryFragment;
-import fr.isen.twinmx.fragments.SettingsFragment;
 import fr.isen.twinmx.R;
+
+import fr.isen.twinmx.fragments.SettingsFragment;
+
 import fr.isen.twinmx.Receivers.BluetoothIconReceiver;
 import fr.isen.twinmx.util.Bluetooth.TMBluetoothManager;
 import fr.isen.twinmx.util.TMBottomNavigation;
@@ -45,6 +48,8 @@ public class MainActivity extends AppCompatActivity implements TMBottomNavigatio
 
     @BindView(R.id.bottom_navigation)
     AHBottomNavigation navigation;
+
+    private static RealmConfiguration realmConfiguration;
 
     @BindView(R.id.bluetoothIcon)
     ImageView bluetoothIcon;
@@ -67,7 +72,7 @@ public class MainActivity extends AppCompatActivity implements TMBottomNavigatio
         ButterKnife.bind(this);
 
         this.setSupportActionBar(this.toolbar);
-        this.setTitle(R.string.app_name);
+        this.setTitle(R.string.bnav_acquisition);
 
         final TMBottomNavigation nav = new TMBottomNavigation(this.navigation, savedInstanceState, this, this.toolbar);
 
@@ -81,15 +86,20 @@ public class MainActivity extends AppCompatActivity implements TMBottomNavigatio
     protected void onStart() {
         super.onStart();
         //instantiate the realm and do migration (compulsory)
-        final RealmConfiguration configuration = new RealmConfiguration.Builder(this)
-                .name("TwinMax")
-                .schemaVersion(0)
-                .migration(new TMMigration())
-                .modules(new TMRealmModule())
-                .build();
-        RealmHelper.setRealm(Realm.getInstance(configuration));
+        if (this.realmConfiguration == null)
+        {
+            this.realmConfiguration = new RealmConfiguration.Builder(this)
+                    .name("TwinMax")
+                    .schemaVersion(0)
+                    .migration(new TMMigration())
+                    .modules(new TMRealmModule())
+                    .build();
+        }
 
-        this.launchFragment(new BluetoothFragment());
+        RealmHelper.setRealm(Realm.getInstance(this.realmConfiguration));
+
+        final ChartFragment chartFragment = ChartFragment.newInstance(this, new LineData());
+        this.launchFragment(chartFragment);
     }
 
     @Override
@@ -110,7 +120,8 @@ public class MainActivity extends AppCompatActivity implements TMBottomNavigatio
         switch (position)
         {
             case 0:
-                this.launchFragment(new BluetoothFragment());
+                final ChartFragment chartFragment = ChartFragment.newInstance(this, new LineData());
+                this.launchFragment(chartFragment);
                 break;
             case 1:
                 this.launchFragment(new HistoryFragment());
