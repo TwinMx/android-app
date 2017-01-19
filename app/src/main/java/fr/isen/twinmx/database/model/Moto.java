@@ -1,5 +1,8 @@
 package fr.isen.twinmx.database.model;
 
+import android.util.Log;
+
+import java.text.DateFormat;
 import java.util.Date;
 
 import fr.isen.twinmx.database.interfaces.AutoIncrement;
@@ -33,11 +36,11 @@ public class Moto extends RealmObject implements AutoIncrement {
 
     public Moto(String name, String photo)
     {
-        this(name, new Date().toString(), photo);
+        this(name, DateFormat.getDateTimeInstance().format(new Date()), photo);
     }
 
     public Moto(String name) {
-        this(name, new Date().toString(), null);
+        this(name, DateFormat.getDateTimeInstance().format(new Date()), null);
     }
 
     public Moto(String name, String date, String photo)

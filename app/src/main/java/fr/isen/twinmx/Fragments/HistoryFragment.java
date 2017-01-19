@@ -2,12 +2,19 @@ package fr.isen.twinmx.fragments;
 
 import android.app.Fragment;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.RectF;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -59,6 +66,8 @@ public class HistoryFragment extends Fragment implements MotoListener.OnCreateMo
     private RealmResults<Moto> motoFinder;
     private MainActivity activity;
 
+    private Paint p = new Paint();
+
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -90,6 +99,7 @@ public class HistoryFragment extends Fragment implements MotoListener.OnCreateMo
         final LinearLayoutManager layoutManager = new LinearLayoutManager(TMApplication.getContext());
         this.historyView.setLayoutManager(layoutManager);
         this.historyView.setAdapter(this.motosAdapter = new MotosAdapter(new ArrayList<Moto>(0), (MainActivity) this.getActivity()));
+        this.initSwipe();
         return this.rootview;
     }
 
@@ -136,6 +146,7 @@ public class HistoryFragment extends Fragment implements MotoListener.OnCreateMo
         {
             this.historyAdapter = new HistoryAdapter(results, (MainActivity) getActivity());
             this.historyView.setAdapter(this.historyAdapter);
+            this.noHistoryView.setVisibility(View.GONE);
         }
         else
         {
@@ -147,6 +158,48 @@ public class HistoryFragment extends Fragment implements MotoListener.OnCreateMo
         if (motos != null && !motos.isEmpty()) {
             this.motosAdapter.setItems(motos);
         }
+    }
+
+    private void initSwipe(){
+        ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+                int position = viewHolder.getAdapterPosition();
+
+                if (direction == ItemTouchHelper.LEFT){
+                    motosAdapter.removeItem(position);
+                }
+            }
+
+            @Override
+            public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+                Bitmap icon;
+                if(actionState == ItemTouchHelper.ACTION_STATE_SWIPE){
+
+                    View itemView = viewHolder.itemView;
+                    float height = (float) itemView.getBottom() - (float) itemView.getTop();
+                    float width = height / 3;
+
+                    if(dX <= 0){
+                        p.setColor(Color.parseColor("#D32F2F"));
+                        RectF background = new RectF((float) itemView.getRight() + dX, (float) itemView.getTop(),(float) itemView.getRight(), (float) itemView.getBottom());
+                        c.drawRect(background,p);
+                        icon = BitmapFactory.decodeResource(getResources(), R.drawable.ic_delete_white_24dp);
+                        RectF icon_dest = new RectF((float) itemView.getRight() - 2*width ,(float) itemView.getTop() + width,(float) itemView.getRight() - width,(float)itemView.getBottom() - width);
+                        c.drawBitmap(icon,null,icon_dest,p);
+                    }
+                }
+                super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+            }
+        };
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
+        itemTouchHelper.attachToRecyclerView(this.historyView);
     }
 
     // On Floating Action Button click

@@ -2,6 +2,7 @@ package fr.isen.twinmx.ui.adapters;
 
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +10,8 @@ import android.view.ViewGroup;
 import java.util.List;
 
 import fr.isen.twinmx.R;
+import fr.isen.twinmx.database.MotoRepository;
+import fr.isen.twinmx.database.exceptions.RepositoryException;
 import fr.isen.twinmx.database.model.Moto;
 import fr.isen.twinmx.fragments.HistoryFragment;
 import fr.isen.twinmx.listeners.OnMotoHistoryClickListener;
@@ -19,7 +22,6 @@ import fr.isen.twinmx.ui.holders.MotoHolder;
  */
 
 public class MotosAdapter extends RecyclerView.Adapter<MotoHolder> {
-
 
     private List<Moto> items;
 
@@ -50,6 +52,18 @@ public class MotosAdapter extends RecyclerView.Adapter<MotoHolder> {
         if (position < this.getItemCount()) {
             holder.bind(items.get(position));
         }
+    }
+
+    public void removeItem(int position)
+    {
+        try {
+            MotoRepository.getInstance().delete(this.items.get(position));
+        } catch (RepositoryException e) {
+            Log.d("[MA][removeItem]", "Can't remove moto");
+        }
+
+        notifyItemRemoved(position);
+        notifyItemRangeChanged(position, this.items.size());
     }
 
     @Override
