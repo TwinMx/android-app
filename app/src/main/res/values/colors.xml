@@ -12,10 +12,18 @@
 
     <color name="white">#FFFFFFFF</color>
 
-
     <!-- Chart colors -->
     <color name="chartRed">#F44336</color>
     <color name="chartGreen">#4CAF50</color>
     <color name="chartBlue">#2196F3</color>
     <color name="chartBrown">#795548</color>
+
+    <!-- Snackbar -->
+    <color name="blue500">#2196F3</color>
+    <color name="blue900">#0D47A1</color>
+    <color name="ripple">#E0E0E0</color>
+    <color name="green500">#4CAF50</color>
+    <color name="red500">#F44336</color>
+    <color name="grey500">#9E9E9E</color>
 </resources>
+
