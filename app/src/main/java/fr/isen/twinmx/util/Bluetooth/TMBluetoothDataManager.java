@@ -1,5 +1,7 @@
 package fr.isen.twinmx.util.Bluetooth;
 
+import android.util.Log;
+
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Observable;
@@ -67,7 +69,7 @@ public class TMBluetoothDataManager extends Observable {
         notifyDataReceived(items);
     }
 
-    private synchronized void notifyDataReceived(int[] values) {
+    private void notifyDataReceived(int[] values) {
         this.setChanged();
         this.notifyObservers();
     }

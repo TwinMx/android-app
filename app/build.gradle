@@ -34,7 +34,7 @@ dependencies {
     apt 'com.jakewharton:butterknife-compiler:8.2.1'
 
     //Bottom navigation bar
-    compile 'com.aurelhubert:ahbottomnavigation:1.4.0'
+    compile 'com.aurelhubert:ahbottomnavigation:2.0.3'
     //Bluetooth
     compile 'io.palaima:smoothbluetooth:0.1.0'
 
@@ -44,6 +44,8 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:24.2.1'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.afollestad.material-dialogs:core:0.9.0.2'
+    compile 'com.github.PhilJay:MPAndroidChart:v3.0.1'
+    compile 'com.github.bmarrdev:android-DecoView-charting:v1.2'
 }
 
 buildscript {

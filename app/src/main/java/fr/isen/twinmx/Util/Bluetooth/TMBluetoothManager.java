@@ -81,7 +81,21 @@ public class TMBluetoothManager {
         TMBluetoothManager.getInstance().getBluetooth().tryConnection();
     }
 
+    public boolean isBluetoothEnabled() {
+        final BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
+        if (adapter != null) {
+            return adapter.isEnabled();
+        }
+        return false;
+    }
 
+    public boolean isBluetoothConnectedToDevice() {
+        return this.bluetooth.isConnected();
+    }
+
+    public void connectToKnownDevicesOrScanDevices() {
+        this.bluetooth.tryConnection();
+    }
 
     public TMBluetoothDataManager getDataManager() {
         return dataManager;

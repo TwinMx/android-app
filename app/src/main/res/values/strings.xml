@@ -26,4 +26,9 @@
     <string name="form_notes">Notes</string>
     <string name="form_save">Sauvegarder</string>
     <string name="form_cancel">Annuler</string>
+
+    <string name="pressure">Pression (mBar)</string>
+    <string name="cylinder">Cylindre %d</string>
+
+    <string name="save">Enregistrer</string>
 </resources>

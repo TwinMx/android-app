@@ -22,7 +22,7 @@ import fr.isen.twinmx.util.TMSnackBar;
 /**
  * Created by pierredfc.
  */
-public class BluetoothFragment extends Fragment implements Observer {
+public class AcquisitionFragment extends Fragment implements Observer {
 
     private View rootview;
     private CoordinatorLayout coordinatorLayout;
@@ -44,23 +44,7 @@ public class BluetoothFragment extends Fragment implements Observer {
         return this.rootview;
     }
 
-    @Override
     public void onResume() {
-        super.onResume();
-
-        final BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-        if (bluetoothAdapter != null) {
-            // Device supports Bluetooth
-            if (!bluetoothAdapter.isEnabled()) {
-                promptEnableBluetooth(); //Prompt to enable bluetooth. Once bluetooth is enabled, displays list of devices
-            }
-            else { //Display list of devices
-                if (!tmBluetooth.isConnected()) {
-                    tmBluetooth.tryConnection();
-                }
-            }
-        }
-
 
     }
 
