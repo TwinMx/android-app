@@ -22,7 +22,7 @@ public class Maintenance extends RealmObject implements AutoIncrement {
     private String note;
     private RealmList<RealmMeasure> measures;
 
-    public Maintenance() { }
+    public Maintenance() {}
 
     public Maintenance(String  date, String note)
     {

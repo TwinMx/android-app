@@ -15,14 +15,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,15 +30,9 @@ import fr.isen.twinmx.activities.MainActivity;
 import fr.isen.twinmx.R;
 import fr.isen.twinmx.activities.MotoFormActivity;
 import fr.isen.twinmx.database.MotoRepository;
-import fr.isen.twinmx.database.exceptions.MotoRepositoryException;
-import fr.isen.twinmx.database.exceptions.RepositoryException;
 import fr.isen.twinmx.database.listeners.MotoListener;
 import fr.isen.twinmx.TMApplication;
 import fr.isen.twinmx.database.model.Moto;
-import fr.isen.twinmx.listeners.OnMotoHistoryClickListener;
-import fr.isen.twinmx.listeners.RequestListener;
-import fr.isen.twinmx.model.History;
-import fr.isen.twinmx.ui.adapters.HistoryAdapter;
 import fr.isen.twinmx.ui.adapters.MotosAdapter;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
@@ -51,7 +42,7 @@ import io.realm.RealmResults;
  * Created by pierredfc.
  */
 
-public class HistoryFragment extends Fragment implements MotoListener.OnCreateMotoCallback, RequestListener, View.OnClickListener {
+public class HistoryFragment extends Fragment implements MotoListener.OnCreateMotoCallback, View.OnClickListener {
 
     private View rootview;
 
@@ -61,7 +52,6 @@ public class HistoryFragment extends Fragment implements MotoListener.OnCreateMo
     @BindView(R.id.no_history_text)
     TextView noHistoryView;
 
-    private HistoryAdapter historyAdapter;
     private MotosAdapter motosAdapter;
     private RealmResults<Moto> motoFinder;
     private MainActivity activity;
@@ -137,21 +127,6 @@ public class HistoryFragment extends Fragment implements MotoListener.OnCreateMo
     public void onFailure()
     {
 
-    }
-
-    @Override
-    public void onResponseReceived(List<History> results)
-    {
-        if (results != null && results.size() != 0)
-        {
-            this.historyAdapter = new HistoryAdapter(results, (MainActivity) getActivity());
-            this.historyView.setAdapter(this.historyAdapter);
-            this.noHistoryView.setVisibility(View.GONE);
-        }
-        else
-        {
-            this.noHistoryView.setVisibility(View.VISIBLE);
-        }
     }
 
     public void onMotoResponseReceived(List<Moto> motos) {
