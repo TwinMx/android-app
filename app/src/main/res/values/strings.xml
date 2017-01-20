@@ -30,4 +30,7 @@
     <string name="last_acquisitions">Dernières acquisitions</string>
     <string name="menu_modify">Modifier</string>
     <string name="no_acquisitions">Pas d\'acquisitions.</string>
+
+    <!-- Moto detail dialog -->
+    <string name="modify_moto_title_dialog">Nouveau nom</string>
 </resources>

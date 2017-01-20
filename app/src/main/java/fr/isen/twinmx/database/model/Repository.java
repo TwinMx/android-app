@@ -55,7 +55,7 @@ public abstract class Repository<T extends RealmObject> {
         try {
             begin();
             if (t instanceof AutoIncrement) generateId((AutoIncrement) t);
-            T item = this.realm.copyToRealm(t);
+            T item = this.realm.copyToRealmOrUpdate(t);
             end();
             return item;
         } catch (Exception ex) {

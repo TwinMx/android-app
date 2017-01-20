@@ -51,6 +51,15 @@ public class Moto extends RealmObject implements AutoIncrement {
         this.image = photo;
     }
 
+    public Moto(Moto moto)
+    {
+        this.id = moto.getId();
+        this.name = moto.getName();
+        this.date = moto.getDate();
+        this.image = moto.getImage();
+        this.maintenances = moto.getMaintenances();
+    }
+
     public static int getIndex() {
         return INDEX++;
     }

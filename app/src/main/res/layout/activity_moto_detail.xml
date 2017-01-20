@@ -22,12 +22,31 @@
         android:orientation="vertical"
         android:layout_marginTop="?android:attr/actionBarSize">
 
-        <ImageView
-            android:layout_width="150dp"
-            android:layout_height="150dp"
-            android:layout_margin="10dp"
-            android:id="@+id/moto_detail_photo"
-            android:layout_gravity="center_horizontal"/>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center">
+
+            <ImageView
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:layout_margin="10dp"
+                android:id="@+id/moto_detail_photo"
+                android:layout_gravity="center_horizontal" />
+
+            <TextView
+                android:id="@+id/myImageViewText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignStart="@+id/moto_detail_photo"
+                android:layout_alignTop="@+id/moto_detail_photo"
+                android:layout_alignEnd="@+id/moto_detail_photo"
+                android:layout_alignBottom="@+id/moto_detail_photo"
+                android:layout_margin="1dp"
+                android:gravity="bottom|center_horizontal"
+                android:text="@string/menu_modify"
+                android:textColor="@color/textSecondary" />
+        </RelativeLayout>
 
         <TextView
             android:layout_width="wrap_content"
