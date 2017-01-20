@@ -10,24 +10,26 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.ImageView;
+import android.widget.TextView;
+
 import com.squareup.picasso.Picasso;
 
-import java.text.DateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import fr.isen.twinmx.R;
 import fr.isen.twinmx.TMApplication;
+import fr.isen.twinmx.database.MaintenanceRepository;
 import fr.isen.twinmx.database.MotoRepository;
 import fr.isen.twinmx.database.model.Maintenance;
 import fr.isen.twinmx.database.model.Moto;
 import fr.isen.twinmx.listeners.OnMotoMaintenanceClickListener;
-import fr.isen.twinmx.ui.adapters.AcquisitionAdapter;
-import fr.isen.twinmx.ui.adapters.MotosAdapter;
+import fr.isen.twinmx.ui.adapters.MaintenanceAdapter;
 import fr.isen.twinmx.util.CircleTransformation;
+import io.realm.RealmChangeListener;
+import io.realm.RealmResults;
 
 /**
  * Created by pierredfc.
@@ -46,7 +48,12 @@ public class MotoDetailActivity extends AppCompatActivity implements OnMotoMaint
     @BindView(R.id.acquisition_recycler)
     RecyclerView acquisitions;
 
-    private AcquisitionAdapter acquisitionAdapter;
+    @BindView(R.id.acquisition_title)
+    TextView acquisitionsTitle;
+
+    private MaintenanceAdapter maintenanceAdapter;
+
+    private RealmResults<Maintenance> maintenanceFinder;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -86,8 +93,30 @@ public class MotoDetailActivity extends AppCompatActivity implements OnMotoMaint
                 .placeholder(R.drawable.ic_motorcycle_black_24dp)
                 .into(this.photo);
 
-
         this.initRecyclerView();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (this.maintenanceFinder != null) this.maintenanceFinder.removeChangeListeners();
+        this.maintenanceFinder = MaintenanceRepository.getInstance().findAllAsync(new RealmChangeListener<RealmResults<Maintenance>>() {
+            @Override
+            public void onChange(RealmResults<Maintenance> element) {
+                onMaintenanceResponseReceived(element);
+            }
+        });
+    }
+
+    public void onMaintenanceResponseReceived(List<Maintenance> maintenances) {
+        if (maintenances != null && !maintenances.isEmpty()) {
+            this.maintenanceAdapter.setMaintenances(maintenances);
+            this.acquisitionsTitle.setText(getString(R.string.last_acquisitions));
+        }
+        else
+        {
+            this.acquisitionsTitle.setText(getString(R.string.no_acquisitions));
+        }
     }
 
     private void initRecyclerView()
@@ -95,7 +124,7 @@ public class MotoDetailActivity extends AppCompatActivity implements OnMotoMaint
         this.acquisitions.setHasFixedSize(true);
         final LinearLayoutManager layoutManager = new LinearLayoutManager(TMApplication.getContext());
         this.acquisitions.setLayoutManager(layoutManager);
-        this.acquisitions.setAdapter(this.acquisitionAdapter = new AcquisitionAdapter(new ArrayList<Maintenance>(0), this));
+        this.acquisitions.setAdapter(this.maintenanceAdapter = new MaintenanceAdapter(new ArrayList<Maintenance>(0), this));
     }
 
     @Override

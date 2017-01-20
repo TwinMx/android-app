@@ -28,4 +28,5 @@
     <!-- Moto detail -->
     <string name="last_acquisitions">Last acquisitions</string>
     <string name="menu_modify">Modify</string>
+    <string name="no_acquisitions">No acquisitions found.</string>
 </resources>

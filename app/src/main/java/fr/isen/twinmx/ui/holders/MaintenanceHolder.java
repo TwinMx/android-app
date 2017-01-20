@@ -14,7 +14,7 @@ import fr.isen.twinmx.listeners.OnMotoMaintenanceClickListener;
  * Created by pierredfc.
  */
 
-public class AcquisitionHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+public class MaintenanceHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
     @BindView(R.id.maintenance_date)
     TextView maintenanceDate;
@@ -23,7 +23,7 @@ public class AcquisitionHolder extends RecyclerView.ViewHolder implements View.O
 
     private Maintenance maintenance;
 
-    public AcquisitionHolder(View itemView, OnMotoMaintenanceClickListener callback) {
+    public MaintenanceHolder(View itemView, OnMotoMaintenanceClickListener callback) {
         super(itemView);
         this.callback = callback;
         itemView.setOnClickListener(this);
