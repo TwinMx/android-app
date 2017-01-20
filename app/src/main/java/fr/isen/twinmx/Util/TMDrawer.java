@@ -8,7 +8,6 @@ import android.view.View;
 import com.mikepenz.materialdrawer.AccountHeader;
 import com.mikepenz.materialdrawer.AccountHeaderBuilder;
 import com.mikepenz.materialdrawer.Drawer;
-import com.mikepenz.materialdrawer.DrawerBuilder;
 import com.mikepenz.materialdrawer.model.DividerDrawerItem;
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
@@ -46,7 +45,7 @@ public class TMDrawer implements Drawer.OnDrawerItemClickListener {
         this.setAccountHeader();
 
         //create the drawer and remember the `Drawer` result object
-        this.drawer = new DrawerBuilder()
+      /*  this.drawer = new DrawerBuilder()
                 .withActivity(this.callback)
                 .withRootView(R.id.drawer_container)
                 .withToolbar(this.toolbar)
@@ -60,7 +59,7 @@ public class TMDrawer implements Drawer.OnDrawerItemClickListener {
                 .build();
 
         this.drawer.getActionBarDrawerToggle().setDrawerIndicatorEnabled(true);
-        this.currentPosition = 1;
+        this.currentPosition = 1;*/
     }
 
     private void setAccountHeader()
