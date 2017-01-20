@@ -1,25 +1,28 @@
 package fr.isen.twinmx.database.model;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 
+import fr.isen.twinmx.database.interfaces.AutoIncrement;
 import fr.isen.twinmx.database.measures.RealmMeasure;
 import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
+import io.realm.annotations.Required;
 
 /**
  * Created by pierredfc.
  */
-public class Maintenance extends RealmObject implements Serializable {
+public class Maintenance extends RealmObject implements AutoIncrement {
 
-    @PrimaryKey
-    private int id;
+    public static final String DB_TYPE = "Maintenance";
+
+    @PrimaryKey @Required
+    private Long id = null;
     private String date;
     private String note;
     private RealmList<RealmMeasure> measures;
 
-    public Maintenance() { }
+    public Maintenance() {}
 
     public Maintenance(String  date, String note)
     {
@@ -62,7 +65,9 @@ public class Maintenance extends RealmObject implements Serializable {
         this.measures = measures;
     }
 
-    public int getId() { return this.id;}
+    @Override
+    public Long getId() { return this.id;}
 
-    public void setId(int id) { this.id = id;}
+    @Override
+    public void setId(Long id) { this.id = id;}
 }

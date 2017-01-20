@@ -27,6 +27,18 @@
     <string name="form_save">Sauvegarder</string>
     <string name="form_cancel">Annuler</string>
 
+    <string name="create">Créer</string>
+    <string name="moto_name">Nom de la moto</string>
+    <string name="no_photo_selected">Pas de photo sélectionnée</string>
+
+    <!-- Moto detail -->
+    <string name="last_acquisitions">Dernières acquisitions</string>
+    <string name="menu_modify">Modifier</string>
+    <string name="no_acquisitions">Pas d\'acquisitions.</string>
+
+    <!-- Moto detail dialog -->
+    <string name="modify_moto_title_dialog">Nouveau nom</string>
+
     <string name="pressure">Pression (mBar)</string>
     <string name="cylinder">Cylindre %d</string>
 
