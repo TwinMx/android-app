@@ -2,9 +2,12 @@ package fr.isen.twinmx.activities;
 
 import android.app.FragmentTransaction;
 import android.content.Intent;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -87,6 +90,9 @@ public class MotoDetailActivity extends AppCompatActivity implements OnMotoMaint
             case R.id.modify_moto:
                 modifyNamesMoto();
                 return true;
+            case android.R.id.home:
+                finish();
+                break;
             default:
                 break;
         }
@@ -103,6 +109,15 @@ public class MotoDetailActivity extends AppCompatActivity implements OnMotoMaint
         ButterKnife.bind(this);
 
         this.setSupportActionBar(this.toolbar);
+
+        if (this.getSupportActionBar() != null)
+        {
+            final Drawable upArrow = ContextCompat.getDrawable(TMApplication.getContext(), R.drawable.ic_arrow_back_white_24dp);
+            getSupportActionBar().setHomeAsUpIndicator(upArrow);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+        }
+
         this.setTitle(this.moto.getName());
 
         Picasso.with(TMApplication.getContext())
@@ -112,11 +127,6 @@ public class MotoDetailActivity extends AppCompatActivity implements OnMotoMaint
                 .into(this.photo);
 
         this.initRecyclerView();
-
-        ArrayList<Maintenance> test = new ArrayList<>(1);
-        Maintenance m1 = new Maintenance(DateFormat.getDateTimeInstance().format(new Date()), "NOTE 1");
-        test.add(m1);
-        this.maintenanceAdapter.setMaintenances(test);
     }
 
     @Override
