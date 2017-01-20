@@ -1,5 +1,6 @@
 package fr.isen.twinmx.activities;
 
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -9,18 +10,18 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.squareup.picasso.Picasso;
 
+import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
@@ -42,7 +43,6 @@ import io.realm.RealmResults;
 /**
  * Created by pierredfc.
  */
-
 public class MotoDetailActivity extends AppCompatActivity implements OnMotoMaintenanceClickListener {
 
     private Moto moto;
@@ -112,6 +112,11 @@ public class MotoDetailActivity extends AppCompatActivity implements OnMotoMaint
                 .into(this.photo);
 
         this.initRecyclerView();
+
+        ArrayList<Maintenance> test = new ArrayList<>(1);
+        Maintenance m1 = new Maintenance(DateFormat.getDateTimeInstance().format(new Date()), "NOTE 1");
+        test.add(m1);
+        this.maintenanceAdapter.setMaintenances(test);
     }
 
     @Override
@@ -211,6 +216,8 @@ public class MotoDetailActivity extends AppCompatActivity implements OnMotoMaint
 
     @Override
     public void onMotoMaintenanceClick(Maintenance maintenance) {
-        // TODO fragment with graph etc.
+        Intent intent = new Intent(this, MaintenanceDetailActivity.class);
+        intent.putExtra("maintenanceID", maintenance.getId());
+        startActivity(intent);
     }
 }
