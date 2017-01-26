@@ -1,0 +1,5 @@
+Twinmax//None//Turn on TwinMax by pressing the switch located on the left side of the device;
+Twinmax//None//You can choose your baseline cylinder with button 1 and 3;
+Twinmax//None//Then validate with button 2;
+Twinmax//None//You can restart TwinMax with button 4;
+Twinmax//None//If TwinMax is in sleep mode, you can use button 4 to awaken it;

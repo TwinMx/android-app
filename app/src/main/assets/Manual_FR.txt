@@ -1,0 +1,19 @@
+Twinmax//None//Allumez le TwinMax à l'aide du bouton placé à la gauche du boitier;
+Twinmax//None//Choisissez votre cylindre de référence à l'aide des boutons n°1 et n°3;
+Twinmax//None//Puis validez à l'aide du bouton n°2;
+Twinmax//None//Vous pouvez redémarrer le TwinMax à l'aide du bouton n°4;
+Twinmax//None//Si le TwinMax se met en veille, réveillez le à l'aide du bouton n°4;
+
+Title;
+Application//accueil1//Une fois le module allumé, vous pouvez cliquer sur ce bouton "Acquisition" pour afficher vos graphiques.;
+Application//choix_bluetooth//Si votre TwinMax est déjà appairé, vous pouvez directement le selectionner.;
+Application//choix_bluetooth//Sinon appuyez sur "SCAN FOR DEVICES" pour recherche votre TwinMax. Une fois qu'il est apparu, selectionnez le et rentrer le code d'appairage "1234". TwinMax est bien appairé : "Connected" doit apparaitre à la droite des graphiques.;
+Application//graphiques//Vous visualisez maintenant les graphiques correspondant aux dépressions de vos carburateurs.;
+Application//graphiques//Vous pouvez afficher ou non les graphiques en décochant les cases placés devant leurs noms.;
+Application//graphiques//Vous pouvez faire un arrêt sur image en appuyant sur le bouton "STOP".;
+Application//graphiques//Vous pouvez également zoomer sur vos graphiques ainsi que vous déplacer. Le bouton "AUTO SCALE" permet de revenir au zoom d'origine.;
+Application//graphiques//Le bouton "ENREGISTRER" vous permet d'enregistrer votre graphique dans une note pour une nouvelle moto ou une moto déjà existante.;
+Application//accueil2//Pour accéder à vos historiques d'entretien, cliquez sur le bouton historique.;
+Application//historique//Vous pouvez faire défiler vos motos et également en ajouter grâce au bouton "+" prévu à cet effet.;
+Application//ajout_moto//Une page apparait donc où vous pouvez rentrer rentrer le nom de votre moto, ainsi que la date et le détail de votre entretien.;
+Application//ajout_commentaire//Si votre moto est déjà ajouté dans votre application, vous n'avez qu'à cliquer sur

@@ -15,9 +15,6 @@ import android.bluetooth.BluetoothAdapter;
 import android.content.BroadcastReceiver;
 import android.content.IntentFilter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
@@ -26,11 +23,12 @@ import android.widget.Toast;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.github.mikephil.charting.data.LineData;
 
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import fr.isen.twinmx.database.RealmHelper;
-import fr.isen.twinmx.database.TMMigration;
 import fr.isen.twinmx.database.TMRealmModule;
 
 
@@ -38,18 +36,18 @@ import fr.isen.twinmx.database.model.Moto;
 
 import fr.isen.twinmx.fragments.ChartFragment;
 
-import fr.isen.twinmx.fragments.HelpFragment;
+import fr.isen.twinmx.fragments.ManualFragment;
 import fr.isen.twinmx.fragments.HistoryFragment;
 import fr.isen.twinmx.R;
 
 import fr.isen.twinmx.listeners.OnMotoHistoryClickListener;
 
-import fr.isen.twinmx.fragments.SettingsFragment;
-
 import fr.isen.twinmx.Receivers.BluetoothIconReceiver;
 import fr.isen.twinmx.util.Bluetooth.TMBluetoothManager;
 import fr.isen.twinmx.util.TMBottomNavigation;
 
+import fr.isen.twinmx.util.manual.ManualPage;
+import fr.isen.twinmx.util.manual.ReadFileHelper;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 
@@ -145,10 +143,7 @@ public class MainActivity extends AppCompatActivity implements TMBottomNavigatio
                 this.launchFragment(HistoryFragment.newInstance(this, this.floatingActionButton), true);
                 break;
             case 2:
-                this.launchFragment(new HelpFragment(), false);
-                break;
-            case 3:
-                this.launchFragment(new SettingsFragment(), false);
+                this.launchFragment(new ManualFragment(), false);
                 break;
             default:
                 return false;
