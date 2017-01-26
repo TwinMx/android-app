@@ -5,9 +5,7 @@ import android.os.AsyncTask;
 import com.github.mikephil.charting.data.Entry;
 
 import java.util.LinkedList;
-import java.util.List;
 
-import fr.isen.twinmx.fragments.IChartComponent;
 import fr.isen.twinmx.fragments.RealTimeChartComponent;
 import fr.isen.twinmx.model.RawData;
 import fr.isen.twinmx.model.RawMeasures;
@@ -84,7 +82,6 @@ public class RawDataManagerAsyncTask extends AsyncTask<Void, Entry, Void> {
     }
 
     private void addMeasures(Entry... entries) {
-        int size = entries.length;
         chart.addEntries(entries);
         nbResults++;
         if (nbResults > 120) {
@@ -95,7 +92,13 @@ public class RawDataManagerAsyncTask extends AsyncTask<Void, Entry, Void> {
 
     @Override
     protected void onProgressUpdate(Entry... entries) {
-        this.chart.refreshChart();
+        /*chart.addEntries(entries);
+        nbResults++;
+        if (nbResults > 20) {
+            chart.refreshChart();
+            nbResults = 0;
+        }*/
+        chart.refreshChart();
     }
 
     @Override

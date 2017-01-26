@@ -2,6 +2,7 @@ package fr.isen.twinmx.fragments;
 
 import android.app.Activity;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.Entry;
@@ -28,7 +29,7 @@ public class RealTimeChartComponent implements Observer {
     private static int NB_POINTS = 200;
     private final Activity context;
     private final LineChart mChart;
-    private ArrayList<LinkedList<Entry>> dataSetEntries = new ArrayList<>(4);
+    private ArrayList<LimitedEntryList> dataSetEntries = new ArrayList<>(4);
     private TMBluetoothListener listener;
 
     public RealTimeChartComponent(Activity context, LineChart chart) {
@@ -42,6 +43,7 @@ public class RealTimeChartComponent implements Observer {
         for(int index = 0; index < 4; index++) {
             dataSetEntries.add(null);
         }
+
     }
 
     public void onCreate() {
@@ -79,13 +81,15 @@ public class RealTimeChartComponent implements Observer {
         LineData data = mChart.getData();
 
         if (data != null) {
-            LinkedList<Entry> entries = this.dataSetEntries.get(index);
+            LimitedEntryList entries = this.dataSetEntries.get(index);
             if (entries == null) {
                 entries = addNewSet(this.context.getString(R.string.cylinder, index + 1), index);
+                this.dataSetEntries.set(index, entries);
             }
 
             synchronized(entries) {
                 data.addEntry(value, index);
+                //entries.add(value.getY());
             }
             data.notifyDataChanged();
         }
@@ -95,22 +99,16 @@ public class RealTimeChartComponent implements Observer {
         // let the chart know it's data has changed
         mChart.notifyDataSetChanged();
 
-        // limit the number of visible entries
-        //mChart.setVisibleXRangeMaximum(NB_POINTS);
-        // mChart.setVisibleYRange(30, AxisDependency.LEFT);
-
+/*        // limit the number of visible entries
         mChart.setVisibleXRangeMaximum(NB_POINTS);
 
         // move to the latest entry
         mChart.moveViewToX(mChart.getData().getEntryCount());
-        //mChart.moveViewToX(mChart.getData().getEntryCount());
-
-        // this automatically refreshes the chart (calls invalidate())
-        // mChart.moveViewTo(data.getXValCount()-7, 55f,
-        // AxisDependency.LEFT);
+        // this automatically refreshes the chart (calls invalidate())*/
+        mChart.invalidate();
     }
 
-    private LinkedList<Entry> addNewSet(String title, int index) {
+    private LimitedEntryList addNewSet(String title, int index) {
 
         int color = 0;
         switch (index) {
@@ -133,7 +131,7 @@ public class RealTimeChartComponent implements Observer {
 
         color = ContextCompat.getColor(this.context, color);
 
-        LinkedList<Entry> entries = new EntriesLimitedLinkedList(NB_POINTS, new Entry(0,0));
+        LimitedEntryList entries = new LimitedEntryList(NB_POINTS);
 
         LineDataSet dataSet = new LineDataSet(entries, title);
         dataSet.setColor(color);
@@ -143,7 +141,6 @@ public class RealTimeChartComponent implements Observer {
         dataSet.setCircleColor(color);
 
         mChart.getData().addDataSet(dataSet);
-        this.dataSetEntries.set(index, entries);
         return entries;
     }
 
