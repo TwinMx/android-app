@@ -2,7 +2,6 @@ package fr.isen.twinmx.fragments;
 
 import android.app.Activity;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.Entry;
@@ -10,13 +9,11 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.Observable;
 import java.util.Observer;
 
 import fr.isen.twinmx.R;
 import fr.isen.twinmx.async.RawDataManagerAsyncTask;
-import fr.isen.twinmx.model.EntriesLimitedLinkedList;
 import fr.isen.twinmx.util.Bluetooth.TMBluetoothListener;
 import fr.isen.twinmx.util.Bluetooth.TMBluetoothManager;
 
@@ -31,13 +28,20 @@ public class RealTimeChartComponent implements Observer {
     private final LineChart mChart;
     private ArrayList<LimitedEntryList> dataSetEntries = new ArrayList<>(4);
     private TMBluetoothListener listener;
+    private RawDataManagerAsyncTask rawDataManagerAsyncTask;
 
     public RealTimeChartComponent(Activity context, LineChart chart) {
         this.context = context;
-        mChart = chart;
+        this.mChart = chart;
     }
 
-    private void initChart() {
+    /** onCreate **/
+    public void onCreate() {
+        mChart.setData(new LineData());
+        initChartSettings();
+    }
+
+    private void initChartSettings() {
         mChart.getAxisRight().setEnabled(false);
         mChart.getXAxis().setDrawLabels(false);
         for(int index = 0; index < 4; index++) {
@@ -46,19 +50,16 @@ public class RealTimeChartComponent implements Observer {
 
     }
 
-    public void onCreate() {
-        mChart.setData(new LineData());
-        initChart();
-    }
-
+    /** onResume() **/
     public void onResume() {
         this.listener = TMBluetoothManager.getInstance().getBluetooth().getListener();
         listener.addObserver(this);
         update();
     }
 
+
     public void update() {
-        if (listener.getConnectedDevice() != null) {
+        if (listener.getConnectedDevice() != null) { //If there's a connected device
             play();
         }
         else {
@@ -144,22 +145,21 @@ public class RealTimeChartComponent implements Observer {
         return entries;
     }
 
-    private RawDataManagerAsyncTask a1;
 
     public void play() {
-        if (a1 != null) {
-            a1.stop();
+        if (rawDataManagerAsyncTask != null) {
+            rawDataManagerAsyncTask.stop();
         }
         mChart.getData().clearValues();
-        a1 = new RawDataManagerAsyncTask(TMBluetoothManager.getInstance().getDataManager(), this);
-        a1.execute();
+        rawDataManagerAsyncTask = new RawDataManagerAsyncTask(TMBluetoothManager.getInstance().getDataManager(), this);
+        rawDataManagerAsyncTask.execute();
     }
 
     public void pause() {
-        if (a1 != null) {
-            a1.stop();
+        if (rawDataManagerAsyncTask != null) {
+            rawDataManagerAsyncTask.stop();
         }
-        a1 = null;
+        rawDataManagerAsyncTask = null;
     }
 
 

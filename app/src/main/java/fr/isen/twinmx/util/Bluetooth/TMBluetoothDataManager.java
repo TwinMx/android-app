@@ -1,5 +1,6 @@
 package fr.isen.twinmx.util.Bluetooth;
 
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Observable;
@@ -15,7 +16,8 @@ import fr.isen.twinmx.model.RawData;
 
 public class TMBluetoothDataManager {
 
-    private LinkedList<Integer> frames = new LinkedList<>();
+    private final List<Integer> frames = new LinkedList<>();
+    private int waitingThreads = 0;
 
     private int listeners = 0;
 
@@ -31,11 +33,19 @@ public class TMBluetoothDataManager {
         if (listeners > 0) {
             synchronized (this.frames) {
                 frames.add(frame);
+                if (waitingThreads > 0) {
+                    this.frames.notifyAll();
+                    waitingThreads = 0;
+                }
             }
         }
     }
 
-    public LinkedList<Integer> getFrames() {
+    public void waitThread() {
+        waitingThreads++;
+    }
+
+    public List<Integer> getFrames() {
         return frames;
     }
 

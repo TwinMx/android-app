@@ -4,7 +4,9 @@ import android.os.AsyncTask;
 
 import com.github.mikephil.charting.data.Entry;
 
+import java.util.Collections;
 import java.util.LinkedList;
+import java.util.List;
 
 import fr.isen.twinmx.fragments.RealTimeChartComponent;
 import fr.isen.twinmx.model.RawData;
@@ -18,7 +20,7 @@ import fr.isen.twinmx.util.Bluetooth.TMBluetoothDataManager;
 public class RawDataManagerAsyncTask extends AsyncTask<Void, Entry, Void> {
 
     private static int HEADER = 128;
-    private final LinkedList<Integer> frames;
+    private final List<Integer> frames;
     private final RawData raw;
     private final RawMeasures rawMeasures;
     private final RealTimeChartComponent chart;
@@ -47,18 +49,28 @@ public class RawDataManagerAsyncTask extends AsyncTask<Void, Entry, Void> {
     protected Void doInBackground(Void... voids) {
         int frame;
         while (!stop) {
-            if (!this.frames.isEmpty()) {
-                synchronized (this.frames) {
-                    frame = this.frames.pop();
-                }
-                try {
-                    if (!resetRawData(frame) && this.raw.add(frame) && this.rawMeasures.add(this.raw.popMeasure())) { //not header frame && raw completed (msb + lsb) && 4 measures
+            synchronized(this.frames) {
+                if (!this.frames.isEmpty()) {
+                    synchronized (this.frames) {
+                        frame = this.frames.remove(0);
+                    }
+                    try {
+                        if (!resetRawData(frame) && this.raw.add(frame) && this.rawMeasures.add(this.raw.popMeasure())) { //not header frame && raw completed (msb + lsb) && 4 measures
+                            addMeasures(this.rawMeasures.toEntries(x));
+                        }
+                    }
+                    catch(IndexOutOfBoundsException ex) {
+                        //Missed a HEADER frame
                         addMeasures(this.rawMeasures.toEntries(x));
                     }
                 }
-                catch(IndexOutOfBoundsException ex) {
-                    //Missed a HEADER frame
-                    addMeasures(this.rawMeasures.toEntries(x));
+                else {
+                    try {
+                        this.dataManager.waitThread();
+                        this.frames.wait();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         }
@@ -92,12 +104,6 @@ public class RawDataManagerAsyncTask extends AsyncTask<Void, Entry, Void> {
 
     @Override
     protected void onProgressUpdate(Entry... entries) {
-        /*chart.addEntries(entries);
-        nbResults++;
-        if (nbResults > 20) {
-            chart.refreshChart();
-            nbResults = 0;
-        }*/
         chart.refreshChart();
     }
 
