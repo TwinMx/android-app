@@ -2,11 +2,17 @@ package fr.isen.twinmx.fragments;
 
 import android.app.Activity;
 import android.support.v4.content.ContextCompat;
+import android.view.MotionEvent;
 
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.highlight.Highlight;
+import com.github.mikephil.charting.listener.ChartTouchListener;
+import com.github.mikephil.charting.listener.OnChartGestureListener;
+import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 
 import java.util.ArrayList;
 import java.util.Observable;
@@ -21,7 +27,7 @@ import fr.isen.twinmx.util.Bluetooth.TMBluetoothManager;
  * Created by Clement on 19/01/2017.
  */
 
-public class RealTimeChartComponent implements Observer {
+public class RealTimeChartComponent implements Observer, OnChartGestureListener, OnChartValueSelectedListener {
 
     private static int NB_POINTS = 200;
     private final Activity context;
@@ -47,6 +53,11 @@ public class RealTimeChartComponent implements Observer {
         for(int index = 0; index < 4; index++) {
             dataSetEntries.add(null);
         }
+        mChart.setDrawGridBackground(false);
+        mChart.setDescription(new Description() {{
+            setText("Pression (mBar)");
+        }});
+        mChart.getLegend().setEnabled(false);
 
     }
 
@@ -180,5 +191,55 @@ public class RealTimeChartComponent implements Observer {
 
     public void fitScreen() {
         mChart.fitScreen();
+    }
+
+    @Override
+    public void onChartGestureStart(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
+
+    }
+
+    @Override
+    public void onChartGestureEnd(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
+
+    }
+
+    @Override
+    public void onChartLongPressed(MotionEvent me) {
+
+    }
+
+    @Override
+    public void onChartDoubleTapped(MotionEvent me) {
+
+    }
+
+    @Override
+    public void onChartSingleTapped(MotionEvent me) {
+
+    }
+
+    @Override
+    public void onChartFling(MotionEvent me1, MotionEvent me2, float velocityX, float velocityY) {
+
+    }
+
+    @Override
+    public void onChartScale(MotionEvent me, float scaleX, float scaleY) {
+
+    }
+
+    @Override
+    public void onChartTranslate(MotionEvent me, float dX, float dY) {
+
+    }
+
+    @Override
+    public void onValueSelected(Entry e, Highlight h) {
+
+    }
+
+    @Override
+    public void onNothingSelected() {
+
     }
 }
