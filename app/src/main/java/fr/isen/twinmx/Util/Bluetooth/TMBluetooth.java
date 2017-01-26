@@ -16,14 +16,14 @@ public class TMBluetooth extends SmoothBluetooth {
     private final TMBluetoothDataManager dataManager;
 
     private Device connectedDevice = null;
-
-
+    private TMBluetoothListener bluetoothListener;
 
 
     public TMBluetooth(TMBluetoothDataManager dataManager, TMBluetoothListener listener) {
         super(TMApplication.getContext(), connectionTo, connectionType, listener);
         this.dataManager = dataManager;
         listener.setBluetooth(this);
+        this.bluetoothListener = listener;
     }
 
     public Device getConnectedDevice() {
@@ -38,8 +38,11 @@ public class TMBluetooth extends SmoothBluetooth {
     }
 
     public void onDataReceived(int data) {
-        this.dataManager.addRawData(data);
+        this.dataManager.addFrame(data);
     }
 
 
+    public TMBluetoothListener getListener() {
+        return bluetoothListener;
+    }
 }

@@ -14,4 +14,5 @@ public interface IChartComponent {
     void feedMultiple();
     void play();
     void pause();
+
 }

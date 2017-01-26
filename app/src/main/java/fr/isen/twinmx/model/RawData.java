@@ -4,6 +4,7 @@ package fr.isen.twinmx.model;
  * Created by Clement on 12/01/2017.
  */
 public class RawData {
+    private boolean firstAdded = false;
     private Integer msb;
     private Integer lsb;
 
@@ -16,37 +17,36 @@ public class RawData {
         return (b%2 == 0) && ((b & 0xFF) < 128);
     }
 
+    /**
+     *
+     * @param val
+     * @return true if complete
+     */
     public boolean add(int val) {
-        if (this.msb == null) {
+        if (!firstAdded) {
             this.msb = val;
-            return true;
+            firstAdded = true;
+            return false;
         }
-
-        if (this.lsb == null) {
+        else {
             this.lsb = val;
             return true;
+
         }
-
-        return false;
-    }
-
-    public boolean isComplete() {
-        return this.msb != null && this.lsb != null;
     }
 
     public void clear() {
-        this.msb = null;
-        this.lsb = null;
+        firstAdded = false;
     }
 
-    public double getMeasure() {
+    public double getRawMeasure() {
         double msbValue = this.msb << 5;
         double lsbValue = this.lsb >> 1;
         return (msbValue + lsbValue)/1.837;
     }
 
     public double popMeasure() {
-        double result = getMeasure();
+        double result = getRawMeasure();
         clear();
         return result;
     }

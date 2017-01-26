@@ -1,13 +1,16 @@
 package fr.isen.twinmx.model;
 
+import com.github.mikephil.charting.data.Entry;
+
 /**
  * Created by Clement on 12/01/2017.
  */
 public class RawMeasures {
 
-    private int capacity;
+    private final int capacity;
     private int size;
-    private int[] array;
+    private final int[] array;
+    private int nbMaxPoints = 200;
 
     public RawMeasures(int capacity) {
         this.array = new int[capacity];
@@ -19,32 +22,34 @@ public class RawMeasures {
         return add((int)value);
     }
 
+    /**
+     *
+     * @param value
+     * @return true if completed
+     */
     public boolean add(int value) {
         if (size >= capacity) {
-            return false;
+            //throw new IndexOutOfBoundsException("RawMeasures array is full");
+            clear();
         }
         array[size++] = value;
-        return true;
+        return isComplete();
     }
 
     public boolean isComplete() {
-        return size >= capacity;
+        return size == capacity;
     }
+
 
     public void clear() {
         this.size = 0;
     }
 
-    public int[] getValues() {
-        if (isComplete()) {
-            return array;
+    public Entry[] toEntries(int x) {
+        Entry[] entries = new Entry[capacity];
+        for (int i = 0; i < capacity; i++) {
+            entries[i] = new Entry(x, array[i]);
         }
-        else {
-            int[] values = new int[size];
-            for(int i = 0; i < size; i++) {
-                values[i] = array[i];
-            }
-            return values;
-        }
+        return entries;
     }
 }

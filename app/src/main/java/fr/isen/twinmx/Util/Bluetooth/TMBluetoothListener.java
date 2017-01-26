@@ -3,6 +3,7 @@ package fr.isen.twinmx.util.Bluetooth;
 import android.util.Log;
 
 import java.util.List;
+import java.util.Observable;
 
 import fr.isen.twinmx.R;
 import fr.isen.twinmx.Receivers.BluetoothIconReceiver;
@@ -14,9 +15,10 @@ import io.palaima.smoothbluetooth.SmoothBluetooth;
  * Created by cdupl on 9/27/2016.
  */
 
-public class TMBluetoothListener implements SmoothBluetooth.Listener {
+public class TMBluetoothListener extends Observable implements SmoothBluetooth.Listener {
 
     private TMBluetooth bluetooth;
+    private Device connectedDevice = null;
 
     public void setBluetooth(TMBluetooth bluetooth) {
         this.bluetooth = bluetooth;
@@ -42,13 +44,17 @@ public class TMBluetoothListener implements SmoothBluetooth.Listener {
     @Override
     public void onConnected(Device device) {
         Log.d("onConnected",device.getName());
+        this.connectedDevice = device;
         this.bluetooth.setConnectedDevice(device);
         BluetoothIconReceiver.sendStatusOk(String.format(TMApplication.getContext().getResources().getString(R.string.connected_to), device.getName()));
+        this.setChanged();
+        this.notifyObservers();
     }
 
     @Override
     public void onDisconnected() {
         Log.d("onDisco","disconnected");
+        this.connectedDevice = null;
         this.bluetooth.setConnectedDevice(null);
     }
 
@@ -89,5 +95,9 @@ public class TMBluetoothListener implements SmoothBluetooth.Listener {
     @Override
     public void onDataReceived(int data) {
         this.bluetooth.onDataReceived(data);
+    }
+
+    public Device getConnectedDevice() {
+        return connectedDevice;
     }
 }

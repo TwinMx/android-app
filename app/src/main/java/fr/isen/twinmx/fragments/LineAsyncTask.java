@@ -20,14 +20,14 @@ import fr.isen.twinmx.util.Bluetooth.TMBluetoothManager;
 public class LineAsyncTask extends AsyncTask<Integer, MeasureEntry, Void> {
 
     private final RealTimeChartComponent chartComponent;
-    private final MeasuresList data;
+    private MeasuresList data;
     private boolean stop = false;
 
     private int nbResults = 0;
 
     public LineAsyncTask(RealTimeChartComponent chartComponent, TMBluetoothManager manager) {
         this.chartComponent = chartComponent;
-        this.data = manager.getDataManager().getData();
+        /*this.data = manager.getDataManager().getData();*/
     }
 
     @Override

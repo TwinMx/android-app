@@ -54,13 +54,13 @@ public class ChartFragment extends BluetoothFragment {
     private Context context;
     private LineChart chart;
     private LineData lineData;
-    private IChartComponent chartComponent;
+    private RealTimeChartComponent chartComponent;
 
     @OnClick({R.id.box1, R.id.box2, R.id.box3, R.id.box4})
     public void onBoxClick(View view) {
         Integer index = Integer.valueOf((String) view.getTag());
 
-        this.chartComponent.setVisible(index, ((AppCompatCheckBox) view).isChecked());
+        //this.chartComponent.setVisible(index, ((AppCompatCheckBox) view).isChecked());
 
 /*        if (((AppCompatCheckBox) view).isChecked()) {
             chart.getLineData().getDataSetByIndex(index).setVisible(true);
@@ -90,7 +90,7 @@ public class ChartFragment extends BluetoothFragment {
 
     @OnClick(R.id.auto_focus)
     public void onAutoFocusClick(View view) {
-        this.chartComponent.fitScreen();
+        /*this.chartComponent.fitScreen();*/
     }
 
     @OnClick(R.id.save_acquisition)
@@ -175,11 +175,5 @@ public class ChartFragment extends BluetoothFragment {
     @Override
     public CoordinatorLayout getCoordinatorLayout() {
         return null;
-    }
-
-    @Override
-    public void update(Observable observable, Object o) {
-        Log.d("Observer", "Update: " + TMBluetoothManager.getInstance().getDataManager().getData().size());
-        this.chartComponent.update();
     }
 }

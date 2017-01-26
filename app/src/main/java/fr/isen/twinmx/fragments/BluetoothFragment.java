@@ -21,7 +21,7 @@ import fr.isen.twinmx.util.TMSnackBar;
  * Created by Clement on 19/01/2017.
  */
 
-public abstract class BluetoothFragment extends Fragment implements Observer {
+public abstract class BluetoothFragment extends Fragment {
 
     private TMBluetoothManager tmBluetoothManager;
     private TMBluetooth tmBluetooth;
@@ -38,7 +38,6 @@ public abstract class BluetoothFragment extends Fragment implements Observer {
         if (tmBluetoothManager == null || tmBluetooth == null) {
             tmBluetoothManager = TMBluetoothManager.getInstance();
             if (tmBluetooth == null) tmBluetooth = tmBluetoothManager.getBluetooth();
-            tmBluetoothManager.getDataManager().addObserver(this);
         }
     }
 
@@ -73,10 +72,6 @@ public abstract class BluetoothFragment extends Fragment implements Observer {
 
         checkBluetothState();
         BluetoothFragment.isFirstInit = false;
-    }
-
-    public MeasuresList getMeasuresList() {
-        return this.tmBluetoothManager.getDataManager().getData();
     }
 
 }

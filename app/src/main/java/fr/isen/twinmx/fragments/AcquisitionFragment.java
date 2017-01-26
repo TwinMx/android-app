@@ -22,7 +22,7 @@ import fr.isen.twinmx.util.TMSnackBar;
 /**
  * Created by pierredfc.
  */
-public class AcquisitionFragment extends Fragment implements Observer {
+public class AcquisitionFragment extends Fragment {
 
     private View rootview;
     private CoordinatorLayout coordinatorLayout;
@@ -39,7 +39,6 @@ public class AcquisitionFragment extends Fragment implements Observer {
 
         tmBluetoothManager = TMBluetoothManager.getInstance();
         tmBluetooth = tmBluetoothManager.getBluetooth();
-        tmBluetoothManager.getDataManager().addObserver(this);
 
         return this.rootview;
     }
@@ -63,11 +62,5 @@ public class AcquisitionFragment extends Fragment implements Observer {
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-    }
-
-    @Override
-    public void update(Observable observable, Object o) {
-        int size = this.tmBluetoothManager.getDataManager().getData().size();
-        Log.d("Observer", "size: "+size);
     }
 }

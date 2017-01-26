@@ -3,6 +3,7 @@ package fr.isen.twinmx.util.Bluetooth;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Observable;
+import java.util.Observer;
 
 import fr.isen.twinmx.model.MeasuresList;
 import fr.isen.twinmx.model.RawMeasures;
@@ -12,18 +13,43 @@ import fr.isen.twinmx.model.RawData;
  * Created by Clement on 19/01/2017.
  */
 
-public class TMBluetoothDataManager extends Observable {
+public class TMBluetoothDataManager {
 
-    private static int HEADER = 128;
+    private LinkedList<Integer> frames = new LinkedList<>();
+
+    private int listeners = 0;
+
+    public void startListening() {
+        listeners++;
+    }
+
+    public void stopListening() {
+        listeners = listeners > 0 ? listeners - 1 : 0;
+    }
+
+    public void addFrame(int frame) {
+        if (listeners > 0) {
+            synchronized (this.frames) {
+                frames.add(frame);
+            }
+        }
+    }
+
+    public LinkedList<Integer> getFrames() {
+        return frames;
+    }
 
 
-    private MeasuresList data = new MeasuresList(500, 4);
+    /*private static int HEADER = 128;*/
+
+
+/*    private MeasuresList data = new MeasuresList(500, 4);
 
     private RawData raw = new RawData();
-    private RawMeasures rawMeasures = new RawMeasures(4);
+    private RawMeasures rawMeasures = new RawMeasures(4);*/
 
 
-    public MeasuresList getData() {
+/*    public MeasuresList getData() {
         return data;
     }
 
@@ -36,14 +62,14 @@ public class TMBluetoothDataManager extends Observable {
                 addRawMeasure(this.raw.popMeasure());
             }
         }
-    }
+    }*/
 
     /**
      * Checks if the header (128) is received : Initializes for a new series of rawMeasures (clears the raw results)
      * @param item
      * @return true if header was received
      */
-    private boolean resetRawData(int item) {
+    /*private boolean resetRawData(int item) {
         if (item == HEADER) {
             this.rawMeasures.clear();
             return true;
@@ -86,5 +112,5 @@ public class TMBluetoothDataManager extends Observable {
 
     public void start() {
         stop = false;
-    }
+    }*/
 }
