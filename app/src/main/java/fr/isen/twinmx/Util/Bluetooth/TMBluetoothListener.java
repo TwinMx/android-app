@@ -8,6 +8,7 @@ import java.util.Observable;
 import fr.isen.twinmx.R;
 import fr.isen.twinmx.Receivers.BluetoothIconReceiver;
 import fr.isen.twinmx.TMApplication;
+import fr.isen.twinmx.util.Bluetooth.SmoothBluetoothFork.TMSmoothBluetooth;
 import io.palaima.smoothbluetooth.Device;
 import io.palaima.smoothbluetooth.SmoothBluetooth;
 
@@ -15,7 +16,7 @@ import io.palaima.smoothbluetooth.SmoothBluetooth;
  * Created by cdupl on 9/27/2016.
  */
 
-public class TMBluetoothListener extends Observable implements SmoothBluetooth.Listener {
+public class TMBluetoothListener extends Observable implements TMSmoothBluetooth.Listener {
 
     private TMBluetooth bluetooth;
     private Device connectedDevice = null;
@@ -84,7 +85,7 @@ public class TMBluetoothListener extends Observable implements SmoothBluetooth.L
 
     //Discovery
     @Override
-    public void onDevicesFound(List<Device> deviceList, SmoothBluetooth.ConnectionCallback connectionCallback) {
+    public void onDevicesFound(List<Device> deviceList, TMSmoothBluetooth.ConnectionCallback connectionCallback) {
         TMBluetoothManager.getInstance().showBluetoothDevicesDialog(deviceList, connectionCallback);
         //receives discovered devices list and connection callback
         //you can filter devices list and connect to specific one

@@ -33,6 +33,10 @@ public class LimitedEntryList extends ArrayList<Entry> {
         }
     }
 
+    public void reset() {
+        this.currentX = 0;
+    }
+
     private void incrementX() {
         this.currentX = this.currentX + 1 < size ? this.currentX + 1 : 0;
     }

@@ -1,11 +1,10 @@
 package fr.isen.twinmx.async;
 
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.github.mikephil.charting.data.Entry;
 
-import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 
 import fr.isen.twinmx.fragments.RealTimeChartComponent;
@@ -64,16 +63,9 @@ public class RawDataManagerAsyncTask extends AsyncTask<Void, Entry, Void> {
                         addMeasures(this.rawMeasures.toEntries(x));
                     }
                 }
-                else {
-                    try {
-                        this.dataManager.waitThread();
-                        this.frames.wait();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
             }
         }
+        this.dataManager.stopListening();
         return null;
     }
 
@@ -96,7 +88,7 @@ public class RawDataManagerAsyncTask extends AsyncTask<Void, Entry, Void> {
     private void addMeasures(Entry... entries) {
         chart.addEntries(entries);
         nbResults++;
-        if (nbResults > 120) {
+        if (nbResults > 200) {
             publishProgress();
             nbResults = 0;
         }
@@ -109,12 +101,10 @@ public class RawDataManagerAsyncTask extends AsyncTask<Void, Entry, Void> {
 
     @Override
     protected void onPostExecute(Void aVoid) {
-        stop = true;
-        //TODO: Tell fragment the async task ended
-        this.dataManager.stopListening();
     }
 
     public void stop() {
         stop = true;
+        this.dataManager.stopListening();
     }
 }

@@ -149,8 +149,13 @@ public class RealTimeChartComponent implements Observer {
     public void play() {
         if (rawDataManagerAsyncTask != null) {
             rawDataManagerAsyncTask.stop();
+            rawDataManagerAsyncTask = null;
         }
-        mChart.getData().clearValues();
+        for(LimitedEntryList entries : this.dataSetEntries) {
+            if (entries != null) {
+                entries.reset();
+            }
+        }
         rawDataManagerAsyncTask = new RawDataManagerAsyncTask(TMBluetoothManager.getInstance().getDataManager(), this);
         rawDataManagerAsyncTask.execute();
     }
@@ -166,5 +171,14 @@ public class RealTimeChartComponent implements Observer {
     @Override
     public void update(Observable observable, Object o) {
         update();
+    }
+
+    public void setVisible(Integer index, boolean checked) {
+        this.mChart.getLineData().getDataSetByIndex(index).setVisible(checked);
+        refreshChart();
+    }
+
+    public void fitScreen() {
+        mChart.fitScreen();
     }
 }

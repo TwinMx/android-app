@@ -9,6 +9,7 @@ import java.util.List;
 
 import fr.isen.twinmx.R;
 import fr.isen.twinmx.Receivers.BluetoothIconReceiver;
+import fr.isen.twinmx.util.Bluetooth.SmoothBluetoothFork.TMSmoothBluetooth;
 import fr.isen.twinmx.util.Bluetooth.TMBluetoothManager;
 import io.palaima.smoothbluetooth.Device;
 import io.palaima.smoothbluetooth.SmoothBluetooth;
@@ -18,10 +19,10 @@ import io.palaima.smoothbluetooth.SmoothBluetooth;
  */
 public class TMBluetoothDialogAdapter extends RecyclerView.Adapter<TMDeviceHolder> {
 
-    private final SmoothBluetooth.ConnectionCallback connectionCallback;
+    private final TMSmoothBluetooth.ConnectionCallback connectionCallback;
     private List<Device> mDevices;
 
-    public TMBluetoothDialogAdapter(List<Device> devices, SmoothBluetooth.ConnectionCallback connectionCallback) {
+    public TMBluetoothDialogAdapter(List<Device> devices, TMSmoothBluetooth.ConnectionCallback connectionCallback) {
         this.mDevices = devices;
         this.connectionCallback = connectionCallback;
     }

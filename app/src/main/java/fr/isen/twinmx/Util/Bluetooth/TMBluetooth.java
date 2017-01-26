@@ -1,14 +1,17 @@
 package fr.isen.twinmx.util.Bluetooth;
 
+import android.os.Handler;
+
 import fr.isen.twinmx.TMApplication;
+import fr.isen.twinmx.util.Bluetooth.SmoothBluetoothFork.TMBluetoothService;
+import fr.isen.twinmx.util.Bluetooth.SmoothBluetoothFork.TMSmoothBluetooth;
 import io.palaima.smoothbluetooth.Device;
-import io.palaima.smoothbluetooth.SmoothBluetooth;
 
 /**
  * Created by cdupl on 9/27/2016.
  */
 
-public class TMBluetooth extends SmoothBluetooth {
+public class TMBluetooth extends TMSmoothBluetooth {
 
     private static final ConnectionTo connectionTo = ConnectionTo.OTHER_DEVICE;
     private static final Connection connectionType = Connection.INSECURE;
@@ -41,8 +44,14 @@ public class TMBluetooth extends SmoothBluetooth {
         this.dataManager.addFrame(data);
     }
 
+    @Override
+    public void setupService() {
+        this.setTMBluetoothService(new TMBluetoothService(getmHandler(), dataManager));
+    }
+
 
     public TMBluetoothListener getListener() {
         return bluetoothListener;
     }
+
 }

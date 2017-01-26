@@ -16,12 +16,9 @@ public class LimitedLinkedList<T> extends LinkedList<T> {
 
     final int capacity;
 
-    public LimitedLinkedList(int capacity, T... items) {
+    public LimitedLinkedList(int capacity) {
         super();
         this.capacity = capacity;
-        if (items != null && items.length > 0) {
-            this.addAll(Arrays.asList(items));
-        }
     }
 
     @Override
@@ -61,46 +58,19 @@ public class LimitedLinkedList<T> extends LinkedList<T> {
 
     @Override
     public void addLast(T t) {
+        this.removeMultipleFirst(this.size() + 1 - capacity);
         super.addLast(t);
     }
 
     @Override
     public T removeLast() {
+        this.removeMultipleFirst(this.size() + 1 - capacity);
         return super.removeLast();
-    }
-
-    @Override
-    public T getFirst() {
-        return super.getFirst();
-    }
-
-    @Override
-    public T getLast() {
-        return super.getLast();
     }
 
     @Override
     public boolean add(T t) {
         this.removeMultipleFirst(this.size() + 1 - capacity);
         return super.add(t);
-    }
-
-    @Override
-    public boolean remove(Object o) {
-        return super.remove(o);
-    }
-
-    @Override
-    public void clear() {
-        super.clear();
-    }
-
-    @Override
-    public T get(int index) {
-        try {
-            return super.get(index);
-        } catch (Exception ex) {
-            return null;
-        }
     }
 }

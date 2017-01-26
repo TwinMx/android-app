@@ -12,6 +12,7 @@ import java.util.Observable;
 import fr.isen.twinmx.R;
 import fr.isen.twinmx.Receivers.BluetoothIconReceiver;
 import fr.isen.twinmx.TMApplication;
+import fr.isen.twinmx.util.Bluetooth.SmoothBluetoothFork.TMSmoothBluetooth;
 import fr.isen.twinmx.util.TMBluetoothDialogAdapter;
 import io.palaima.smoothbluetooth.Device;
 import io.palaima.smoothbluetooth.SmoothBluetooth;
@@ -48,7 +49,7 @@ public class TMBluetoothManager {
     }
 
 
-    public void showBluetoothDevicesDialog(List<Device> devices, SmoothBluetooth.ConnectionCallback connectionCallback) {
+    public void showBluetoothDevicesDialog(List<Device> devices, TMSmoothBluetooth.ConnectionCallback connectionCallback) {
         if (!this.bluetooth.isBluetoothEnabled()) {
             return;
         }

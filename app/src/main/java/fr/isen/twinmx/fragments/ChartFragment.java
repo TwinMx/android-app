@@ -60,13 +60,7 @@ public class ChartFragment extends BluetoothFragment {
     public void onBoxClick(View view) {
         Integer index = Integer.valueOf((String) view.getTag());
 
-        //this.chartComponent.setVisible(index, ((AppCompatCheckBox) view).isChecked());
-
-/*        if (((AppCompatCheckBox) view).isChecked()) {
-            chart.getLineData().getDataSetByIndex(index).setVisible(true);
-        } else {
-            chart.getLineData().getDataSetByIndex(index).setVisible(false);
-        }*/
+        this.chartComponent.setVisible(index, ((AppCompatCheckBox) view).isChecked());
     }
 
     private boolean isStarted;
@@ -76,11 +70,11 @@ public class ChartFragment extends BluetoothFragment {
         ImageView image = (ImageView) view;
 
         if (this.isStarted) {
-            this.chartComponent.pause();
             image.setImageDrawable(ContextCompat.getDrawable(this.context, R.drawable.ic_play_arrow_white_24dp));
+            this.chartComponent.pause();
         } else {
-            this.chartComponent.play();
             image.setImageDrawable(ContextCompat.getDrawable(this.context, R.drawable.ic_pause_white_24dp));
+            this.chartComponent.play();
         }
 
         this.isStarted = !this.isStarted;
@@ -90,7 +84,7 @@ public class ChartFragment extends BluetoothFragment {
 
     @OnClick(R.id.auto_focus)
     public void onAutoFocusClick(View view) {
-        /*this.chartComponent.fitScreen();*/
+        this.chartComponent.fitScreen();
     }
 
     @OnClick(R.id.save_acquisition)
