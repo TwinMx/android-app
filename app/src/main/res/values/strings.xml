@@ -43,4 +43,8 @@
     <string name="cylinder">Cylindre %d</string>
 
     <string name="save">Enregistrer</string>
+
+    <!-- Manual help -->
+    <string name="twinmax_title">Fonctionnement de l\'appareil</string>
+    <string name="app_title">Fonctionnement de l\'application</string>
 </resources>

@@ -33,7 +33,7 @@ public class ManualAdapter extends RecyclerView.Adapter<ManualHolder> {
     @Override
     public void onBindViewHolder(ManualHolder holder, int position) {
         if (position < this.getItemCount()) {
-            holder.bind(instructions.get(position));
+            holder.bind(instructions.get(position), position);
         }
     }
 

@@ -3,7 +3,9 @@ package fr.isen.twinmx.fragments;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -48,6 +50,14 @@ public class ManualFragment extends Fragment {
     {
         List<ManualPage> inst = ReadFileHelper.getManualFromFile(TMApplication.getContext(), "Application");
         this.manualAdapter.setItems(inst);
+
+        manualTitle.setText(getString(R.string.app_title));
+
+        if (view instanceof CardView)
+        {
+            CardView card = (CardView) view;
+        }
+
     }
 
     @OnClick(R.id.cardview_twinmax)
@@ -55,6 +65,7 @@ public class ManualFragment extends Fragment {
     {
         List<ManualPage> inst = ReadFileHelper.getManualFromFile(TMApplication.getContext(), "Twinmax");
         this.manualAdapter.setItems(inst);
+        manualTitle.setText(getString(R.string.twinmax_title));
     }
 
     @Nullable

@@ -21,6 +21,9 @@ public class ManualHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.manual_photo)
     ImageView photo;
 
+    @BindView(R.id.manual_id)
+    TextView instructionId;
+
     @BindView(R.id.manual_text)
     TextView instruction;
 
@@ -31,8 +34,9 @@ public class ManualHolder extends RecyclerView.ViewHolder {
         ButterKnife.bind(this, itemView);
     }
 
-    public void bind(ManualPage manualPage) {
+    public void bind(ManualPage manualPage, int position) {
         this.page = manualPage;
+        this.instructionId.setText(String.valueOf(position + 1));
         this.instruction.setText(manualPage.getText());
         // ImageView TODO
     }
