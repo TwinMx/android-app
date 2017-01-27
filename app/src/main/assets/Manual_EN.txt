@@ -5,15 +5,4 @@ Twinmax//None//You can restart TwinMax with button 4.;
 Twinmax//None//If TwinMax is in sleep mode, you can use button 4 to awaken it.;
 
 Title;
-Application//None//Once TwinMax turning on, you can pressUne fois le module allumé, vous pouvez cliquer sur ce bouton "Acquisition" pour afficher vos graphiques.;
-Application//None//Si votre TwinMax est déjà appairé, vous pouvez directement le selectionner.;
-Application//None//Sinon appuyez sur "SCAN FOR DEVICES" pour recherche votre TwinMax. Une fois qu'il est apparu, selectionnez le et rentrer le code d'appairage "1234". TwinMax est bien appairé : "Connected" doit apparaitre à la droite des graphiques.;
-Application//None//Vous visualisez maintenant les graphiques correspondant aux dépressions de vos carburateurs.;
-Application//None//Vous pouvez afficher ou non les graphiques en décochant les cases placés devant leurs noms.;
-Application//None//Vous pouvez faire un arrêt sur image en appuyant sur le bouton "STOP".;
-Application//None//Vous pouvez également zoomer sur vos graphiques ainsi que vous déplacer. Le bouton "AUTO SCALE" permet de revenir au zoom d'origine.;
-Application//None//Le bouton "ENREGISTRER" vous permet d'enregistrer votre graphique dans une note pour une nouvelle moto ou une moto déjà existante.;
-Application//None//Pour accéder à vos historiques d'entretien, cliquez sur le bouton historique.;
-Application//None//Vous pouvez faire défiler vos motos et également en ajouter grâce au bouton "+" prévu à cet effet.;
-Application//None//Une page apparait donc où vous pouvez rentrer rentrer le nom de votre moto, ainsi que la date et le détail de votre entretien.;
-Application//None//Si votre moto est déjà ajouté dans votre application, vous n'avez qu'à cliquer sur
+Application//None//TODO;

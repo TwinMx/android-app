@@ -8,6 +8,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.SpannableString;
+import android.text.style.UnderlineSpan;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
@@ -45,19 +47,21 @@ public class ManualFragment extends Fragment {
     @BindView(R.id.manual_title)
     TextView manualTitle;
 
+    @BindView(R.id.cardview_twinmax)
+    CardView cardTwinMax;
+
+    @BindView(R.id.cardview_app)
+    CardView cardApp;
+
     @OnClick(R.id.cardview_app)
     public void onCardViewApp(View view)
     {
         List<ManualPage> inst = ReadFileHelper.getManualFromFile(TMApplication.getContext(), "Application");
         this.manualAdapter.setItems(inst);
-
         manualTitle.setText(getString(R.string.app_title));
 
-        if (view instanceof CardView)
-        {
-            CardView card = (CardView) view;
-        }
-
+        cardTwinMax.setAlpha(0.5f);
+        cardApp.setAlpha(1f);
     }
 
     @OnClick(R.id.cardview_twinmax)
@@ -66,6 +70,9 @@ public class ManualFragment extends Fragment {
         List<ManualPage> inst = ReadFileHelper.getManualFromFile(TMApplication.getContext(), "Twinmax");
         this.manualAdapter.setItems(inst);
         manualTitle.setText(getString(R.string.twinmax_title));
+
+        cardTwinMax.setAlpha(1f);
+        cardApp.setAlpha(0.5f);
     }
 
     @Nullable
