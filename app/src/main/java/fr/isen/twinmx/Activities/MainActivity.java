@@ -2,25 +2,24 @@ package fr.isen.twinmx.activities;
 
 import android.app.Fragment;
 import android.app.FragmentTransaction;
-import android.bluetooth.BluetoothAdapter;
-import android.content.BroadcastReceiver;
-import android.content.IntentFilter;
+import android.content.Intent;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
-import com.github.mikephil.charting.data.LineData;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import butterknife.OnClick;
 import fr.isen.twinmx.database.RealmHelper;
-import fr.isen.twinmx.database.TMMigration;
 import fr.isen.twinmx.database.TMRealmModule;
 
 import fr.isen.twinmx.fragments.ChartFragment;
@@ -31,7 +30,7 @@ import fr.isen.twinmx.R;
 import fr.isen.twinmx.fragments.SettingsFragment;
 
 import fr.isen.twinmx.Receivers.BluetoothIconReceiver;
-import fr.isen.twinmx.util.Bluetooth.TMBluetoothManager;
+import fr.isen.twinmx.util.Bluetooth.TMBluetooth;
 import fr.isen.twinmx.util.TMBottomNavigation;
 
 import io.realm.Realm;
@@ -60,9 +59,9 @@ public class MainActivity extends AppCompatActivity implements TMBottomNavigatio
     @BindView(R.id.bluetoothProgressIcon)
     ProgressBar bluetoothProgressBar;
 
-    private BroadcastReceiver bluetoothIconReceiver;
+    private BluetoothIconReceiver bluetoothIconReceiver;
 
-    private TMBluetoothManager bluetoothManager; //Keep a pointer to avoid GC
+    private TMBluetooth mBluetooth; //Keep a pointer to avoid GC
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,8 +77,9 @@ public class MainActivity extends AppCompatActivity implements TMBottomNavigatio
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
-        this.bluetoothManager = TMBluetoothManager.makeInstance(this);
-        this.bluetoothIconReceiver = new BluetoothIconReceiver(bluetoothIcon, bluetoothProgressBar, viewPager);
+        this.mBluetooth = new TMBluetooth(this);
+        this.bluetoothIconReceiver = new BluetoothIconReceiver(bluetoothIcon, bluetoothProgressBar, viewPager, mBluetooth);
+        this.mBluetooth.setBluetoothIconReceiver(this.bluetoothIconReceiver);
     }
 
     @Override
@@ -106,15 +106,14 @@ public class MainActivity extends AppCompatActivity implements TMBottomNavigatio
 
         RealmHelper.setRealm(Realm.getInstance(this.realmConfiguration));
 
-        final ChartFragment chartFragment = ChartFragment.newInstance(this, new LineData());
+        final ChartFragment chartFragment = ChartFragment.newInstance(this, mBluetooth);
         this.launchFragment(chartFragment);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        this.registerReceiver(bluetoothIconReceiver, new IntentFilter(BluetoothIconReceiver.ACTION));
-        this.registerReceiver(bluetoothIconReceiver, new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED));
+        bluetoothIconReceiver.register(this);
     }
 
     @Override
@@ -128,7 +127,7 @@ public class MainActivity extends AppCompatActivity implements TMBottomNavigatio
         switch (position)
         {
             case 0:
-                final ChartFragment chartFragment = ChartFragment.newInstance(this, new LineData());
+                final ChartFragment chartFragment = ChartFragment.newInstance(this, mBluetooth);
                 this.launchFragment(chartFragment);
                 break;
             case 1:
@@ -161,6 +160,28 @@ public class MainActivity extends AppCompatActivity implements TMBottomNavigatio
     @Override
     protected void onStop() {
         super.onStop();
-        TMBluetoothManager.getInstance().getBluetooth().stop();
+        mBluetooth.stop();
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode == TMBluetooth.REQUEST_ENABLE_BT){
+            if (resultCode == TMBluetooth.RESULT_ENABLE_BT_ALLOWED) {
+                bluetoothIconReceiver.enabled();
+            }
+        }
+
+    }
+
+    @OnClick(R.id.bluetoothIcon)
+    public void onBluetoothIconClick(View view) {
+        if (mBluetooth.isBluetoothEnabled()) { //scan
+            mBluetooth.scanDevices();
+        }
+        else
+        {
+            mBluetooth.enableBluetooth(); //prompt to enable bluetooth
+        }
+    }
+
 }

@@ -23,31 +23,19 @@ import fr.isen.twinmx.util.TMSnackBar;
 
 public abstract class BluetoothFragment extends Fragment {
 
-    private TMBluetoothManager tmBluetoothManager;
-    private TMBluetooth tmBluetooth;
+    private TMBluetooth mBluetooth;
 
     private static boolean isFirstInit = true;
 
     public abstract CoordinatorLayout getCoordinatorLayout();
 
-    public BluetoothFragment() {
-        initObserver();
-    }
-
-    private void initObserver() {
-        if (tmBluetoothManager == null || tmBluetooth == null) {
-            tmBluetoothManager = TMBluetoothManager.getInstance();
-            if (tmBluetooth == null) tmBluetooth = tmBluetoothManager.getBluetooth();
-        }
-    }
-
     private void checkBluetothState() {
         if (isFirstInit) {
-            if (!tmBluetoothManager.isBluetoothEnabled()) {
+            if (!mBluetooth.isBluetoothEnabled()) {
                 showEnabledBluetoothSnackBar(); //Prompt to enable bluetooth. Once bluetooth is enabled, displays list of devices
             } else {
-                if (!tmBluetoothManager.isBluetoothConnectedToDevice()) {
-                    tmBluetoothManager.connectToKnownDevicesOrScanDevices();
+                if (!mBluetooth.isBluetoothConnectedToDevice()) {
+                    mBluetooth.connectToKnownDevicesOrScanDevices();
                 }
             }
         }
@@ -60,7 +48,7 @@ public abstract class BluetoothFragment extends Fragment {
                     new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            TMBluetoothManager.getInstance().enableBluetooth();
+                            mBluetooth.enableBluetooth();
                         }
                     }))
                     .show();
@@ -74,4 +62,11 @@ public abstract class BluetoothFragment extends Fragment {
         BluetoothFragment.isFirstInit = false;
     }
 
+    public TMBluetooth getBluetooth() {
+        return mBluetooth;
+    }
+
+    public void setBluetooth(TMBluetooth mBluetooth) {
+        this.mBluetooth = mBluetooth;
+    }
 }

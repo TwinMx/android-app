@@ -6,6 +6,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import fr.isen.twinmx.R;
+import fr.isen.twinmx.util.Bluetooth.SmoothBluetoothFork.TMDevice;
 import fr.isen.twinmx.util.Bluetooth.TMBluetooth;
 import fr.isen.twinmx.util.Bluetooth.TMBluetoothManager;
 import io.palaima.smoothbluetooth.Device;
@@ -15,15 +16,15 @@ import io.palaima.smoothbluetooth.Device;
  */
 public class TMDeviceHolder extends RecyclerView.ViewHolder {
 
-    private static TMBluetooth bluetooth;
+    private TMBluetooth bluetooth;
 
     private final ImageView bluetoothIcon;
-    private Device device;
+    private TMDevice device;
     private TextView name;
     private TextView mac;
     private ImageView disconnectIcon;
 
-    public TMDeviceHolder(View itemView) {
+    public TMDeviceHolder(View itemView, final TMBluetooth bluetooth) {
         super(itemView);
         this.bluetoothIcon = (ImageView) itemView.findViewById(R.id.recycler_view_bluetooth_icon);
         this.name = (TextView) itemView.findViewById(R.id.recycler_view_device_item_name);
@@ -33,17 +34,18 @@ public class TMDeviceHolder extends RecyclerView.ViewHolder {
             @Override
             public void onClick(View v) {
                 if (disconnectIcon.getVisibility() == View.VISIBLE) {
-                    TMBluetoothManager.getInstance().getBluetooth().disconnect();
+                    bluetooth.disconnect();
                     disconnectIcon.setVisibility(View.GONE);
                     updateIcon();
                 }
             }
         });
+        this.bluetooth = bluetooth;
     }
 
-    public void bind(Device device) {
+    public void bind(TMDevice device) {
         this.device = device;
-        final Device connectedDevice = this.getConnectedDevice();
+        final TMDevice connectedDevice = this.getConnectedDevice();
         this.name.setText(device.getName());
         this.mac.setText(device.getAddress());
 
@@ -58,7 +60,7 @@ public class TMDeviceHolder extends RecyclerView.ViewHolder {
 
     }
 
-    public Device getDevice() {
+    public TMDevice getDevice() {
         return this.device;
     }
 
@@ -70,13 +72,12 @@ public class TMDeviceHolder extends RecyclerView.ViewHolder {
         return mac.getText().toString();
     }
 
-    private Device getConnectedDevice() {
-        if (bluetooth == null) bluetooth = TMBluetoothManager.getInstance().getBluetooth();
+    private TMDevice getConnectedDevice() {
         return bluetooth.getConnectedDevice();
     }
 
     private void updateIcon() {
-        final Device connectedDevice = this.getConnectedDevice();
+        final TMDevice connectedDevice = this.getConnectedDevice();
         if (connectedDevice != null && device != null && device.getAddress().equals(connectedDevice.getAddress())) {
             this.bluetoothIcon.setBackgroundResource(R.drawable.circular_image_view_green);
             this.bluetoothIcon.setImageResource(R.drawable.ic_bluetooth_connected_white_24dp);

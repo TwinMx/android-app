@@ -9,8 +9,12 @@ import fr.isen.twinmx.model.LimitedLinkedList;
 
 public class TMBluetoothDataManager {
 
-    private final List<Integer> frames = new LimitedLinkedList<>(1000);
+    private final List<Integer> frames;
     private int listeners = 0;
+
+    public TMBluetoothDataManager(int size) {
+        this.frames = new LimitedLinkedList<>(size);
+    }
 
     public void startListening() {
         listeners++;

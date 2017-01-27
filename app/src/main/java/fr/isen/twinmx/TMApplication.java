@@ -29,4 +29,12 @@ public class TMApplication extends Application {
     {
         return context;
     }
+
+    public static String loadString(int resourceId) {
+        return getContext().getResources().getString(resourceId);
+    }
+
+    public static String loadString(int resourceId, String... strings) {
+        return String.format(loadString(resourceId), (Object[]) strings);
+    }
 }

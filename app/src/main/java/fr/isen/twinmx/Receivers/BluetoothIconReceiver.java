@@ -1,9 +1,11 @@
 package fr.isen.twinmx.Receivers;
 
+import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.support.design.widget.Snackbar;
 import android.view.View;
 import android.widget.ImageView;
@@ -12,7 +14,6 @@ import android.widget.ProgressBar;
 import fr.isen.twinmx.R;
 import fr.isen.twinmx.TMApplication;
 import fr.isen.twinmx.util.Bluetooth.TMBluetooth;
-import fr.isen.twinmx.util.Bluetooth.TMBluetoothManager;
 
 /**
  * Created by cdupl on 10/5/2016.
@@ -32,36 +33,23 @@ public class BluetoothIconReceiver extends BroadcastReceiver {
     private final ImageView bluetoothIcon;
     private final View container;
     private final ProgressBar progressBar;
+    private final TMBluetooth bluetooth;
 
 
-    public BluetoothIconReceiver(ImageView bluetoothIcon, ProgressBar progressBar, View container) {
+    public BluetoothIconReceiver(ImageView bluetoothIcon, ProgressBar progressBar, View container, final TMBluetooth bluetooth) {
         this.bluetoothIcon = bluetoothIcon;
         this.progressBar = progressBar;
-        this.bluetoothIcon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                final TMBluetooth bt = TMBluetoothManager.getInstance().getBluetooth();
-                if (bt.isBluetoothEnabled()) {
-                    bt.tryConnection();
-                }
-                else {
-                    TMBluetoothManager.getInstance().enableBluetooth();
-                }
-            }
-        });
         this.container = container;
+        this.bluetooth = bluetooth;
         this.updateIcon();
     }
 
     private void updateIcon() {
-        final TMBluetooth bt = TMBluetoothManager.getInstance().getBluetooth();
-        if (!bt.isBluetoothEnabled()) {
+        if (!bluetooth.isBluetoothEnabled()) {
             this.updateIcon(R.drawable.ic_bluetooth_disabled_white_24dp, R.drawable.circular_image_view_grey);
-        }
-        else if (!bt.isConnected()) {
+        } else if (!bluetooth.isConnected()) {
             this.updateIcon(R.drawable.ic_bluetooth_white_24dp, R.drawable.circular_image_view);
-        }
-        else {
+        } else {
             this.updateIcon(R.drawable.ic_bluetooth_connected_white_24dp, R.drawable.circular_image_view_green);
         }
 
@@ -69,26 +57,52 @@ public class BluetoothIconReceiver extends BroadcastReceiver {
 
     private void updateIcon(String status) {
         if (status.equals(EXTRA_STATUS_OK)) {
-            this.showLoading(false);
-            this.updateIcon(R.drawable.ic_bluetooth_connected_white_24dp, R.drawable.circular_image_view_green);
+            this.connected(null);
+        } else if (status.equals(EXTRA_STATUS_CONNECTING)) {
+            this.connecting();
+        } else if (status.equals(EXTRA_STATUS_ENABLED)) {
+            this.enabled();
+        } else if (status.equals(EXTRA_STATUS_ERROR)) {
+            this.errorOrDisabled();
         }
-        else if (status.equals(EXTRA_STATUS_CONNECTING)) {
-            this.showLoading(true);
+    }
+
+    public void connected(String message) {
+        this.showLoading(false);
+        this.updateIcon(R.drawable.ic_bluetooth_connected_white_24dp, R.drawable.circular_image_view_green);
+        inform(message);
+    }
+
+    public void connecting() {
+        this.showLoading(true);
+    }
+
+    public void disconnected() {
+        enabled();
+    }
+
+    public void enabled() {
+        this.showLoading(false);
+        this.updateIcon(R.drawable.ic_bluetooth_white_24dp, R.drawable.circular_image_view);
+    }
+
+    public void errorOrDisabled() {
+        if (!bluetooth.isBluetoothEnabled()) {
+            this.disabled();
+        } else {
+            this.error(TMApplication.loadString(R.string.connection_failed_to));
         }
-        else if (status.equals(EXTRA_STATUS_ENABLED)) {
-            this.showLoading(false);
-            this.updateIcon(R.drawable.ic_bluetooth_white_24dp, R.drawable.circular_image_view);
-        }
-        else if (status.equals(EXTRA_STATUS_ERROR)) {
-            this.showLoading(false);
-            final TMBluetooth bt = TMBluetoothManager.getInstance().getBluetooth();
-            if (!bt.isBluetoothEnabled()) {
-                this.updateIcon(R.drawable.ic_bluetooth_disabled_white_24dp, R.drawable.circular_image_view_grey);
-            }
-            else {
-                this.updateIcon(R.drawable.ic_bluetooth_white_24dp, R.drawable.circular_image_view_red);
-            }
-        }
+    }
+
+    public void disabled() {
+        this.showLoading(false);
+        this.updateIcon(R.drawable.ic_bluetooth_disabled_white_24dp, R.drawable.circular_image_view_grey);
+    }
+
+    public void error(String message) {
+        this.showLoading(false);
+        this.updateIcon(R.drawable.ic_bluetooth_white_24dp, R.drawable.circular_image_view_red);
+        inform(message);
     }
 
     private void showLoading(boolean val) {
@@ -108,10 +122,14 @@ public class BluetoothIconReceiver extends BroadcastReceiver {
         if (intent != null && intent.getAction().equals(ACTION)) {
             this.updateIcon(intent.getStringExtra(EXTRA_STATUS));
             this.inform(intent.getStringExtra(EXTRA_MESSAGE));
-        }
-        else if (intent != null && intent.getAction().equals(BluetoothAdapter.ACTION_STATE_CHANGED)) {
+        } else if (intent != null && intent.getAction().equals(BluetoothAdapter.ACTION_STATE_CHANGED)) {
             this.updateIcon();
         }
+    }
+
+    public void register(Activity activity) {
+        activity.registerReceiver(this, new IntentFilter(BluetoothIconReceiver.ACTION));
+        activity.registerReceiver(this, new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED));
     }
 
     private void inform(final String message) {
@@ -128,20 +146,36 @@ public class BluetoothIconReceiver extends BroadcastReceiver {
     }
 
     public static void sendStatusOk(final String message) {
-        sendStatus(TMApplication.getContext(), EXTRA_STATUS_OK, message);
+        sendStatusOk(message, TMApplication.getContext());
+    }
+
+    public static void sendStatusOk(final String message, Context context) {
+        sendStatus(context, EXTRA_STATUS_OK, message);
     }
 
     public static void sendStatusError(final String message) {
-        sendStatus(TMApplication.getContext(), EXTRA_STATUS_ERROR, message);
+        sendStatusError(message, TMApplication.getContext());
+    }
+
+    public static void sendStatusError(final String message, Context context) {
+        sendStatus(context, EXTRA_STATUS_ERROR, message);
     }
 
     public static void sendStatusEnabled() {
-        sendStatus(TMApplication.getContext(), EXTRA_STATUS_ENABLED, null);
+        sendStatusEnabled(TMApplication.getContext());
+    }
 
-
+    public static void sendStatusEnabled(Context context) {
+        sendStatus(context, EXTRA_STATUS_ENABLED, null);
     }
 
     public static void sendStatusConnecting() {
-        sendStatus(TMApplication.getContext(), EXTRA_STATUS_CONNECTING, null);
+        sendStatusConnecting(TMApplication.getContext());
     }
+
+    public static void sendStatusConnecting(Context context) {
+        sendStatus(context, EXTRA_STATUS_CONNECTING, null);
+    }
+
+
 }

@@ -52,4 +52,8 @@ public class RawMeasures {
         }
         return entries;
     }
+
+    public int[] toYCoordinates() {
+        return array;
+    }
 }

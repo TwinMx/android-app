@@ -9,7 +9,9 @@ import java.util.List;
 
 import fr.isen.twinmx.R;
 import fr.isen.twinmx.Receivers.BluetoothIconReceiver;
+import fr.isen.twinmx.util.Bluetooth.SmoothBluetoothFork.TMDevice;
 import fr.isen.twinmx.util.Bluetooth.SmoothBluetoothFork.TMSmoothBluetooth;
+import fr.isen.twinmx.util.Bluetooth.TMBluetooth;
 import fr.isen.twinmx.util.Bluetooth.TMBluetoothManager;
 import io.palaima.smoothbluetooth.Device;
 import io.palaima.smoothbluetooth.SmoothBluetooth;
@@ -20,22 +22,24 @@ import io.palaima.smoothbluetooth.SmoothBluetooth;
 public class TMBluetoothDialogAdapter extends RecyclerView.Adapter<TMDeviceHolder> {
 
     private final TMSmoothBluetooth.ConnectionCallback connectionCallback;
-    private List<Device> mDevices;
+    private final TMBluetooth mBluetooth;
+    private List<TMDevice> mDevices;
 
-    public TMBluetoothDialogAdapter(List<Device> devices, TMSmoothBluetooth.ConnectionCallback connectionCallback) {
+    public TMBluetoothDialogAdapter(List<TMDevice> devices, TMSmoothBluetooth.ConnectionCallback connectionCallback, TMBluetooth bluetooth) {
         this.mDevices = devices;
         this.connectionCallback = connectionCallback;
+        this.mBluetooth = bluetooth;
     }
 
     @Override
     public TMDeviceHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         final View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_view_device_item, parent, false);
-        final TMDeviceHolder holder = new TMDeviceHolder(view);
+        final TMDeviceHolder holder = new TMDeviceHolder(view, mBluetooth);
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 BluetoothIconReceiver.sendStatusConnecting();
-                TMBluetoothManager.getInstance().hideBluetoothDevicesDialog();
+                mBluetooth.hideBluetoothDevicesDialog();
                 connectionCallback.connectTo(holder.getDevice());
             }
         });

@@ -20,8 +20,7 @@ import java.util.Observer;
 
 import fr.isen.twinmx.R;
 import fr.isen.twinmx.async.RawDataManagerAsyncTask;
-import fr.isen.twinmx.util.Bluetooth.TMBluetoothListener;
-import fr.isen.twinmx.util.Bluetooth.TMBluetoothManager;
+import fr.isen.twinmx.util.Bluetooth.TMBluetooth;
 
 /**
  * Created by Clement on 19/01/2017.
@@ -33,12 +32,13 @@ public class RealTimeChartComponent implements Observer, OnChartGestureListener,
     private final Activity context;
     private final LineChart mChart;
     private ArrayList<LimitedEntryList> dataSetEntries = new ArrayList<>(4);
-    private TMBluetoothListener listener;
+    private TMBluetooth mBluetooth;
     private RawDataManagerAsyncTask rawDataManagerAsyncTask;
 
-    public RealTimeChartComponent(Activity context, LineChart chart) {
+    public RealTimeChartComponent(Activity context, LineChart chart, TMBluetooth bluetooth) {
         this.context = context;
         this.mChart = chart;
+        this.mBluetooth = bluetooth;
     }
 
     /** onCreate **/
@@ -63,14 +63,13 @@ public class RealTimeChartComponent implements Observer, OnChartGestureListener,
 
     /** onResume() **/
     public void onResume() {
-        this.listener = TMBluetoothManager.getInstance().getBluetooth().getListener();
-        listener.addObserver(this);
+        mBluetooth.addObserver(this);
         update();
     }
 
 
     public void update() {
-        if (listener.getConnectedDevice() != null) { //If there's a connected device
+        if (mBluetooth.getConnectedDevice() != null) { //If there's a connected device
             play();
         }
         else {
@@ -167,7 +166,7 @@ public class RealTimeChartComponent implements Observer, OnChartGestureListener,
                 entries.reset();
             }
         }
-        rawDataManagerAsyncTask = new RawDataManagerAsyncTask(TMBluetoothManager.getInstance().getDataManager(), this);
+        rawDataManagerAsyncTask = new RawDataManagerAsyncTask(mBluetooth.getDataManager(), this);
         rawDataManagerAsyncTask.execute();
     }
 

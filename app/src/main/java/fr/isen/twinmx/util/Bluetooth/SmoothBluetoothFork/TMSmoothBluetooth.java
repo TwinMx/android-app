@@ -13,15 +13,18 @@ import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Observable;
 import java.util.Set;
 
+import fr.isen.twinmx.Receivers.BluetoothIconReceiver;
+import fr.isen.twinmx.util.Bluetooth.TMBluetooth;
 import io.palaima.smoothbluetooth.Device;
 
 /**
  * Created by Clement on 26/01/2017.
  */
 
-public abstract class TMSmoothBluetooth {
+public abstract class TMSmoothBluetooth extends Observable {
 
     public Handler getmHandler() {
         return mHandler;
@@ -42,20 +45,20 @@ public abstract class TMSmoothBluetooth {
     }
 
     public interface ConnectionCallback {
-        void connectTo(Device device);
+        void connectTo(TMDevice device);
     }
 
     public interface Listener {
         void onBluetoothNotSupported();
         void onBluetoothNotEnabled();
-        void onConnecting(Device device);
-        void onConnected(Device device);
+        void onConnecting(TMDevice device);
+        void onConnected(TMDevice device);
         void onDisconnected();
-        void onConnectionFailed(Device device);
+        void onConnectionFailed(TMDevice device);
         void onDiscoveryStarted();
         void onDiscoveryFinished();
         void onNoDevicesFound();
-        void onDevicesFound(List<Device> deviceList, TMSmoothBluetooth.ConnectionCallback connectionCallback);
+        void onDevicesFound(List<TMDevice> deviceList, TMSmoothBluetooth.ConnectionCallback connectionCallback);
         void onDataReceived(int data);
     }
 
@@ -79,9 +82,9 @@ public abstract class TMSmoothBluetooth {
 
     private TMSmoothBluetooth.Listener mListener;
 
-    private ArrayList<Device> mDevices = new ArrayList<>();
+    private List<TMDevice> mDevices = new ArrayList<>();
 
-    private Device mCurrentDevice;
+    private TMDevice mCurrentDevice;
 
     public TMSmoothBluetooth(Context context) {
         this(context, TMSmoothBluetooth.ConnectionTo.OTHER_DEVICE, TMSmoothBluetooth.Connection.SECURE, null);
@@ -114,6 +117,7 @@ public abstract class TMSmoothBluetooth {
             }
             return false;
         }
+        BluetoothIconReceiver.sendStatusEnabled();
         return true;
     }
 
@@ -126,12 +130,12 @@ public abstract class TMSmoothBluetooth {
 
         Set<BluetoothDevice> pairedDevices = mBluetoothAdapter.getBondedDevices();
 
-        if (pairedDevices.size() > 0) {
-            for (BluetoothDevice device : pairedDevices) {
-                String name = device.getName();
-                String address = device.getAddress();
+                if (pairedDevices.size() > 0) {
+                    for (BluetoothDevice device : pairedDevices) {
+                        String name = device.getName();
+                        String address = device.getAddress();
                 if(name != null && address != null) {
-                    mDevices.add(new Device(name, address, true));
+                    mDevices.add(new TMDevice(name, address, true));
                 }
             }
         }
@@ -140,7 +144,7 @@ public abstract class TMSmoothBluetooth {
         if (!mDevices.isEmpty()) {
             mListener.onDevicesFound(mDevices, new TMSmoothBluetooth.ConnectionCallback() {
                 @Override
-                public void connectTo(Device device) {
+                public void connectTo(TMDevice device) {
                     if (device != null) {
                         connect(device, mIsAndroid, mIsSecure);
                     }
@@ -185,12 +189,16 @@ public abstract class TMSmoothBluetooth {
         mListener = listener;
     }
 
-    private void connect(Device device, boolean android, boolean secure) {
+    private void connect(TMDevice device, boolean android, boolean secure) {
         mCurrentDevice = device;
         if (mListener != null) {
             mListener.onConnecting(device);
         }
         connect(device.getAddress(), android, secure);
+    }
+
+    public TMDevice getConnectedDevice() {
+        return mCurrentDevice;
     }
 
     public boolean isConnected() {
@@ -233,7 +241,7 @@ public abstract class TMSmoothBluetooth {
                 // If it's already paired, skip it, because it's been listed already
                 Log.d(TAG, "Device found: " + device.getName() + " " + device.getAddress());
                 if(!deviceExist(device)) {
-                    mDevices.add(new Device(device.getName(), device.getAddress(), false));
+                    mDevices.add(new TMDevice(device.getName(), device.getAddress(), false));
                 }
             } else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
                 Log.d(TAG, "Discovery finished: " + mDevices.size());
@@ -246,14 +254,14 @@ public abstract class TMSmoothBluetooth {
         }
     };
 
-    private void connectAction(List<Device> devices, final boolean android, final boolean secure) {
+    private void connectAction(List<TMDevice> devices, final boolean android, final boolean secure) {
         if (mListener != null) {
             if (devices.isEmpty()) {
                 mListener.onNoDevicesFound();
             } else {
                 mListener.onDevicesFound(devices, new TMSmoothBluetooth.ConnectionCallback() {
                     @Override
-                    public void connectTo(Device device) {
+                    public void connectTo(TMDevice device) {
                         if (device != null) {
                             connect(device, android, secure);
                         }
@@ -264,7 +272,7 @@ public abstract class TMSmoothBluetooth {
     }
 
     private boolean deviceExist(BluetoothDevice device){
-        for (Device mDevice : mDevices) {
+        for (TMDevice mDevice : mDevices) {
             if (mDevice.getAddress().contains(device.getAddress())) {
                 return true;
             }
