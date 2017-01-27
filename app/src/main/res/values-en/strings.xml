@@ -25,9 +25,24 @@
     <string name="form_notes">Notes</string>
     <string name="form_save">Save</string>
     <string name="form_cancel">Cancel</string>
+    <string name="create">Create</string>
+    <string name="moto_name">Moto\'s name</string>
+    <string name="no_photo_selected">No image selected</string>
+
+    <!-- Moto detail -->
+    <string name="last_acquisitions">Last acquisitions</string>
+    <string name="menu_modify">Modify</string>
+    <string name="no_acquisitions">No acquisitions found.</string>
+
+    <!-- Moto detail dialog -->
+    <string name="modify_moto_title_dialog">New name</string>
 
     <string name="pressure">Pressure (mBar)</string>
     <string name="cylinder">Cylinder %d</string>
 
     <string name="save">Save</string>
+
+    <!-- Manual help -->
+    <string name="twinmax_title">Device help</string>
+    <string name="app_title">Application help</string>
 </resources>

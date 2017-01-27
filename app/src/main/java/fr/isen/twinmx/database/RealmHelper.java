@@ -2,6 +2,8 @@ package fr.isen.twinmx.database;
 
 import android.util.Log;
 
+import java.util.List;
+
 import fr.isen.twinmx.database.listeners.MaintenanceListener;
 import fr.isen.twinmx.database.listeners.MotoListener;
 import fr.isen.twinmx.database.model.Maintenance;
@@ -24,6 +26,10 @@ public class RealmHelper implements MotoListener, MaintenanceListener {
         realm = newRealm;
     }
 
+    public static Realm getRealm() {
+        return realm;
+    }
+
     @Override
     public void createMoto(Moto moto, OnCreateMotoCallback callback) {
         realm.beginTransaction();
@@ -42,12 +48,12 @@ public class RealmHelper implements MotoListener, MaintenanceListener {
 
     @Override
     public void deleteMoto(String name, OnDeleteMotoCallback callback) {
-        realm.beginTransaction();
+        //realm.beginTransaction();
 
         RealmResults<Moto> result = realm.where(Moto.class).equalTo("name", name).findAll();
         final boolean isSuccess = result.deleteAllFromRealm();
 
-        realm.commitTransaction();
+        //realm.commitTransaction();
 
         if (callback != null)
         {
@@ -62,7 +68,7 @@ public class RealmHelper implements MotoListener, MaintenanceListener {
         }
     }
 
-    public void getMotos()
+    public List<Moto> getMotos()
     {
         realm.beginTransaction();
 
@@ -72,6 +78,8 @@ public class RealmHelper implements MotoListener, MaintenanceListener {
         {
             Log.d(TAG, m.getName());
         }
+
+        return results;
     }
 
     public void getMaintenances()

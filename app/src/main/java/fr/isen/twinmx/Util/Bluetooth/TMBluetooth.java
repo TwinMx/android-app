@@ -13,6 +13,9 @@ import java.util.List;
 import fr.isen.twinmx.R;
 import fr.isen.twinmx.Receivers.BluetoothIconReceiver;
 import fr.isen.twinmx.TMApplication;
+import fr.isen.twinmx.database.RealmDeviceRepository;
+import fr.isen.twinmx.database.exceptions.RepositoryException;
+import fr.isen.twinmx.database.model.RealmDevice;
 import fr.isen.twinmx.util.Bluetooth.SmoothBluetoothFork.TMBluetoothService;
 import fr.isen.twinmx.util.Bluetooth.SmoothBluetoothFork.TMDevice;
 import fr.isen.twinmx.util.Bluetooth.SmoothBluetoothFork.TMSmoothBluetooth;
@@ -76,6 +79,14 @@ public class TMBluetooth extends TMSmoothBluetooth implements TMSmoothBluetooth.
         if (this.bluetoothIconReceiver != null) {
             this.bluetoothIconReceiver.connected(TMApplication.loadString(R.string.connected_to, device.getName()));
         }
+
+        device.setTwinMax(true);
+        try {
+            RealmDeviceRepository.getInstance().create(new RealmDevice(device));
+        } catch (RepositoryException e) {
+            e.printStackTrace();
+        }
+
         //BluetoothIconReceiver.sendStatusOk(String.format(TMApplication.getContext().getResources().getString(R.string.connected_to), device.getName()));
         this.setChanged();
         this.notifyObservers();
@@ -117,6 +128,10 @@ public class TMBluetooth extends TMSmoothBluetooth implements TMSmoothBluetooth.
 
     @Override
     public void onDevicesFound(List<TMDevice> deviceList, ConnectionCallback connectionCallback) {
+        List<RealmDevice> realmDevices = RealmDeviceRepository.getInstance().findAll();
+        for(TMDevice device : deviceList) {
+
+        }
         this.showBluetoothDevicesDialog(deviceList, connectionCallback);
     }
 

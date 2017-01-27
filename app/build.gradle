@@ -35,6 +35,7 @@ dependencies {
 
     //Bottom navigation bar
     compile 'com.aurelhubert:ahbottomnavigation:2.0.3'
+
     //Bluetooth
     compile 'io.palaima:smoothbluetooth:0.1.0'
 
