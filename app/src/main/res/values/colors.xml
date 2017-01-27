@@ -25,5 +25,7 @@
     <color name="green500">#4CAF50</color>
     <color name="red500">#F44336</color>
     <color name="grey500">#9E9E9E</color>
+
+    <color name="transparent">@android:color/transparent</color>
 </resources>
 

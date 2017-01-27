@@ -219,12 +219,12 @@ public class MotoFormActivity extends AppCompatActivity {
     private void locationpermission() {
         if (ContextCompat.checkSelfPermission(this
                 ,
-                Manifest.permission.ACCESS_COARSE_LOCATION)
+                Manifest.permission.CAMERA)
                 != PackageManager.PERMISSION_GRANTED) {
 
             // Should we show an explanation?
             if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                    Manifest.permission.ACCESS_COARSE_LOCATION)) {
+                    Manifest.permission.CAMERA)) {
 
                 // Show an expanation to the user *asynchronously* -- don't block
                 // this thread waiting for the user's response! After the user
@@ -234,7 +234,7 @@ public class MotoFormActivity extends AppCompatActivity {
 
                 // No explanation needed, we can request the permission.
                 ActivityCompat.requestPermissions(this,
-                        new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
+                        new String[]{Manifest.permission.CAMERA},
                         REQUEST_IMAGE_CAPTURE);
             }
         }
