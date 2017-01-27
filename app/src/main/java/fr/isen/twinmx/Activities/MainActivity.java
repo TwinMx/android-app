@@ -14,6 +14,7 @@ import android.widget.ProgressBar;
 
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 
 import butterknife.BindView;
@@ -70,6 +71,7 @@ public class MainActivity extends AppCompatActivity implements TMBottomNavigatio
 
     private TMBluetooth mBluetooth; //Keep a pointer to avoid GC
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -92,7 +94,7 @@ public class MainActivity extends AppCompatActivity implements TMBottomNavigatio
         if (this.realmConfiguration == null) {
             this.realmConfiguration = new RealmConfiguration.Builder(this)
                     .name("TwinMax")
-                    .schemaVersion(5)
+                    .schemaVersion(6)
                     .deleteRealmIfMigrationNeeded()
                     .modules(new TMRealmModule())
                     .build();

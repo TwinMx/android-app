@@ -1,5 +1,7 @@
 package fr.isen.twinmx.database;
 
+import com.github.mikephil.charting.data.Entry;
+
 import java.util.List;
 import java.util.concurrent.Callable;
 
@@ -32,6 +34,24 @@ public class MotoRepository extends Repository<Moto> {
 
     private MotoRepository() {
         super(Moto.class);
+    }
+
+    public Moto updateName(Moto moto, String newName) throws RepositoryException {
+        Moto updatedMoto = new Moto(moto);
+        updatedMoto.setName(newName);
+        return update(updatedMoto);
+    }
+
+    public Moto updateImage(Moto moto, String newImage) throws RepositoryException {
+        Moto updatedMoto = new Moto(moto);
+        updatedMoto.setImage(newImage);
+        return update(updatedMoto);
+    }
+
+    public Moto updateAddGraph(Moto moto, String date, String note, List<List<Entry>> graphs) throws RepositoryException {
+        Moto updatedMoto = new Moto(moto);
+        updatedMoto.addGraphs(date, note, graphs);
+        return update(updatedMoto);
     }
 
     public boolean deleteByName(final String name) throws RepositoryException {

@@ -51,6 +51,14 @@ public abstract class Repository<T extends RealmObject> {
         this.realm.commitTransaction();
     }
 
+    public T update(final T t) throws RepositoryException {
+        return create(t);
+    }
+
+    public void updateAsync(final T t) throws RepositoryException {
+        createAsync(t);
+    }
+
     public T create(final T t) throws RepositoryException {
         try {
             begin();

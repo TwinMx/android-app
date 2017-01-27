@@ -1,6 +1,9 @@
 package fr.isen.twinmx.database.model;
 
+import com.github.mikephil.charting.data.Entry;
+
 import java.util.ArrayList;
+import java.util.List;
 
 import fr.isen.twinmx.database.interfaces.AutoIncrement;
 import fr.isen.twinmx.database.measures.RealmMeasure;
@@ -20,24 +23,17 @@ public class Maintenance extends RealmObject implements AutoIncrement {
     private Long id = null;
     private String date;
     private String note;
-    private RealmList<RealmMeasure> measures;
+    private RealmList<RealmGraph> graphs;
 
     public Maintenance() {}
 
-    public Maintenance(String  date, String note)
+    public Maintenance(String  date, String note, List<List<Entry>> graphs)
     {
         this.date = date;
         this.note = note;
-        this.measures = new RealmList<>();
-    }
-
-    public Maintenance(String date, String note, ArrayList<RealmMeasure> measuresList)
-    {
-        this(date, note);
-
-        for (RealmMeasure measure : measuresList)
-        {
-            this.measures.add(new RealmMeasure(measure));
+        this.graphs = new RealmList<>();
+        for(List<Entry> graph : graphs) {
+            this.graphs.add(new RealmGraph(graph));
         }
     }
 
@@ -57,12 +53,12 @@ public class Maintenance extends RealmObject implements AutoIncrement {
         this.note = note;
     }
 
-    public RealmList<RealmMeasure> getMeasures() {
-        return this.measures;
+    public RealmList<RealmGraph> getGraphs() {
+        return graphs;
     }
 
-    public void setMeasures(RealmList<RealmMeasure> measures) {
-        this.measures = measures;
+    public void setGraphs(RealmList<RealmGraph> graphs) {
+        this.graphs = graphs;
     }
 
     @Override

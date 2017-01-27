@@ -2,8 +2,11 @@ package fr.isen.twinmx.database.model;
 
 import android.util.Log;
 
+import com.github.mikephil.charting.data.Entry;
+
 import java.text.DateFormat;
 import java.util.Date;
+import java.util.List;
 
 import fr.isen.twinmx.database.interfaces.AutoIncrement;
 import io.realm.RealmList;
@@ -93,4 +96,11 @@ public class Moto extends RealmObject implements AutoIncrement {
     public String getImage() { return this.image; }
 
     public void setImage(String image) { this.image = image;}
+
+    public void addGraphs(String date, String note, List<List<Entry>> graphs) {
+        if (this.maintenances == null) {
+            this.maintenances = new RealmList<>();
+        }
+        this.maintenances.add(new Maintenance(date, note, graphs));
+    }
 }

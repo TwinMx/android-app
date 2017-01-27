@@ -47,4 +47,6 @@
     <!-- Manual help -->
     <string name="twinmax_title">Fonctionnement de l\'appareil</string>
     <string name="app_title">Fonctionnement de l\'application</string>
+    <string name="select_moto">Sélectionnez une moto</string>
+    <string name="new_moto">Nouvelle moto...</string>
 </resources>

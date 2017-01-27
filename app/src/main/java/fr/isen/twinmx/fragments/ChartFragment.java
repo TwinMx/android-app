@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,27 +14,40 @@ import android.support.v7.widget.AppCompatCheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.Entry;
 import com.hookedonplay.decoviewlib.DecoView;
 import com.hookedonplay.decoviewlib.charts.SeriesItem;
+
+import java.util.LinkedList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import fr.isen.twinmx.R;
+import fr.isen.twinmx.TMApplication;
+import fr.isen.twinmx.database.MotoRepository;
+import fr.isen.twinmx.database.exceptions.RepositoryException;
+import fr.isen.twinmx.database.model.Moto;
+import fr.isen.twinmx.listeners.OnMotoHistoryClickListener;
+import fr.isen.twinmx.ui.adapters.DialogMotoAdapter;
 import fr.isen.twinmx.util.Bluetooth.TMBluetooth;
 
 /**
  * Created by pierredfc.
  */
-public class ChartFragment extends BluetoothFragment {
+public class ChartFragment extends BluetoothFragment implements OnMotoHistoryClickListener {
 
     private Context context;
     private int maxMotorValue = 5000;
     private int minMotorValue = 0;
     private RealTimeChartComponent chartComponent;
     private int serie1Index;
+
+    private MaterialDialog chooseMotoDialog;
+
 
     @OnClick({R.id.box1, R.id.box2, R.id.box3, R.id.box4})
     public void onBoxClick(View view) {
@@ -68,7 +82,17 @@ public class ChartFragment extends BluetoothFragment {
 
     @OnClick(R.id.save_acquisition)
     public void onSaveClick(View view) {
-        // TODO
+        showChooseMotoDialog();
+    }
+
+
+
+    private void save(Moto moto, String date, String note, List<List<Entry>> graphs) {
+        try {
+            MotoRepository.getInstance().updateAddGraph(moto, date, note, graphs);
+        } catch (RepositoryException e) {
+            e.printStackTrace();
+        }
     }
 
     @BindView(R.id.motorLifeCycleValue)
@@ -76,7 +100,6 @@ public class ChartFragment extends BluetoothFragment {
 
     @BindView(R.id.motorLifeCycle)
     DecoView motorLifeCycle;
-
 
 
     public static ChartFragment newInstance(Context context, TMBluetooth bluetooth) {
@@ -137,5 +160,63 @@ public class ChartFragment extends BluetoothFragment {
     @Override
     public CoordinatorLayout getCoordinatorLayout() {
         return null;
+    }
+
+    @Override
+    public void onMotoHistoryClick(Moto moto) {
+        hideChooseMotoDialog();
+
+        if (moto == null) {
+
+            //FIXME
+
+            //Dialog new moto + note
+            new MaterialDialog.Builder(this.getActivity())
+                    .title("Sauvegarde de l'acquisition")
+                    .content("Nom de la nouvelle moto")
+                    .inputType(InputType.TYPE_CLASS_TEXT)
+                    .input("Nom de la nouvelle moto", "", new MaterialDialog.InputCallback() {
+                        @Override
+                        public void onInput(MaterialDialog dialog, CharSequence input) {
+                            // Do something
+                        }})
+                    .content("Note")
+                    .inputType(InputType.TYPE_CLASS_TEXT)
+                    .input("Note", "", new MaterialDialog.InputCallback() {
+                        @Override
+                        public void onInput(MaterialDialog dialog, CharSequence input) {
+                            // Do something
+                        }})
+                    .build().show();
+
+
+        }
+        else {
+            //Dialog note
+        }
+    }
+
+    private void showChooseMotoDialog() {
+        if (this.chooseMotoDialog == null || !this.chooseMotoDialog.isShowing()) {
+
+            List<Moto> motos = new LinkedList<>();
+            for(int i = 0; i < 5; i++) {
+                motos.addAll(MotoRepository.getInstance().findAll());
+            }
+
+            this.chooseMotoDialog = new MaterialDialog.Builder(this.getActivity())
+                    .title(TMApplication.getContext().getResources().getString(R.string.select_moto))
+                    .adapter(new DialogMotoAdapter(motos, this), null)
+                    .build();
+
+            this.chooseMotoDialog.show();
+        }
+    }
+
+    private void hideChooseMotoDialog() {
+        if (this.chooseMotoDialog != null && this.chooseMotoDialog.isShowing()) {
+            this.chooseMotoDialog.dismiss();
+            this.chooseMotoDialog = null;
+        }
     }
 }

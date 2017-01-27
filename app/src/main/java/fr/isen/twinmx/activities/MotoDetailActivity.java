@@ -1,8 +1,6 @@
 package fr.isen.twinmx.activities;
 
-import android.app.FragmentTransaction;
 import android.content.Intent;
-import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -22,9 +20,7 @@ import android.widget.TextView;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.squareup.picasso.Picasso;
 
-import java.text.DateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
@@ -172,9 +168,7 @@ public class MotoDetailActivity extends AppCompatActivity implements OnMotoMaint
                         if (!input.toString().isEmpty())
                         {
                             try {
-                                Moto updatedMoto = new Moto(moto);
-                                updatedMoto.setName(input.toString());
-                                moto = MotoRepository.getInstance().create(updatedMoto);
+                                moto = MotoRepository.getInstance().updateName(moto, input.toString());
                                 updateViewAfterMotoUpdate(false);
                             } catch (RepositoryException e) {
                                 e.printStackTrace();
@@ -210,9 +204,7 @@ public class MotoDetailActivity extends AppCompatActivity implements OnMotoMaint
                     Uri uri = data.getData();
 
                     try {
-                        Moto updatedMoto = new Moto(moto);
-                        updatedMoto.setImage(uri.toString());
-                        moto = MotoRepository.getInstance().create(updatedMoto);
+                        moto = MotoRepository.getInstance().updateImage(moto, uri.toString());
                         updateViewAfterMotoUpdate(true);
                     } catch (RepositoryException e) {
                         e.printStackTrace();
