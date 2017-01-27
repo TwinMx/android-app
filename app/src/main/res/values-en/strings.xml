@@ -41,4 +41,8 @@
     <string name="cylinder">Cylinder %d</string>
 
     <string name="save">Save</string>
+
+    <!-- Manual help -->
+    <string name="twinmax_title">Device help</string>
+    <string name="app_title">Application help</string>
 </resources>

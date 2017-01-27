@@ -160,7 +160,7 @@ public class MotoFormActivity extends AppCompatActivity {
         switch(requestCode)
         {
             case REQUEST_IMAGE_CAPTURE:
-                if (resultCode == RESULT_OK && data != null) {
+                if (resultCode == RESULT_OK) {
                     //this.photoURI = getImageUri(TMApplication.getContext(), (Bitmap)data.getExtras().get("data"));
                     this.loadMotoImage(this.photoURI);
                 }

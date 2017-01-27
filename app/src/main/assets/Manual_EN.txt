@@ -1,0 +1,15 @@
+Twinmax//None//Turn on TwinMax by pressing the switch located on the left side of the device.;
+Twinmax//None//You can choose your baseline cylinder with button 1 and 3.;
+Twinmax//None//Then validate with button 2.;
+Twinmax//None//You can restart TwinMax with button 4.;
+Twinmax//None//If TwinMax is in sleep mode, you can use button 4 to awaken it.;
+
+Title;
+Application//None//In order to communicate with TwinMax, you'll have to paired your device with the TwinMax from the Bluetooth settings windows. Code is "1234".;
+Application//None//In order to get the carburettor's depression curves, press the bluetooth icon located on the top right corner of the app.;
+Application//None//Select TwinMax in the list. Once connected, you can visualize depression curves.;
+Application//None//You can disable some curves by deselecting their associated checkbox.;
+Application//None//Three buttons are also displayed on the interface: Pause/Restart - Auto scaling - Save.;
+Application//None//If you want to save an acquisition, you'll have to choose a motorcycle. If the motorcycle hasn't been created, you'll be able to create one.;
+Application//None//History tab allows you to find previous acquisitions that have been saved. They are linked to a motorcycle. You'll find a list of your motorcycle.;
+Application//None//By pressing the button "+", you'll be able to create a new motorcycle by entering a name and a photo.;
