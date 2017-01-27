@@ -53,26 +53,39 @@ public class ManualFragment extends Fragment {
     @BindView(R.id.cardview_app)
     CardView cardApp;
 
+    private ManualFragmentEnum selectedCard = ManualFragmentEnum.NONE;
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        if (savedInstanceState != null)
+        {
+            this.selectedCard = ManualFragmentEnum.convertIntValueToEnum(savedInstanceState.getInt("ManualFragment"));
+
+            if (ManualFragmentEnum.APP.equals(this.selectedCard))
+            {
+                this.loadInstructions("Application", R.string.app_title, 0.5f, 1f);
+            }
+            else if (ManualFragmentEnum.TM.equals((this.selectedCard)))
+            {
+                this.loadInstructions("Twinmax",R.string.twinmax_title, 1f, 0.5f);
+            }
+        }
+    }
+
     @OnClick(R.id.cardview_app)
     public void onCardViewApp(View view)
     {
-        List<ManualPage> inst = ReadFileHelper.getManualFromFile(TMApplication.getContext(), "Application");
-        this.manualAdapter.setItems(inst);
-        manualTitle.setText(getString(R.string.app_title));
-
-        cardTwinMax.setAlpha(0.5f);
-        cardApp.setAlpha(1f);
+        this.loadInstructions("Application", R.string.app_title, 0.5f, 1f);
+        this.selectedCard = ManualFragmentEnum.APP;
     }
 
     @OnClick(R.id.cardview_twinmax)
     public void onCardViewTwinMax(View view)
     {
-        List<ManualPage> inst = ReadFileHelper.getManualFromFile(TMApplication.getContext(), "Twinmax");
-        this.manualAdapter.setItems(inst);
-        manualTitle.setText(getString(R.string.twinmax_title));
-
-        cardTwinMax.setAlpha(1f);
-        cardApp.setAlpha(0.5f);
+        this.loadInstructions("Twinmax", R.string.twinmax_title, 1f, 0.5f);
+        this.selectedCard = ManualFragmentEnum.TM;
     }
 
     @Nullable
@@ -91,4 +104,48 @@ public class ManualFragment extends Fragment {
         return this.rootview;
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putInt("ManualFragment", selectedCard.getValue());
+    }
+
+    private void loadInstructions(String manual, int stringId, float alphaTM, float alphaApp)
+    {
+        List<ManualPage> pages = ReadFileHelper.getManualFromFile(TMApplication.getContext(), manual);
+        this.manualAdapter.setItems(pages);
+        manualTitle.setText(getString(stringId));
+
+        cardTwinMax.setAlpha(alphaTM);
+        cardApp.setAlpha(alphaApp);
+    }
+
+    private enum ManualFragmentEnum
+    {
+        NONE(0),
+        TM(1),
+        APP(2);
+
+        private final int value;
+
+        ManualFragmentEnum(final int newValue) {
+            value = newValue;
+        }
+
+        public int getValue() { return value; }
+
+        public static ManualFragmentEnum convertIntValueToEnum(int value)
+        {
+            switch(value)
+            {
+                case 0:
+                    return ManualFragmentEnum.NONE;
+                case 1:
+                    return ManualFragmentEnum.TM;
+                case 2:
+                    return ManualFragmentEnum.APP;
+                default:
+                    return null;
+            }
+        }
+    }
 }
