@@ -130,7 +130,9 @@ public class TMBluetooth extends TMSmoothBluetooth implements TMSmoothBluetooth.
     public void onDevicesFound(List<TMDevice> deviceList, ConnectionCallback connectionCallback) {
         List<RealmDevice> realmDevices = RealmDeviceRepository.getInstance().findAll();
         for(TMDevice device : deviceList) {
-
+            if (realmDevices.contains(device)) {
+                device.setTwinMax(true);
+            }
         }
         this.showBluetoothDevicesDialog(deviceList, connectionCallback);
     }

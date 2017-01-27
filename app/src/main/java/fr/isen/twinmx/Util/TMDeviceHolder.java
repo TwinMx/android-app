@@ -46,7 +46,7 @@ public class TMDeviceHolder extends RecyclerView.ViewHolder {
     public void bind(TMDevice device) {
         this.device = device;
         final TMDevice connectedDevice = this.getConnectedDevice();
-        this.name.setText(device.getName());
+        this.name.setText((device.isTwinMax() ? "TM: " : "") + device.getName());
         this.mac.setText(device.getAddress());
 
         if (this.device != null && connectedDevice != null) {

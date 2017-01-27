@@ -92,7 +92,7 @@ public class MainActivity extends AppCompatActivity implements TMBottomNavigatio
         if (this.realmConfiguration == null) {
             this.realmConfiguration = new RealmConfiguration.Builder(this)
                     .name("TwinMax")
-                    .schemaVersion(4)
+                    .schemaVersion(5)
                     .deleteRealmIfMigrationNeeded()
                     .modules(new TMRealmModule())
                     .build();
