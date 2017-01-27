@@ -92,6 +92,7 @@
         android:layout_height="wrap_content"
         android:textAllCaps="true"
         android:id="@+id/manual_title"
+        android:padding="5dp"/>
 
     <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
