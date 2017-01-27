@@ -1,11 +1,13 @@
 package fr.isen.twinmx.util;
 
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import fr.isen.twinmx.R;
+import fr.isen.twinmx.TMApplication;
 import fr.isen.twinmx.util.Bluetooth.SmoothBluetoothFork.TMDevice;
 import fr.isen.twinmx.util.Bluetooth.TMBluetooth;
 import fr.isen.twinmx.util.Bluetooth.TMBluetoothManager;
@@ -16,6 +18,7 @@ import io.palaima.smoothbluetooth.Device;
  */
 public class TMDeviceHolder extends RecyclerView.ViewHolder {
 
+    public static final int LAYOUT = R.layout.recycler_view_device_item;
     private TMBluetooth bluetooth;
 
     private final ImageView bluetoothIcon;
@@ -46,9 +49,9 @@ public class TMDeviceHolder extends RecyclerView.ViewHolder {
     public void bind(TMDevice device) {
         this.device = device;
         final TMDevice connectedDevice = this.getConnectedDevice();
-        this.name.setText((device.isTwinMax() ? "TM: " : "") + device.getName());
+        this.name.setText(device.getName());
         this.mac.setText(device.getAddress());
-
+        this.updateIcon();
         if (this.device != null && connectedDevice != null) {
             if (this.device.getAddress().equals(connectedDevice.getAddress())) {
                 this.disconnectIcon.setVisibility(View.VISIBLE);
@@ -81,10 +84,29 @@ public class TMDeviceHolder extends RecyclerView.ViewHolder {
         if (connectedDevice != null && device != null && device.getAddress().equals(connectedDevice.getAddress())) {
             this.bluetoothIcon.setBackgroundResource(R.drawable.circular_image_view_green);
             this.bluetoothIcon.setImageResource(R.drawable.ic_bluetooth_connected_white_24dp);
+            int pixelsPadding = getDpAsPixels(5);
+            this.bluetoothIcon.setPadding(pixelsPadding, pixelsPadding, pixelsPadding, pixelsPadding);
         }
         else {
+            setTwinMaxImage(device.isTwinMax());
+        }
+    }
+
+    private void setTwinMaxImage(boolean isTwinMax) {
+        if (isTwinMax) {
+            this.bluetoothIcon.setImageResource(R.mipmap.ic_bluetooth_twinmx);
+            this.bluetoothIcon.setBackgroundResource(R.color.transparent);
+            this.bluetoothIcon.setPadding(0,0,0,0);
+        } else {
             this.bluetoothIcon.setBackgroundResource(R.drawable.circular_image_view);
             this.bluetoothIcon.setImageResource(R.drawable.ic_bluetooth_white_24dp);
+            int pixelsPadding = getDpAsPixels(5);
+            this.bluetoothIcon.setPadding(pixelsPadding, pixelsPadding, pixelsPadding, pixelsPadding);
         }
+    }
+
+    private int getDpAsPixels(int sizeInDp) {
+        float scale = TMApplication.getContext().getResources().getDisplayMetrics().density;
+        return (int) (sizeInDp*scale + 0.5f);
     }
 }

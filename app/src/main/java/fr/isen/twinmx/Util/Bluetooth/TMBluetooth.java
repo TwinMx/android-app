@@ -8,6 +8,8 @@ import android.util.Log;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import fr.isen.twinmx.R;
@@ -128,12 +130,23 @@ public class TMBluetooth extends TMSmoothBluetooth implements TMSmoothBluetooth.
 
     @Override
     public void onDevicesFound(List<TMDevice> deviceList, ConnectionCallback connectionCallback) {
-        List<RealmDevice> realmDevices = RealmDeviceRepository.getInstance().findAll();
         for(TMDevice device : deviceList) {
-            if (realmDevices.contains(device)) {
+            if (RealmDeviceRepository.getInstance().contains(device)) {
                 device.setTwinMax(true);
             }
         }
+        Collections.sort(deviceList, new Comparator<TMDevice>() {
+            @Override
+            public int compare(TMDevice o1, TMDevice o2) {
+                if (o1.isTwinMax()) {
+                    return -1;
+                }
+                else if (o2.isTwinMax()) {
+                    return 1;
+                }
+                return 0;
+            }
+        });
         this.showBluetoothDevicesDialog(deviceList, connectionCallback);
     }
 

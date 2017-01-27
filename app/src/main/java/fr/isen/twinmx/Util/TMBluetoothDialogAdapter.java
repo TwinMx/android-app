@@ -33,8 +33,9 @@ public class TMBluetoothDialogAdapter extends RecyclerView.Adapter<TMDeviceHolde
 
     @Override
     public TMDeviceHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        final View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_view_device_item, parent, false);
+        final View view = LayoutInflater.from(parent.getContext()).inflate(TMDeviceHolder.LAYOUT, parent, false);
         final TMDeviceHolder holder = new TMDeviceHolder(view, mBluetooth);
+
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -43,6 +44,7 @@ public class TMBluetoothDialogAdapter extends RecyclerView.Adapter<TMDeviceHolde
                 connectionCallback.connectTo(holder.getDevice());
             }
         });
+
         return holder;
     }
 

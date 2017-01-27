@@ -60,10 +60,6 @@ public class Moto extends RealmObject implements AutoIncrement {
         this.maintenances = moto.getMaintenances();
     }
 
-    public static int getIndex() {
-        return INDEX++;
-    }
-
     @Override
     public Long getId() {
         return this.id;

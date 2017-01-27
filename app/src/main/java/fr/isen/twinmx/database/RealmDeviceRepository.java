@@ -5,6 +5,7 @@ import java.util.List;
 import fr.isen.twinmx.database.model.RealmDevice;
 import fr.isen.twinmx.database.model.Repository;
 import fr.isen.twinmx.util.Bluetooth.SmoothBluetoothFork.TMDevice;
+import io.realm.RealmList;
 
 /**
  * Created by Clement on 27/01/2017.
@@ -25,13 +26,14 @@ public class RealmDeviceRepository extends Repository<RealmDevice> {
         super(RealmDevice.class);
     }
 
+    public List<RealmDevice> findByAddress(String address) {
+        List<RealmDevice> all = findAll();
+        List<RealmDevice> devices = getRepository().equalTo("address", address).findAll();
+        return devices;
+    }
+
     public boolean contains(TMDevice device) {
-        List<RealmDevice> devices = findAll();
-        for(RealmDevice btDevice : devices) {
-            if (btDevice.equals(device)) {
-                return true;
-            }
-        }
-        return false;
+        return !findByAddress(device.getAddress()).isEmpty();
+
     }
 }
