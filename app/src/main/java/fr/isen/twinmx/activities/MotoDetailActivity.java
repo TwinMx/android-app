@@ -219,8 +219,7 @@ public class MotoDetailActivity extends AppCompatActivity implements OnMotoMaint
 
     @Override
     public void onMotoMaintenanceClick(Maintenance maintenance) {
-        Intent intent = new Intent(this, MaintenanceDetailActivity.class);
-        //intent.putExtra("maintenanceID", maintenance.getId());
+        Intent intent = MaintenanceDetailActivity.makeIntent(this, this.moto, maintenance);
         startActivity(intent);
     }
 }
