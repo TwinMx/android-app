@@ -1,6 +1,7 @@
 package fr.isen.twinmx.fragments;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
@@ -77,8 +78,6 @@ public class ChartFragment extends BluetoothFragment {
     @BindView(R.id.motorLifeCycle)
     DecoView motorLifeCycle;
 
-
-
     public static ChartFragment newInstance(Context context, TMBluetooth bluetooth) {
         final ChartFragment chartFragment = new ChartFragment();
         chartFragment.context = context;
@@ -107,7 +106,6 @@ public class ChartFragment extends BluetoothFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.isStarted = true;
-
     }
 
     public void onResume() {

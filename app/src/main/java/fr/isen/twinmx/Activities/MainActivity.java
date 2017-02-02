@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity implements TMBottomNavigatio
 
     private BluetoothIconReceiver bluetoothIconReceiver;
 
-    private TMBluetooth mBluetooth; //Keep a pointer to avoid GC
+    private static TMBluetooth mBluetooth; //Keep a pointer to avoid GC
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,10 +85,6 @@ public class MainActivity extends AppCompatActivity implements TMBottomNavigatio
         this.navigation.manageFloatingActionButtonBehavior(this.floatingActionButton);
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
-        this.mBluetooth = new TMBluetooth(this);
-        this.bluetoothIconReceiver = new BluetoothIconReceiver(bluetoothIcon, bluetoothProgressBar, viewPager, mBluetooth);
-        this.mBluetooth.setBluetoothIconReceiver(this.bluetoothIconReceiver);
-
         if (this.realmConfiguration == null) {
             this.realmConfiguration = new RealmConfiguration.Builder(this)
                     .name("TwinMax")
@@ -101,10 +97,20 @@ public class MainActivity extends AppCompatActivity implements TMBottomNavigatio
         RealmHelper.setRealm(Realm.getInstance(this.realmConfiguration));
 
         if (savedInstanceState == null) {
-            final ChartFragment chartFragment = ChartFragment.newInstance(this, mBluetooth);
-            this.launchFragment(chartFragment, false);
+            this.mBluetooth = new TMBluetooth(this);
+            this.bluetoothIconReceiver = new BluetoothIconReceiver(bluetoothIcon, bluetoothProgressBar, viewPager, mBluetooth);
+            this.mBluetooth.setBluetoothIconReceiver(this.bluetoothIconReceiver);
+
+        }
+        else
+        {
+            this.mBluetooth.setActivity(this);
+            this.bluetoothIconReceiver = new BluetoothIconReceiver(bluetoothIcon, bluetoothProgressBar, viewPager, mBluetooth);
+            this.mBluetooth.setBluetoothIconReceiver(this.bluetoothIconReceiver);
         }
 
+        final ChartFragment chartFragment = ChartFragment.newInstance(this, mBluetooth);
+        this.launchFragment(chartFragment, false);
     }
 
     @Override
@@ -160,7 +166,11 @@ public class MainActivity extends AppCompatActivity implements TMBottomNavigatio
 
     protected void onStop() {
         super.onStop();
-        mBluetooth.stop();
+
+        if(this.isFinishing())
+        {
+            mBluetooth.stop();
+        }
     }
 
     @Override

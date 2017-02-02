@@ -67,7 +67,6 @@ public class RealTimeChartComponent implements Observer, OnChartGestureListener,
         update();
     }
 
-
     public void update() {
         if (mBluetooth.getConnectedDevice() != null) { //If there's a connected device
             play();
@@ -161,11 +160,13 @@ public class RealTimeChartComponent implements Observer, OnChartGestureListener,
             rawDataManagerAsyncTask.stop();
             rawDataManagerAsyncTask = null;
         }
-        for(LimitedEntryList entries : this.dataSetEntries) {
-            if (entries != null) {
-                entries.reset();
-            }
+
+        dataSetEntries = new ArrayList<>();
+        for (int index = 0; index < 4; index++)
+        {
+            dataSetEntries.add(null);
         }
+
         rawDataManagerAsyncTask = new RawDataManagerAsyncTask(mBluetooth.getDataManager(), this);
         rawDataManagerAsyncTask.execute();
     }
