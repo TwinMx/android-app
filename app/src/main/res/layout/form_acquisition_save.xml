@@ -7,7 +7,7 @@
         android:id="@+id/dialog_acquisition_moto_name_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Nom de la moto"/>
+        android:text="@string/form_moto_name"/>
 
     <EditText
         android:id="@+id/dialog_acquistion_moto_name"
@@ -17,7 +17,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Note"/>
+        android:text="@string/form_acquistion_note"/>
 
     <EditText
         android:id="@+id/dialog_acquistion_note"

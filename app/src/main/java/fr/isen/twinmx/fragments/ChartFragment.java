@@ -7,8 +7,6 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.text.InputType;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,12 +18,9 @@ import android.widget.TextView;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.data.Entry;
 import com.hookedonplay.decoviewlib.DecoView;
 import com.hookedonplay.decoviewlib.charts.SeriesItem;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -35,7 +30,6 @@ import butterknife.OnClick;
 import fr.isen.twinmx.R;
 import fr.isen.twinmx.TMApplication;
 import fr.isen.twinmx.database.MotoRepository;
-import fr.isen.twinmx.database.exceptions.RepositoryException;
 import fr.isen.twinmx.database.model.Moto;
 import fr.isen.twinmx.listeners.OnMotoHistoryClickListener;
 import fr.isen.twinmx.model.AcquisitionSaveRequest;
@@ -196,8 +190,8 @@ public class ChartFragment extends BluetoothFragment implements OnMotoHistoryCli
     private void showSaveAcquistionDialog(Moto moto) {
         MaterialDialog dialog = new MaterialDialog.Builder(this.getActivity())
                 .title("Sauvegarde de l'acquisition")
-                .customView(R.layout.custom_form, true)
-                .positiveText("Sauvegarder")
+                .customView(R.layout.form_acquisition_save, true)
+                .positiveText(R.string.form_save)
                 .onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
@@ -215,7 +209,7 @@ public class ChartFragment extends BluetoothFragment implements OnMotoHistoryCli
                         acquisitionSaveRequest.save();
                     }
                 })
-                .negativeText("Annuler")
+                .negativeText(R.string.form_cancel)
                 .onNegative(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
