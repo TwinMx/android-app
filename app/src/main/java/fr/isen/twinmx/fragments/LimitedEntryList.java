@@ -3,6 +3,7 @@ package fr.isen.twinmx.fragments;
 import com.github.mikephil.charting.data.Entry;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Clement on 26/01/2017.
@@ -39,5 +40,9 @@ public class LimitedEntryList extends ArrayList<Entry> {
 
     private void incrementX() {
         this.currentX = this.currentX + 1 < size ? this.currentX + 1 : 0;
+    }
+
+    public List<Entry> toList() {
+        return this;
     }
 }
