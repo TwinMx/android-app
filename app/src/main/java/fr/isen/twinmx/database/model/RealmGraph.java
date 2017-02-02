@@ -20,9 +20,13 @@ public class RealmGraph implements RealmModel {
         this.measures = new RealmList<>();
     }
 
+    public RealmGraph(RealmGraph graph) {
+
+    }
+
     public RealmGraph(List<Entry> entries) {
         this.measures = new RealmList<>();
-        for(Entry entry : entries) {
+        for (Entry entry : entries) {
             this.measures.add(new RealmFloat(entry.getY()));
         }
     }
@@ -33,5 +37,13 @@ public class RealmGraph implements RealmModel {
 
     public void setMeasures(RealmList<RealmFloat> measures) {
         this.measures = measures;
+    }
+
+    public static RealmList<RealmGraph> newRealmList(RealmList<RealmGraph> graphs) {
+        RealmList<RealmGraph> list = new RealmList<>();
+        for(RealmGraph graph : graphs) {
+            list.add(new RealmGraph(graph));
+        }
+        return list;
     }
 }

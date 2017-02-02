@@ -1,7 +1,5 @@
 package fr.isen.twinmx.database.model;
 
-import android.util.Log;
-
 import com.github.mikephil.charting.data.Entry;
 
 import java.text.DateFormat;
@@ -60,7 +58,7 @@ public class Moto extends RealmObject implements AutoIncrement {
         this.name = moto.getName();
         this.date = moto.getDate();
         this.image = moto.getImage();
-        this.maintenances = moto.getMaintenances();
+        this.maintenances = Maintenance.newRealmList(this.getMaintenances());
     }
 
     @Override

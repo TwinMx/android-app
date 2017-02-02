@@ -2,24 +2,30 @@ package fr.isen.twinmx.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.support.v7.widget.AppCompatCheckBox;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.Entry;
 import com.hookedonplay.decoviewlib.DecoView;
 import com.hookedonplay.decoviewlib.charts.SeriesItem;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -32,6 +38,7 @@ import fr.isen.twinmx.database.MotoRepository;
 import fr.isen.twinmx.database.exceptions.RepositoryException;
 import fr.isen.twinmx.database.model.Moto;
 import fr.isen.twinmx.listeners.OnMotoHistoryClickListener;
+import fr.isen.twinmx.model.AcquisitionSaveRequest;
 import fr.isen.twinmx.ui.adapters.DialogMotoAdapter;
 import fr.isen.twinmx.util.Bluetooth.TMBluetooth;
 
@@ -47,6 +54,7 @@ public class ChartFragment extends BluetoothFragment implements OnMotoHistoryCli
     private int serie1Index;
 
     private MaterialDialog chooseMotoDialog;
+    private AcquisitionSaveRequest acquisitionSaveRequest = null;
 
 
     @OnClick({R.id.box1, R.id.box2, R.id.box3, R.id.box4})
@@ -82,18 +90,10 @@ public class ChartFragment extends BluetoothFragment implements OnMotoHistoryCli
 
     @OnClick(R.id.save_acquisition)
     public void onSaveClick(View view) {
+        this.acquisitionSaveRequest = new AcquisitionSaveRequest(this.chartComponent.getDataSetEntries());
         showChooseMotoDialog();
     }
 
-
-
-    private void save(Moto moto, String date, String note, List<List<Entry>> graphs) {
-        try {
-            MotoRepository.getInstance().updateAddGraph(moto, date, note, graphs);
-        } catch (RepositoryException e) {
-            e.printStackTrace();
-        }
-    }
 
     @BindView(R.id.motorLifeCycleValue)
     TextView motorLifeCycleValue;
@@ -164,43 +164,16 @@ public class ChartFragment extends BluetoothFragment implements OnMotoHistoryCli
 
     @Override
     public void onMotoHistoryClick(Moto moto) {
+        this.acquisitionSaveRequest.setMoto(moto);
         hideChooseMotoDialog();
-
-        if (moto == null) {
-
-            //FIXME
-
-            //Dialog new moto + note
-            new MaterialDialog.Builder(this.getActivity())
-                    .title("Sauvegarde de l'acquisition")
-                    .content("Nom de la nouvelle moto")
-                    .inputType(InputType.TYPE_CLASS_TEXT)
-                    .input("Nom de la nouvelle moto", "", new MaterialDialog.InputCallback() {
-                        @Override
-                        public void onInput(MaterialDialog dialog, CharSequence input) {
-                            // Do something
-                        }})
-                    .content("Note")
-                    .inputType(InputType.TYPE_CLASS_TEXT)
-                    .input("Note", "", new MaterialDialog.InputCallback() {
-                        @Override
-                        public void onInput(MaterialDialog dialog, CharSequence input) {
-                            // Do something
-                        }})
-                    .build().show();
-
-
-        }
-        else {
-            //Dialog note
-        }
+        showSaveAcquistionDialog(moto);
     }
 
     private void showChooseMotoDialog() {
         if (this.chooseMotoDialog == null || !this.chooseMotoDialog.isShowing()) {
 
             List<Moto> motos = new LinkedList<>();
-            for(int i = 0; i < 5; i++) {
+            for (int i = 0; i < 5; i++) {
                 motos.addAll(MotoRepository.getInstance().findAll());
             }
 
@@ -218,5 +191,51 @@ public class ChartFragment extends BluetoothFragment implements OnMotoHistoryCli
             this.chooseMotoDialog.dismiss();
             this.chooseMotoDialog = null;
         }
+    }
+
+    private void showSaveAcquistionDialog(Moto moto) {
+        MaterialDialog dialog = new MaterialDialog.Builder(this.getActivity())
+                .title("Sauvegarde de l'acquisition")
+                .customView(R.layout.custom_form, true)
+                .positiveText("Sauvegarder")
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        EditText motoNameEditText = (EditText) dialog.getCustomView().findViewById(R.id.dialog_acquistion_moto_name);
+                        EditText noteEditText = (EditText) dialog.getCustomView().findViewById(R.id.dialog_acquistion_note);
+
+                        String motoName = motoNameEditText.getText().toString();
+                        String note = noteEditText.getText().toString();
+
+                        if (acquisitionSaveRequest.isNewMoto()) {
+                            acquisitionSaveRequest.createNewMoto(motoName);
+                        }
+
+                        acquisitionSaveRequest.setNote(note);
+                        acquisitionSaveRequest.save();
+                    }
+                })
+                .negativeText("Annuler")
+                .onNegative(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        acquisitionSaveRequest = null;
+                    }
+                })
+                .build();
+
+        if (moto != null) {
+            try {
+                View customView = dialog.getCustomView();
+                assert customView != null;
+                customView.findViewById(R.id.dialog_acquisition_moto_name_label).setVisibility(View.GONE);
+                customView.findViewById(R.id.dialog_acquistion_moto_name).setVisibility(View.GONE);
+            } catch (NullPointerException ex) {
+                //
+            }
+
+        }
+
+        dialog.show();
     }
 }

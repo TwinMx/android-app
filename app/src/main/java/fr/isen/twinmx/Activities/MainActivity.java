@@ -14,7 +14,6 @@ import android.widget.ProgressBar;
 
 import android.widget.Toast;
 
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 
 import butterknife.BindView;

@@ -4,18 +4,25 @@
     android:orientation="vertical">
 
     <TextView
+        android:id="@+id/dialog_acquisition_moto_name_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/form_name"/>
+        android:text="Nom de la moto"/>
 
     <EditText
+        android:id="@+id/dialog_acquistion_moto_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/form_date"/>
+        android:text="Note"/>
+
+    <EditText
+        android:id="@+id/dialog_acquistion_note"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
 
 </LinearLayout>

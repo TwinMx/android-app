@@ -101,7 +101,7 @@ public class RealmHelper implements MotoListener, MaintenanceListener {
 
         Maintenance m = realm.createObject(Maintenance.class);
         m.setDate(maintenance.getDate());
-        m.setId(maintenance.getId());
+        //m.setId(maintenance.getId());
         m.setNote(maintenance.getNote());
         m.setGraphs(maintenance.getGraphs());
         realm.commitTransaction();

@@ -15,17 +15,26 @@ import io.realm.annotations.Required;
 /**
  * Created by pierredfc.
  */
-public class Maintenance extends RealmObject implements AutoIncrement {
+public class Maintenance extends RealmObject {
 
     public static final String DB_TYPE = "Maintenance";
 
-    @PrimaryKey @Required
-    private Long id = null;
     private String date;
     private String note;
     private RealmList<RealmGraph> graphs;
 
     public Maintenance() {}
+
+    public Maintenance(Maintenance maintenance) {
+        this(maintenance.getDate(), maintenance.getNote(), RealmGraph.newRealmList(maintenance.getGraphs()));
+    }
+
+
+    public Maintenance(String date, String note, RealmList<RealmGraph> graphs) {
+        this.date = date;
+        this.note = note;
+        this.graphs = graphs;
+    }
 
     public Maintenance(String  date, String note, List<List<Entry>> graphs)
     {
@@ -61,9 +70,11 @@ public class Maintenance extends RealmObject implements AutoIncrement {
         this.graphs = graphs;
     }
 
-    @Override
-    public Long getId() { return this.id;}
-
-    @Override
-    public void setId(Long id) { this.id = id;}
+    public static RealmList<Maintenance> newRealmList(RealmList<Maintenance> maintenances) {
+        RealmList<Maintenance> list = new RealmList<>();
+        for(Maintenance maintenance : maintenances) {
+            list.add(new Maintenance(maintenance));
+        }
+        return list;
+    }
 }

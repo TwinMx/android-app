@@ -128,13 +128,14 @@ public class MotoDetailActivity extends AppCompatActivity implements OnMotoMaint
     @Override
     protected void onResume() {
         super.onResume();
-        if (this.maintenanceFinder != null) this.maintenanceFinder.removeChangeListeners();
+/*        if (this.maintenanceFinder != null) this.maintenanceFinder.removeChangeListeners();
         this.maintenanceFinder = MaintenanceRepository.getInstance().findAllAsync(new RealmChangeListener<RealmResults<Maintenance>>() {
             @Override
             public void onChange(RealmResults<Maintenance> element) {
                 onMaintenanceResponseReceived(element);
             }
-        });
+        });*/
+        onMaintenanceResponseReceived(moto.getMaintenances());
     }
 
     public void onMaintenanceResponseReceived(List<Maintenance> maintenances) {
@@ -219,7 +220,7 @@ public class MotoDetailActivity extends AppCompatActivity implements OnMotoMaint
     @Override
     public void onMotoMaintenanceClick(Maintenance maintenance) {
         Intent intent = new Intent(this, MaintenanceDetailActivity.class);
-        intent.putExtra("maintenanceID", maintenance.getId());
+        //intent.putExtra("maintenanceID", maintenance.getId());
         startActivity(intent);
     }
 }
