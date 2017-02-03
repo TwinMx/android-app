@@ -51,4 +51,9 @@
     <string name="form_moto_name">New moto\'s name</string>
     <string name="form_acquistion_note">Note</string>
 
+
+    <!-- Maintenance detail -->
+    <string name="note">Note</string>
+    <string name="no_note">No note.</string>
+    <string name="menu_delete">Delete</string>
 </resources>

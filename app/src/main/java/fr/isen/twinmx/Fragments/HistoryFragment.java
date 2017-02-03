@@ -96,7 +96,7 @@ public class HistoryFragment extends Fragment implements MotoListener.OnCreateMo
     @Override
     public void onResume() {
         super.onResume();
-        //demo(MotoRepository.getInstance());
+
         if (this.motoFinder != null) this.motoFinder.removeChangeListeners();
         this.motoFinder = MotoRepository.getInstance().findAllAsync(new RealmChangeListener<RealmResults<Moto>>() {
             @Override

@@ -4,6 +4,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
+import java.text.DateFormat;
+import java.util.Date;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import fr.isen.twinmx.R;
@@ -33,7 +36,7 @@ public class MaintenanceHolder extends RecyclerView.ViewHolder implements View.O
     public void bind(Maintenance maintenance)
     {
         this.maintenance = maintenance;
-        this.maintenanceDate.setText(this.maintenance.getDate());
+        this.maintenanceDate.setText(DateFormat.getDateTimeInstance().format(new Date(Long.valueOf(this.maintenance.getDate()))));
     }
 
     @Override

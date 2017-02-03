@@ -37,11 +37,11 @@ public class Moto extends RealmObject implements AutoIncrement {
 
     public Moto(String name, String photo)
     {
-        this(name, DateFormat.getDateTimeInstance().format(new Date()), photo);
+        this(name, String.valueOf(new Date().getTime()), photo);
     }
 
     public Moto(String name) {
-        this(name, DateFormat.getDateTimeInstance().format(new Date()), null);
+        this(name, String.valueOf(new Date().getTime()), null);
     }
 
     public Moto(String name, String date, String photo)
@@ -94,6 +94,11 @@ public class Moto extends RealmObject implements AutoIncrement {
     public String getImage() { return this.image; }
 
     public void setImage(String image) { this.image = image;}
+
+    public void removeMaintenance(int maintenanceIndex)
+    {
+        this.maintenances.remove(maintenanceIndex);
+    }
 
     public void addGraphs(String date, String note, List<List<Entry>> graphs) {
         if (this.maintenances == null) {

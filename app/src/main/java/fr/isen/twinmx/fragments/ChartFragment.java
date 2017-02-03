@@ -122,6 +122,7 @@ public class ChartFragment extends BluetoothFragment implements OnMotoHistoryCli
 
     @OnClick(R.id.save_acquisition)
     public void onSaveClick(View view) {
+        this.chartComponent.pause();
         List<LimitedEntryList> entries = this.chartComponent.getDataSetEntries();
         if (entries != null && entries.size() > 0 && entries.get(0) != null && entries.get(0).size() > 0) {
             this.acquisitionSaveRequest = new AcquisitionSaveRequest(entries);
@@ -240,11 +241,8 @@ public class ChartFragment extends BluetoothFragment implements OnMotoHistoryCli
 
     private void showChooseMotoDialog() {
         if (this.chooseMotoDialog == null || !this.chooseMotoDialog.isShowing()) {
-
             List<Moto> motos = new LinkedList<>();
-            for (int i = 0; i < 5; i++) {
-                motos.addAll(MotoRepository.getInstance().findAll());
-            }
+            motos.addAll(MotoRepository.getInstance().findAll());
 
             this.chooseMotoDialog = new MaterialDialog.Builder(this.getActivity())
                     .title(TMApplication.getContext().getResources().getString(R.string.select_moto))
@@ -282,6 +280,7 @@ public class ChartFragment extends BluetoothFragment implements OnMotoHistoryCli
 
                         acquisitionSaveRequest.setNote(note);
                         acquisitionSaveRequest.save();
+                        chartComponent.play();
                     }
                 })
                 .negativeText(R.string.form_cancel)
@@ -289,6 +288,7 @@ public class ChartFragment extends BluetoothFragment implements OnMotoHistoryCli
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                         acquisitionSaveRequest = null;
+                        chartComponent.play();
                     }
                 })
                 .build();
