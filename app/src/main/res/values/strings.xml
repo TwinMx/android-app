@@ -51,4 +51,9 @@
     <string name="new_moto">Nouvelle moto...</string>
     <string name="form_moto_name">Nom de la nouvelle moto</string>
     <string name="form_acquistion_note">Note</string>
+
+
+    <!-- Maintenance detail -->
+    <string name="note">Note</string>
+    <string name="no_note">Pas de note.</string>
 </resources>

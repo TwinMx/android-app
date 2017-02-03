@@ -89,7 +89,15 @@ public class MaintenanceDetailActivity extends AppCompatActivity {
         Maintenance maintenance = MotoRepository.getInstance().findById(motoId).getMaintenances().get(maintenanceIndex);
 
         this.setTitle(DateFormat.getDateTimeInstance().format(new Date(Long.valueOf(maintenance.getDate()))));
-        this.note.setText(maintenance.getNote());
+
+        if (!maintenance.getNote().isEmpty())
+        {
+            this.note.setText(maintenance.getNote());
+        }
+        else
+        {
+            this.note.setText(TMApplication.getContext().getString(R.string.no_note));
+        }
 
         graph.setData(new LineData());
         initChartSettings();
