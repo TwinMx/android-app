@@ -39,6 +39,9 @@ public class ChartFragment extends BluetoothFragment {
     private int serie1Index;
     private boolean playing = false;
 
+    @BindView(R.id.match_start_pause)
+    ImageView playPauseImage;
+
     private Boolean onResumeWasPlaying = null;
 
     private static final String STATE_PLAYING = "STATE_PLAYING";
@@ -57,16 +60,39 @@ public class ChartFragment extends BluetoothFragment {
         ImageView image = (ImageView) view;
 
         if (this.isStarted) {
-            if (context != null) image.setImageDrawable(ContextCompat.getDrawable(this.context, R.drawable.ic_play_arrow_white_24dp));
+            setPlayImage(image, context);
             this.chartComponent.pause(true);
         } else {
-            if (context != null) image.setImageDrawable(ContextCompat.getDrawable(this.context, R.drawable.ic_pause_white_24dp));
+            setPauseImage(image, context);
             this.chartComponent.play(true);
         }
 
         this.isStarted = !this.isStarted;
 
         // TODO
+    }
+
+    private void setPlayPauseImage(ImageView image, Context context, Boolean value) {
+        if (value == null) {
+            return;
+        }
+
+        if (value) {
+            setPauseImage(image, context);
+            this.isStarted = true;
+        }
+        else {
+            setPlayImage(image, context);
+            this.isStarted = false;
+        }
+    }
+
+    private void setPlayImage(ImageView image, Context context) {
+        if (context != null) image.setImageDrawable(ContextCompat.getDrawable(this.context, R.drawable.ic_play_arrow_white_24dp));
+    }
+
+    private void setPauseImage(ImageView image, Context context) {
+        if (context != null) image.setImageDrawable(ContextCompat.getDrawable(this.context, R.drawable.ic_pause_white_24dp));
     }
 
     @OnClick(R.id.auto_focus)
@@ -123,6 +149,7 @@ public class ChartFragment extends BluetoothFragment {
 
     public void onResume() {
         super.onResume();
+        this.setPlayPauseImage(this.playPauseImage, this.getActivity(), this.onResumeWasPlaying);
         this.chartComponent.onResume(this.onResumeWasPlaying, true);
         this.setMotorLifeCycle();
     }
