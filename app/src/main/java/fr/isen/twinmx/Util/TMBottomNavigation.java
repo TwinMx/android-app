@@ -3,14 +3,12 @@ package fr.isen.twinmx.util;
 import android.app.Activity;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
 
-import fr.isen.twinmx.activities.MainActivity;
+import fr.isen.twinmx.activitiesabc.MainActivity;
 import fr.isen.twinmx.R;
 
 /**

@@ -1,4 +1,4 @@
-package fr.isen.twinmx.activities;
+package fr.isen.twinmx.activitiesabc;
 
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
@@ -28,7 +28,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import fr.isen.twinmx.R;
 import fr.isen.twinmx.TMApplication;
-import fr.isen.twinmx.database.MaintenanceRepository;
 import fr.isen.twinmx.database.MotoRepository;
 import fr.isen.twinmx.database.exceptions.RepositoryException;
 import fr.isen.twinmx.database.model.Maintenance;
@@ -36,7 +35,6 @@ import fr.isen.twinmx.database.model.Moto;
 import fr.isen.twinmx.listeners.OnMotoMaintenanceClickListener;
 import fr.isen.twinmx.ui.adapters.MaintenanceAdapter;
 import fr.isen.twinmx.util.CircleTransformation;
-import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 
 /**

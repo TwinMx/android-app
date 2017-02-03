@@ -7,7 +7,7 @@
     android:id="@+id/mainActivityContainer"
     android:fitsSystemWindows="true"
     android:background="@color/colorPrimary"
-    tools:context=".activities.MotoFormActivity">
+    tools:context=".activitiesabc.MotoFormActivity">
 
     <LinearLayout
         android:layout_width="match_parent"

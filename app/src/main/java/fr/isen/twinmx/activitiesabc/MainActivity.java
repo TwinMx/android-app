@@ -1,4 +1,4 @@
-package fr.isen.twinmx.activities;
+package fr.isen.twinmx.activitiesabc;
 
 import android.app.Fragment;
 import android.app.FragmentTransaction;
