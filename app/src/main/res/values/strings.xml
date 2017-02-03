@@ -16,6 +16,7 @@
     <string name="disconnect_bt">Déconnexion</string>
     <string name="connected_to">Connecté à %s</string>
     <string name="connection_failed_to">Connexion échouée à %s</string>
+    <string name="connection_failed">Connexion échouée</string>
 
     <string name="no_history">Pas d\'historique</string>
 

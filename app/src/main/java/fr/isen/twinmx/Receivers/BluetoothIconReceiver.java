@@ -90,7 +90,7 @@ public class BluetoothIconReceiver extends BroadcastReceiver {
         if (!bluetooth.isBluetoothEnabled()) {
             this.disabled();
         } else {
-            this.error(TMApplication.loadString(R.string.connection_failed_to));
+            this.error(TMApplication.loadString(R.string.connection_failed));
         }
     }
 

@@ -16,6 +16,7 @@
     <string name="disconnect_bt">Unplug</string>
     <string name="connected_to">Connected to %s</string>
     <string name="connection_failed_to">Connection failed to %s</string>
+    <string name="connection_failed">Connection failed</string>
 
     <string name="no_history">No history found</string>
 
