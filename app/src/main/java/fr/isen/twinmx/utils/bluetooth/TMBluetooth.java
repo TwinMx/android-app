@@ -218,6 +218,7 @@ public class TMBluetooth extends TMSmoothBluetooth implements TMSmoothBluetooth.
 
     public void setActivity(Activity activity)
     {
+        hideBluetoothDevicesDialog();
         this.activity = activity;
     }
 }
