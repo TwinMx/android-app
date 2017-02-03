@@ -50,10 +50,10 @@ public class ChartFragment extends BluetoothFragment {
         ImageView image = (ImageView) view;
 
         if (this.isStarted) {
-            image.setImageDrawable(ContextCompat.getDrawable(this.context, R.drawable.ic_play_arrow_white_24dp));
+            if (context != null) image.setImageDrawable(ContextCompat.getDrawable(this.context, R.drawable.ic_play_arrow_white_24dp));
             this.chartComponent.pause();
         } else {
-            image.setImageDrawable(ContextCompat.getDrawable(this.context, R.drawable.ic_pause_white_24dp));
+            if (context != null) image.setImageDrawable(ContextCompat.getDrawable(this.context, R.drawable.ic_pause_white_24dp));
             this.chartComponent.play();
         }
 
@@ -130,6 +130,12 @@ public class ChartFragment extends BluetoothFragment {
                 .build();
 
         serie1Index = this.motorLifeCycle.addSeries(seriesItem1);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        this.chartComponent.pause();
     }
 
     @Override

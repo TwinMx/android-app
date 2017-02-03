@@ -15,6 +15,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
+import com.github.mikephil.charting.charts.Chart;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -70,6 +71,8 @@ public class MainActivity extends AppCompatActivity implements TMBottomNavigatio
 
     private static TMBluetooth mBluetooth; //Keep a pointer to avoid GC
 
+    private static final String FRAGMENT_TAG = "FRAGMENT_TAG";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,7 +91,7 @@ public class MainActivity extends AppCompatActivity implements TMBottomNavigatio
         if (this.realmConfiguration == null) {
             this.realmConfiguration = new RealmConfiguration.Builder(this)
                     .name("TwinMax")
-                    .schemaVersion(5)
+                    .schemaVersion(6)
                     .deleteRealmIfMigrationNeeded()
                     .modules(new TMRealmModule())
                     .build();
@@ -100,17 +103,25 @@ public class MainActivity extends AppCompatActivity implements TMBottomNavigatio
             this.mBluetooth = new TMBluetooth(this);
             this.bluetoothIconReceiver = new BluetoothIconReceiver(bluetoothIcon, bluetoothProgressBar, viewPager, mBluetooth);
             this.mBluetooth.setBluetoothIconReceiver(this.bluetoothIconReceiver);
-
+            final ChartFragment chartFragment = ChartFragment.newInstance(this, mBluetooth);
+            this.launchFragment(chartFragment, false);
         }
         else
         {
             this.mBluetooth.setActivity(this);
             this.bluetoothIconReceiver = new BluetoothIconReceiver(bluetoothIcon, bluetoothProgressBar, viewPager, mBluetooth);
             this.mBluetooth.setBluetoothIconReceiver(this.bluetoothIconReceiver);
+            Fragment fragment = getCurrentFragment();
+            if (fragment instanceof ChartFragment) {
+                ((ChartFragment) fragment).setBluetooth(mBluetooth);
+            }
         }
 
-        final ChartFragment chartFragment = ChartFragment.newInstance(this, mBluetooth);
-        this.launchFragment(chartFragment, false);
+
+    }
+
+    private Fragment getCurrentFragment() {
+        return getFragmentManager().findFragmentByTag(FRAGMENT_TAG);
     }
 
     @Override
@@ -147,7 +158,7 @@ public class MainActivity extends AppCompatActivity implements TMBottomNavigatio
 
     private void launchFragment(Fragment fragment, boolean isFab) {
         final FragmentTransaction transaction = this.getFragmentManager().beginTransaction();
-        transaction.replace(R.id.mainActivityContainer, fragment);
+        transaction.replace(R.id.mainActivityContainer, fragment, FRAGMENT_TAG);
         transaction.commit();
         this.floatingActionButton.setVisibility(!isFab ? View.INVISIBLE : View.VISIBLE);
     }

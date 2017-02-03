@@ -150,6 +150,9 @@ public class RealTimeChartComponent implements Observer, OnChartGestureListener,
         dataSet.setValueTextColor(color);
         dataSet.setCircleColor(color);
 
+        LineData data = mChart.getData();
+
+
         mChart.getData().addDataSet(dataSet);
         return entries;
     }
@@ -161,11 +164,18 @@ public class RealTimeChartComponent implements Observer, OnChartGestureListener,
             rawDataManagerAsyncTask = null;
         }
 
-        dataSetEntries = new ArrayList<>();
-        for (int index = 0; index < 4; index++)
+        for (int index = 0; index < dataSetEntries.size(); index++)
         {
-            dataSetEntries.add(null);
+            dataSetEntries.set(index, null);
         }
+
+
+        LineData data = mChart.getData();
+
+        for(int index = data.getDataSetCount() - 1; index >= 0; index--) {
+            data.removeDataSet(index);
+        }
+
 
         rawDataManagerAsyncTask = new RawDataManagerAsyncTask(mBluetooth.getDataManager(), this);
         rawDataManagerAsyncTask.execute();
