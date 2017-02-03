@@ -122,6 +122,7 @@ public class ChartFragment extends BluetoothFragment implements OnMotoHistoryCli
     @OnClick(R.id.save_acquisition)
     public void onSaveClick(View view) {
         this.chartComponent.pause(true);
+        this.setPauseImage(this.playPauseImage, this.context);
         List<LimitedEntryList> entries = this.chartComponent.getDataSetEntries();
         if (entries != null && entries.size() > 0 && entries.get(0) != null && entries.get(0).size() > 0) {
             this.acquisitionSaveRequest = new AcquisitionSaveRequest(entries);

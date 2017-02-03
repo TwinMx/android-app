@@ -104,7 +104,7 @@ public class AcquisitionSaveRequest {
     public boolean createNewMoto(String motoName) {
         if (isNewMoto() && motoName != null && motoName.length() > 0) {
             try {
-                MotoRepository.getInstance().create(new Moto(motoName));
+                this.moto = MotoRepository.getInstance().create(new Moto(motoName));
                 return true;
             } catch (RepositoryException e) {
                 e.printStackTrace();
