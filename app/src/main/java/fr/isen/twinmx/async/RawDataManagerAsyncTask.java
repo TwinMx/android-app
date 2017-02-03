@@ -89,8 +89,11 @@ public class RawDataManagerAsyncTask extends AsyncTask<Void, Entry, Void> {
         chart.addEntries(entries);
         nbResults++;
         if (nbResults > 200) {
-            publishProgress();
-            nbResults = 0;
+            if (!stop)
+            {
+                publishProgress();
+                nbResults = 0;
+            }
         }
     }
 

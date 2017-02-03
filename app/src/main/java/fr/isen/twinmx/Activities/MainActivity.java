@@ -15,6 +15,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
+import com.github.mikephil.charting.charts.Chart;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -68,7 +69,9 @@ public class MainActivity extends AppCompatActivity implements TMBottomNavigatio
 
     private BluetoothIconReceiver bluetoothIconReceiver;
 
-    private TMBluetooth mBluetooth; //Keep a pointer to avoid GC
+    private static TMBluetooth mBluetooth; //Keep a pointer to avoid GC
+
+    private static final String FRAGMENT_TAG = "FRAGMENT_TAG";
 
 
     @Override
@@ -86,10 +89,6 @@ public class MainActivity extends AppCompatActivity implements TMBottomNavigatio
         this.navigation.manageFloatingActionButtonBehavior(this.floatingActionButton);
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
-        this.mBluetooth = new TMBluetooth(this);
-        this.bluetoothIconReceiver = new BluetoothIconReceiver(bluetoothIcon, bluetoothProgressBar, viewPager, mBluetooth);
-        this.mBluetooth.setBluetoothIconReceiver(this.bluetoothIconReceiver);
-
         if (this.realmConfiguration == null) {
             this.realmConfiguration = new RealmConfiguration.Builder(this)
                     .name("TwinMax")
@@ -102,10 +101,30 @@ public class MainActivity extends AppCompatActivity implements TMBottomNavigatio
         RealmHelper.setRealm(Realm.getInstance(this.realmConfiguration));
 
         if (savedInstanceState == null) {
+            this.mBluetooth = new TMBluetooth(this);
+            this.bluetoothIconReceiver = new BluetoothIconReceiver(bluetoothIcon, bluetoothProgressBar, viewPager, mBluetooth);
+            this.mBluetooth.setBluetoothIconReceiver(this.bluetoothIconReceiver);
             final ChartFragment chartFragment = ChartFragment.newInstance(this, mBluetooth);
             this.launchFragment(chartFragment, false);
         }
+        else
+        {
+            this.mBluetooth.setActivity(this);
+            this.bluetoothIconReceiver = new BluetoothIconReceiver(bluetoothIcon, bluetoothProgressBar, viewPager, mBluetooth);
+            this.mBluetooth.setBluetoothIconReceiver(this.bluetoothIconReceiver);
+            Fragment fragment = getCurrentFragment();
+            if (fragment instanceof ChartFragment) {
+                ChartFragment chartFragment = (ChartFragment) fragment;
+                chartFragment.setBluetooth(mBluetooth);
+                chartFragment.setContext(this);
+            }
+        }
 
+
+    }
+
+    private Fragment getCurrentFragment() {
+        return getFragmentManager().findFragmentByTag(FRAGMENT_TAG);
     }
 
     @Override
@@ -142,7 +161,7 @@ public class MainActivity extends AppCompatActivity implements TMBottomNavigatio
 
     private void launchFragment(Fragment fragment, boolean isFab) {
         final FragmentTransaction transaction = this.getFragmentManager().beginTransaction();
-        transaction.replace(R.id.mainActivityContainer, fragment);
+        transaction.replace(R.id.mainActivityContainer, fragment, FRAGMENT_TAG);
         transaction.commit();
         this.floatingActionButton.setVisibility(!isFab ? View.INVISIBLE : View.VISIBLE);
     }
@@ -161,7 +180,11 @@ public class MainActivity extends AppCompatActivity implements TMBottomNavigatio
 
     protected void onStop() {
         super.onStop();
-        mBluetooth.stop();
+
+        if(this.isFinishing())
+        {
+            mBluetooth.stop();
+        }
     }
 
     @Override

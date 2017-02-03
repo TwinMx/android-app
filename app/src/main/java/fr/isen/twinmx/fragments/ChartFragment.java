@@ -28,6 +28,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import fr.isen.twinmx.R;
+import fr.isen.twinmx.activities.MainActivity;
+import fr.isen.twinmx.model.InitChartData;
 import fr.isen.twinmx.TMApplication;
 import fr.isen.twinmx.database.MotoRepository;
 import fr.isen.twinmx.database.model.Moto;
@@ -46,6 +48,18 @@ public class ChartFragment extends BluetoothFragment implements OnMotoHistoryCli
     private int minMotorValue = 0;
     private RealTimeChartComponent chartComponent;
     private int serie1Index;
+    private boolean playing = false;
+
+    @BindView(R.id.match_start_pause)
+    ImageView playPauseImage;
+
+    private Boolean onResumeWasPlaying = null;
+
+    private static final String STATE_PLAYING = "STATE_PLAYING";
+    private static final String STATE_NB_GRAPHS = "STATE_NB_GRAPHS";
+    private static final String STATE_GRAPH = "STATE_GRAPH_";
+    private static final String STATE_GRAPH_SIZE = "STATE_GRAPH_SIZE";
+
 
     private MaterialDialog chooseMotoDialog;
     private AcquisitionSaveRequest acquisitionSaveRequest = null;
@@ -65,16 +79,40 @@ public class ChartFragment extends BluetoothFragment implements OnMotoHistoryCli
         ImageView image = (ImageView) view;
 
         if (this.isStarted) {
-            image.setImageDrawable(ContextCompat.getDrawable(this.context, R.drawable.ic_play_arrow_white_24dp));
-            this.chartComponent.pause();
+            setPlayImage(image, context);
+            this.chartComponent.pause(true);
         } else {
-            image.setImageDrawable(ContextCompat.getDrawable(this.context, R.drawable.ic_pause_white_24dp));
-            this.chartComponent.play();
+            setPauseImage(image, context);
+            this.chartComponent.play(true);
         }
 
         this.isStarted = !this.isStarted;
 
         // TODO
+    }
+
+    private void setPlayPauseImage(ImageView image, Context context, Boolean value) {
+        if (value == null) {
+            return;
+        }
+
+        if (value) {
+            setPauseImage(image, context);
+            this.isStarted = true;
+        } else {
+            setPlayImage(image, context);
+            this.isStarted = false;
+        }
+    }
+
+    private void setPlayImage(ImageView image, Context context) {
+        if (context != null)
+            image.setImageDrawable(ContextCompat.getDrawable(this.context, R.drawable.ic_play_arrow_white_24dp));
+    }
+
+    private void setPauseImage(ImageView image, Context context) {
+        if (context != null)
+            image.setImageDrawable(ContextCompat.getDrawable(this.context, R.drawable.ic_pause_white_24dp));
     }
 
     @OnClick(R.id.auto_focus)
@@ -99,7 +137,6 @@ public class ChartFragment extends BluetoothFragment implements OnMotoHistoryCli
     @BindView(R.id.motorLifeCycle)
     DecoView motorLifeCycle;
 
-
     public static ChartFragment newInstance(Context context, TMBluetooth bluetooth) {
         final ChartFragment chartFragment = new ChartFragment();
         chartFragment.context = context;
@@ -118,7 +155,7 @@ public class ChartFragment extends BluetoothFragment implements OnMotoHistoryCli
 
         LineChart chart = (LineChart) rootView.findViewById(R.id.graph);
 
-        this.chartComponent = new RealTimeChartComponent(this.getActivity(), chart, getBluetooth());
+        this.chartComponent = new RealTimeChartComponent(this.getActivity(), this, chart, getBluetooth(), savedInstanceState != null ? new InitChartData(savedInstanceState, STATE_NB_GRAPHS, STATE_GRAPH_SIZE, STATE_GRAPH) : null);
         this.chartComponent.onCreate();
 
         return rootView;
@@ -129,11 +166,17 @@ public class ChartFragment extends BluetoothFragment implements OnMotoHistoryCli
         super.onCreate(savedInstanceState);
         this.isStarted = true;
 
+        if (savedInstanceState != null && savedInstanceState.containsKey(STATE_PLAYING)) {
+            this.onResumeWasPlaying = savedInstanceState.getBoolean(STATE_PLAYING);
+        } else {
+            this.onResumeWasPlaying = null;
+        }
     }
 
     public void onResume() {
         super.onResume();
-        this.chartComponent.onResume();
+        this.setPlayPauseImage(this.playPauseImage, this.getActivity(), this.onResumeWasPlaying);
+        this.chartComponent.onResume(this.onResumeWasPlaying, true);
         this.setMotorLifeCycle();
     }
 
@@ -156,11 +199,40 @@ public class ChartFragment extends BluetoothFragment implements OnMotoHistoryCli
     }
 
     @Override
+    public void onPause() {
+        super.onPause();
+        this.chartComponent.pause(false);
+    }
+
+    @Override
     public CoordinatorLayout getCoordinatorLayout() {
         return null;
     }
 
     @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putBoolean(STATE_PLAYING, isPlaying());
+        int nbGraphs = this.chartComponent.getNbGraphs();
+        outState.putInt(STATE_NB_GRAPHS, nbGraphs);
+        outState.putInt(STATE_GRAPH_SIZE, this.chartComponent.getGraphsSize());
+        for (int i = 0; i < nbGraphs; i++) {
+            outState.putFloatArray(STATE_GRAPH + i, this.chartComponent.getDataSetValues(i));
+        }
+        super.onSaveInstanceState(outState);
+    }
+
+    public void setContext(Context context) {
+        this.context = context;
+    }
+
+    public boolean isPlaying() {
+        return playing;
+    }
+
+    public void setPlaying(boolean playing) {
+        this.playing = playing;
+    }
+
     public void onMotoHistoryClick(Moto moto) {
         this.acquisitionSaveRequest.setMoto(moto);
         hideChooseMotoDialog();
