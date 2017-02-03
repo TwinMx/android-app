@@ -1,4 +1,4 @@
-package fr.isen.twinmx.utilabc.bluetooth;
+package fr.isen.twinmx.utils.bluetooth;
 
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
@@ -12,15 +12,15 @@ import java.util.Comparator;
 import java.util.List;
 
 import fr.isen.twinmx.R;
-import fr.isen.twinmx.receivers.BluetoothIconReceiver;
+import fr.isen.twinmx.receiversabc.BluetoothIconReceiver;
 import fr.isen.twinmx.TMApplication;
 import fr.isen.twinmx.database.RealmDeviceRepository;
 import fr.isen.twinmx.database.exceptions.RepositoryException;
 import fr.isen.twinmx.database.model.RealmDevice;
-import fr.isen.twinmx.utilabc.bluetooth.SmoothBluetoothFork.TMBluetoothService;
-import fr.isen.twinmx.utilabc.bluetooth.SmoothBluetoothFork.TMDevice;
-import fr.isen.twinmx.utilabc.bluetooth.SmoothBluetoothFork.TMSmoothBluetooth;
-import fr.isen.twinmx.utilabc.TMBluetoothDialogAdapter;
+import fr.isen.twinmx.utils.bluetooth.SmoothBluetoothFork.TMBluetoothService;
+import fr.isen.twinmx.utils.bluetooth.SmoothBluetoothFork.TMDevice;
+import fr.isen.twinmx.utils.bluetooth.SmoothBluetoothFork.TMSmoothBluetooth;
+import fr.isen.twinmx.utils.TMBluetoothDialogAdapter;
 
 /**
  * Created by cdupl on 9/27/2016.

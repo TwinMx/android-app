@@ -1,4 +1,4 @@
-package fr.isen.twinmx.utilabc;
+package fr.isen.twinmx.utils;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapShader;

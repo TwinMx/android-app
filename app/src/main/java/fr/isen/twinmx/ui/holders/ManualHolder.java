@@ -8,7 +8,7 @@ import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import fr.isen.twinmx.R;
-import fr.isen.twinmx.utilabc.manual.ManualPage;
+import fr.isen.twinmx.utils.manual.ManualPage;
 
 /**
  * Created by pierredfc.

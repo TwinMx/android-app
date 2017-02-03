@@ -34,9 +34,9 @@ import fr.isen.twinmx.R;
 
 import fr.isen.twinmx.listeners.OnMotoHistoryClickListener;
 
-import fr.isen.twinmx.receivers.BluetoothIconReceiver;
-import fr.isen.twinmx.utilabc.bluetooth.TMBluetooth;
-import fr.isen.twinmx.utilabc.TMBottomNavigation;
+import fr.isen.twinmx.receiversabc.BluetoothIconReceiver;
+import fr.isen.twinmx.utils.bluetooth.TMBluetooth;
+import fr.isen.twinmx.utils.TMBottomNavigation;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;

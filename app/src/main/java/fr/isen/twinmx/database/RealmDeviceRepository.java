@@ -4,7 +4,7 @@ import java.util.List;
 
 import fr.isen.twinmx.database.model.RealmDevice;
 import fr.isen.twinmx.database.model.Repository;
-import fr.isen.twinmx.utilabc.bluetooth.SmoothBluetoothFork.TMDevice;
+import fr.isen.twinmx.utils.bluetooth.SmoothBluetoothFork.TMDevice;
 
 /**
  * Created by Clement on 27/01/2017.

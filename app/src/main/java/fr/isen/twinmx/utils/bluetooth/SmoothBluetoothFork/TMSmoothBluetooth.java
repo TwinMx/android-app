@@ -1,4 +1,4 @@
-package fr.isen.twinmx.utilabc.bluetooth.SmoothBluetoothFork;
+package fr.isen.twinmx.utils.bluetooth.SmoothBluetoothFork;
 
 import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothAdapter;
@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Observable;
 import java.util.Set;
 
-import fr.isen.twinmx.receivers.BluetoothIconReceiver;
+import fr.isen.twinmx.receiversabc.BluetoothIconReceiver;
 
 /**
  * Created by Clement on 26/01/2017.

@@ -9,7 +9,7 @@ import java.util.List;
 
 import fr.isen.twinmx.R;
 import fr.isen.twinmx.ui.holders.ManualHolder;
-import fr.isen.twinmx.utilabc.manual.ManualPage;
+import fr.isen.twinmx.utils.manual.ManualPage;
 
 /**
  * Created by pierredfc.

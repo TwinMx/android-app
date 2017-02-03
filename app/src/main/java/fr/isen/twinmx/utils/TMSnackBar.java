@@ -1,4 +1,4 @@
-package fr.isen.twinmx.utilabc;
+package fr.isen.twinmx.utils;
 
 import android.content.Context;
 import android.content.res.Resources;

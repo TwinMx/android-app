@@ -1,4 +1,4 @@
-package fr.isen.twinmx.receivers;
+package fr.isen.twinmx.receiversabc;
 
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
@@ -13,7 +13,7 @@ import android.widget.ProgressBar;
 
 import fr.isen.twinmx.R;
 import fr.isen.twinmx.TMApplication;
-import fr.isen.twinmx.utilabc.bluetooth.TMBluetooth;
+import fr.isen.twinmx.utils.bluetooth.TMBluetooth;
 
 /**
  * Created by cdupl on 10/5/2016.

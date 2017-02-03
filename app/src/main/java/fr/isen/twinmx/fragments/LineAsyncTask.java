@@ -7,7 +7,7 @@ import com.github.mikephil.charting.data.Entry;
 
 import fr.isen.twinmx.model.MeasureEntry;
 import fr.isen.twinmx.model.MeasuresList;
-import fr.isen.twinmx.utilabc.bluetooth.TMBluetoothManager;
+import fr.isen.twinmx.utils.bluetooth.TMBluetoothManager;
 
 /**
  * Created by Clement on 19/01/2017.

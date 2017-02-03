@@ -1,4 +1,4 @@
-package fr.isen.twinmx.utilabc;
+package fr.isen.twinmx.utils;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -7,10 +7,10 @@ import android.view.ViewGroup;
 
 import java.util.List;
 
-import fr.isen.twinmx.receivers.BluetoothIconReceiver;
-import fr.isen.twinmx.utilabc.bluetooth.SmoothBluetoothFork.TMDevice;
-import fr.isen.twinmx.utilabc.bluetooth.SmoothBluetoothFork.TMSmoothBluetooth;
-import fr.isen.twinmx.utilabc.bluetooth.TMBluetooth;
+import fr.isen.twinmx.receiversabc.BluetoothIconReceiver;
+import fr.isen.twinmx.utils.bluetooth.SmoothBluetoothFork.TMDevice;
+import fr.isen.twinmx.utils.bluetooth.SmoothBluetoothFork.TMSmoothBluetooth;
+import fr.isen.twinmx.utils.bluetooth.TMBluetooth;
 
 /**
  * Created by cdupl on 9/27/2016.

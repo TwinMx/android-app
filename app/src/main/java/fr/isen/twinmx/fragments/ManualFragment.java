@@ -21,8 +21,8 @@ import butterknife.OnClick;
 import fr.isen.twinmx.R;
 import fr.isen.twinmx.TMApplication;
 import fr.isen.twinmx.ui.adapters.ManualAdapter;
-import fr.isen.twinmx.utilabc.manual.ManualPage;
-import fr.isen.twinmx.utilabc.manual.ReadFileHelper;
+import fr.isen.twinmx.utils.manual.ManualPage;
+import fr.isen.twinmx.utils.manual.ReadFileHelper;
 
 /**
  * Created by pierredfc.

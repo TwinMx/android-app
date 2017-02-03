@@ -17,7 +17,7 @@ import fr.isen.twinmx.R;
 import fr.isen.twinmx.TMApplication;
 import fr.isen.twinmx.database.model.Moto;
 import fr.isen.twinmx.listeners.OnMotoHistoryClickListener;
-import fr.isen.twinmx.utilabc.CircleTransformation;
+import fr.isen.twinmx.utils.CircleTransformation;
 
 /**
  * Created by Clement on 05/01/2017.

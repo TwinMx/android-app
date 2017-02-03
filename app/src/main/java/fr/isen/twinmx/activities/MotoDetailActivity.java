@@ -34,7 +34,7 @@ import fr.isen.twinmx.database.model.Maintenance;
 import fr.isen.twinmx.database.model.Moto;
 import fr.isen.twinmx.listeners.OnMotoMaintenanceClickListener;
 import fr.isen.twinmx.ui.adapters.MaintenanceAdapter;
-import fr.isen.twinmx.utilabc.CircleTransformation;
+import fr.isen.twinmx.utils.CircleTransformation;
 import io.realm.RealmResults;
 
 /**

@@ -35,7 +35,7 @@ import fr.isen.twinmx.database.model.Moto;
 import fr.isen.twinmx.listeners.OnMotoHistoryClickListener;
 import fr.isen.twinmx.model.AcquisitionSaveRequest;
 import fr.isen.twinmx.ui.adapters.DialogMotoAdapter;
-import fr.isen.twinmx.utilabc.bluetooth.TMBluetooth;
+import fr.isen.twinmx.utils.bluetooth.TMBluetooth;
 
 /**
  * Created by pierredfc.
