@@ -23,6 +23,8 @@ import fr.isen.twinmx.util.CircleTransformation;
 
 public class MotoHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
+    public static final int LAYOUT = R.layout.history_item;
+
     @BindView(R.id.history_cardview)
     CardView cardView;
 

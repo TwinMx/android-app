@@ -1,6 +1,9 @@
 package fr.isen.twinmx.database.model;
 
+import com.github.mikephil.charting.data.Entry;
+
 import java.util.ArrayList;
+import java.util.List;
 
 import fr.isen.twinmx.database.interfaces.AutoIncrement;
 import fr.isen.twinmx.database.measures.RealmMeasure;
@@ -12,32 +15,34 @@ import io.realm.annotations.Required;
 /**
  * Created by pierredfc.
  */
-public class Maintenance extends RealmObject implements AutoIncrement {
+public class Maintenance extends RealmObject {
 
     public static final String DB_TYPE = "Maintenance";
 
-    @PrimaryKey @Required
-    private Long id = null;
     private String date;
     private String note;
-    private RealmList<RealmMeasure> measures;
+    private RealmList<RealmGraph> graphs;
 
     public Maintenance() {}
 
-    public Maintenance(String  date, String note)
+    public Maintenance(Maintenance maintenance) {
+        this(maintenance.getDate(), maintenance.getNote(), RealmGraph.newRealmList(maintenance.getGraphs()));
+    }
+
+
+    public Maintenance(String date, String note, RealmList<RealmGraph> graphs) {
+        this.date = date;
+        this.note = note;
+        this.graphs = graphs;
+    }
+
+    public Maintenance(String  date, String note, List<List<Entry>> graphs)
     {
         this.date = date;
         this.note = note;
-        this.measures = new RealmList<>();
-    }
-
-    public Maintenance(String date, String note, ArrayList<RealmMeasure> measuresList)
-    {
-        this(date, note);
-
-        for (RealmMeasure measure : measuresList)
-        {
-            this.measures.add(new RealmMeasure(measure));
+        this.graphs = new RealmList<>();
+        for(List<Entry> graph : graphs) {
+            this.graphs.add(new RealmGraph(graph));
         }
     }
 
@@ -57,17 +62,19 @@ public class Maintenance extends RealmObject implements AutoIncrement {
         this.note = note;
     }
 
-    public RealmList<RealmMeasure> getMeasures() {
-        return this.measures;
+    public RealmList<RealmGraph> getGraphs() {
+        return graphs;
     }
 
-    public void setMeasures(RealmList<RealmMeasure> measures) {
-        this.measures = measures;
+    public void setGraphs(RealmList<RealmGraph> graphs) {
+        this.graphs = graphs;
     }
 
-    @Override
-    public Long getId() { return this.id;}
-
-    @Override
-    public void setId(Long id) { this.id = id;}
+    public static RealmList<Maintenance> newRealmList(RealmList<Maintenance> maintenances) {
+        RealmList<Maintenance> list = new RealmList<>();
+        for(Maintenance maintenance : maintenances) {
+            list.add(new Maintenance(maintenance));
+        }
+        return list;
+    }
 }

@@ -73,6 +73,7 @@ public class MainActivity extends AppCompatActivity implements TMBottomNavigatio
 
     private static final String FRAGMENT_TAG = "FRAGMENT_TAG";
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

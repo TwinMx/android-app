@@ -15,6 +15,7 @@ import com.github.mikephil.charting.listener.OnChartGestureListener;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -259,7 +260,7 @@ public class RealTimeChartComponent implements Observer, OnChartGestureListener,
 
     public int getNbGraphs() {
         int size = 0;
-        for(LimitedEntryList entries : dataSetEntries) {
+        for (LimitedEntryList entries : dataSetEntries) {
             if (entries != null && !entries.isEmpty()) {
                 size++;
             }
@@ -285,5 +286,9 @@ public class RealTimeChartComponent implements Observer, OnChartGestureListener,
             return result;
         }
         return null;
+    }
+
+    public List<LimitedEntryList> getDataSetEntries() {
+        return dataSetEntries;
     }
 }

@@ -46,4 +46,9 @@
     <!-- Manual help -->
     <string name="twinmax_title">Device help</string>
     <string name="app_title">Application help</string>
+    <string name="select_moto">Select a moto</string>
+    <string name="new_moto">New moto...</string>
+    <string name="form_moto_name">New moto\'s name</string>
+    <string name="form_acquistion_note">Note</string>
+
 </resources>

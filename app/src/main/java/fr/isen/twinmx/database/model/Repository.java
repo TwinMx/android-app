@@ -51,6 +51,14 @@ public abstract class Repository<T extends RealmObject> {
         this.realm.commitTransaction();
     }
 
+    public T update(final T t) throws RepositoryException {
+        return create(t);
+    }
+
+    public void updateAsync(final T t) throws RepositoryException {
+        createAsync(t);
+    }
+
     public T create(final T t) throws RepositoryException {
         try {
             begin();
@@ -65,6 +73,10 @@ public abstract class Repository<T extends RealmObject> {
 
     private void generateId(AutoIncrement t) {
         if (t.getId() == null) t.setId(this.getMaxId() + 1);
+    }
+
+    public static void generateId(AutoIncrement t, Realm realm, Class clazz) {
+        if (t.getId() == null) t.setId(Repository.getMaxId(realm, clazz) + 1);
     }
 
     public void createAsync(final T t) throws RepositoryException {
@@ -124,6 +136,10 @@ public abstract class Repository<T extends RealmObject> {
     }
 
     public long getMaxId() {
+        return Repository.getMaxId(realm, clazz);
+    }
+
+    public static long getMaxId(Realm realm, Class clazz) {
         Number n = realm.where(clazz).max("id");
         return n != null ? n.longValue() : -1;
     }
