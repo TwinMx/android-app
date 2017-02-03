@@ -107,7 +107,7 @@ public class TMBluetooth extends TMSmoothBluetooth implements TMSmoothBluetooth.
         Log.d("TMBluetooth", "onConnectionFailed ["+device+"]");
         //BluetoothIconReceiver.sendStatusError(String.format(TMApplication.getContext().getResources().getString(R.string.connection_failed_to),device.getName()));
         if (this.bluetoothIconReceiver != null) {
-            this.bluetoothIconReceiver.error(TMApplication.loadString(R.string.connection_failed_to));
+            this.bluetoothIconReceiver.error(TMApplication.loadString(R.string.connection_failed_to, device != null ? device.getName() : ""));
         }
     }
 
