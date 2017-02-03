@@ -1,4 +1,4 @@
-package fr.isen.twinmx.fragmentsabs;
+package fr.isen.twinmx.fragments;
 
 import android.os.AsyncTask;
 import android.util.Log;
@@ -7,7 +7,7 @@ import com.github.mikephil.charting.data.Entry;
 
 import fr.isen.twinmx.model.MeasureEntry;
 import fr.isen.twinmx.model.MeasuresList;
-import fr.isen.twinmx.util.bluetooth.TMBluetoothManager;
+import fr.isen.twinmx.utilabc.bluetooth.TMBluetoothManager;
 
 /**
  * Created by Clement on 19/01/2017.

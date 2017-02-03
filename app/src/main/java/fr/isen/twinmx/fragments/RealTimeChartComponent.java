@@ -1,4 +1,4 @@
-package fr.isen.twinmx.fragmentsabs;
+package fr.isen.twinmx.fragments;
 
 import android.app.Activity;
 import android.support.v4.content.ContextCompat;
@@ -22,7 +22,7 @@ import java.util.Observer;
 import fr.isen.twinmx.R;
 import fr.isen.twinmx.async.RawDataManagerAsyncTask;
 import fr.isen.twinmx.model.InitChartData;
-import fr.isen.twinmx.util.bluetooth.TMBluetooth;
+import fr.isen.twinmx.utilabc.bluetooth.TMBluetooth;
 
 /**
  * Created by Clement on 19/01/2017.

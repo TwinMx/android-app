@@ -1,4 +1,4 @@
-package fr.isen.twinmx.util.bluetooth.SmoothBluetoothFork;
+package fr.isen.twinmx.utilabc.bluetooth.SmoothBluetoothFork;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -13,7 +13,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.UUID;
 
-import fr.isen.twinmx.util.bluetooth.TMBluetoothDataManager;
+import fr.isen.twinmx.utilabc.bluetooth.TMBluetoothDataManager;
 
 /**
  * Created by Clement on 26/01/2017.

@@ -6,10 +6,10 @@ import com.github.mikephil.charting.data.Entry;
 
 import java.util.List;
 
-import fr.isen.twinmx.fragmentsabs.RealTimeChartComponent;
+import fr.isen.twinmx.fragments.RealTimeChartComponent;
 import fr.isen.twinmx.model.RawData;
 import fr.isen.twinmx.model.RawMeasures;
-import fr.isen.twinmx.util.bluetooth.TMBluetoothDataManager;
+import fr.isen.twinmx.utilabc.bluetooth.TMBluetoothDataManager;
 
 /**
  * Created by Clement on 20/01/2017.

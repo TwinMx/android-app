@@ -2,7 +2,6 @@ package fr.isen.twinmx.ui.holders;
 
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -18,7 +17,7 @@ import fr.isen.twinmx.R;
 import fr.isen.twinmx.TMApplication;
 import fr.isen.twinmx.database.model.Moto;
 import fr.isen.twinmx.listeners.OnMotoHistoryClickListener;
-import fr.isen.twinmx.util.CircleTransformation;
+import fr.isen.twinmx.utilabc.CircleTransformation;
 
 /**
  * Created by Clement on 05/01/2017.

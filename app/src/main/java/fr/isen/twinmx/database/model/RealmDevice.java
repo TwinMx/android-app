@@ -1,7 +1,7 @@
 package fr.isen.twinmx.database.model;
 
 import fr.isen.twinmx.database.interfaces.AutoIncrement;
-import fr.isen.twinmx.util.bluetooth.SmoothBluetoothFork.TMDevice;
+import fr.isen.twinmx.utilabc.bluetooth.SmoothBluetoothFork.TMDevice;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 import io.realm.annotations.Required;

@@ -1,4 +1,4 @@
-package fr.isen.twinmx.fragmentsabs;
+package fr.isen.twinmx.fragments;
 
 import android.app.Fragment;
 import android.os.Bundle;
@@ -21,8 +21,8 @@ import butterknife.OnClick;
 import fr.isen.twinmx.R;
 import fr.isen.twinmx.TMApplication;
 import fr.isen.twinmx.ui.adapters.ManualAdapter;
-import fr.isen.twinmx.util.manual.ManualPage;
-import fr.isen.twinmx.util.manual.ReadFileHelper;
+import fr.isen.twinmx.utilabc.manual.ManualPage;
+import fr.isen.twinmx.utilabc.manual.ReadFileHelper;
 
 /**
  * Created by pierredfc.

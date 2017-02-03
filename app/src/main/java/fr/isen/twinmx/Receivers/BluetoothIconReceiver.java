@@ -13,7 +13,7 @@ import android.widget.ProgressBar;
 
 import fr.isen.twinmx.R;
 import fr.isen.twinmx.TMApplication;
-import fr.isen.twinmx.util.bluetooth.TMBluetooth;
+import fr.isen.twinmx.utilabc.bluetooth.TMBluetooth;
 
 /**
  * Created by cdupl on 10/5/2016.

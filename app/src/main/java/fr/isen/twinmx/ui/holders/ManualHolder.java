@@ -5,12 +5,10 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import fr.isen.twinmx.R;
-import fr.isen.twinmx.util.manual.ManualPage;
+import fr.isen.twinmx.utilabc.manual.ManualPage;
 
 /**
  * Created by pierredfc.

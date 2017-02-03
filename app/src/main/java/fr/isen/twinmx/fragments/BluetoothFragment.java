@@ -1,11 +1,11 @@
-package fr.isen.twinmx.fragmentsabs;
+package fr.isen.twinmx.fragments;
 
 import android.app.Fragment;
 import android.support.design.widget.CoordinatorLayout;
 import android.view.View;
 
-import fr.isen.twinmx.util.bluetooth.TMBluetooth;
-import fr.isen.twinmx.util.TMSnackBar;
+import fr.isen.twinmx.utilabc.bluetooth.TMBluetooth;
+import fr.isen.twinmx.utilabc.TMSnackBar;
 
 /**
  * Created by Clement on 19/01/2017.

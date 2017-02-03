@@ -1,4 +1,4 @@
-package fr.isen.twinmx.fragmentsabs;
+package fr.isen.twinmx.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -35,7 +35,7 @@ import fr.isen.twinmx.database.model.Moto;
 import fr.isen.twinmx.listeners.OnMotoHistoryClickListener;
 import fr.isen.twinmx.model.AcquisitionSaveRequest;
 import fr.isen.twinmx.ui.adapters.DialogMotoAdapter;
-import fr.isen.twinmx.util.bluetooth.TMBluetooth;
+import fr.isen.twinmx.utilabc.bluetooth.TMBluetooth;
 
 /**
  * Created by pierredfc.

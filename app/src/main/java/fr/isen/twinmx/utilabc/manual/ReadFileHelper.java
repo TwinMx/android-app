@@ -1,4 +1,4 @@
-package fr.isen.twinmx.util.manual;
+package fr.isen.twinmx.utilabc.manual;
 
 import android.content.Context;
 

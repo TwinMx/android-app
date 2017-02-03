@@ -1,4 +1,4 @@
-package fr.isen.twinmx.util.bluetooth;
+package fr.isen.twinmx.utilabc.bluetooth;
 
 import android.app.Activity;
 

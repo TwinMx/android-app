@@ -9,7 +9,7 @@ import java.util.List;
 import fr.isen.twinmx.database.MotoRepository;
 import fr.isen.twinmx.database.exceptions.RepositoryException;
 import fr.isen.twinmx.database.model.Moto;
-import fr.isen.twinmx.fragmentsabs.LimitedEntryList;
+import fr.isen.twinmx.fragments.LimitedEntryList;
 
 /**
  * Created by Clement on 02/02/2017.
