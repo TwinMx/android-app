@@ -34,14 +34,18 @@ public class RealTimeChartComponent implements Observer, OnChartGestureListener,
     private ArrayList<LimitedEntryList> dataSetEntries = new ArrayList<>(4);
     private TMBluetooth mBluetooth;
     private RawDataManagerAsyncTask rawDataManagerAsyncTask;
+    private ChartFragment chartFragment;
 
-    public RealTimeChartComponent(Activity context, LineChart chart, TMBluetooth bluetooth) {
+    public RealTimeChartComponent(Activity context, ChartFragment chartFragment, LineChart chart, TMBluetooth bluetooth) {
         this.context = context;
         this.mChart = chart;
+        this.chartFragment = chartFragment;
         this.mBluetooth = bluetooth;
     }
 
-    /** onCreate **/
+    /**
+     * onCreate
+     **/
     public void onCreate() {
         mChart.setData(new LineData());
         initChartSettings();
@@ -50,7 +54,7 @@ public class RealTimeChartComponent implements Observer, OnChartGestureListener,
     private void initChartSettings() {
         mChart.getAxisRight().setEnabled(false);
         mChart.getXAxis().setDrawLabels(false);
-        for(int index = 0; index < 4; index++) {
+        for (int index = 0; index < 4; index++) {
             dataSetEntries.add(null);
         }
         mChart.setDrawGridBackground(false);
@@ -61,28 +65,32 @@ public class RealTimeChartComponent implements Observer, OnChartGestureListener,
 
     }
 
-    /** onResume() **/
-    public void onResume() {
+    /**
+     * onResume()
+     **/
+    public void onResume(Boolean wasPlaying, boolean updateState) {
         mBluetooth.addObserver(this);
-        update();
+        update(wasPlaying, updateState);
     }
 
-    public void update() {
+    public void update(Boolean wasPlaying, boolean updateState) {
         if (mBluetooth.getConnectedDevice() != null) { //If there's a connected device
-            play();
-        }
-        else {
-            pause();
+            if (wasPlaying == null || wasPlaying) {
+                play(updateState);
+            } else { // !wasPlaying
+                pause(updateState);
+            }
+        } else {
+            pause(updateState);
         }
     }
 
     /**
-     *
      * @param entries One entry per dataset
      */
     public void addEntries(Entry... entries) {
         int size = entries.length;
-        for(int i = 0; i < size; i++) {
+        for (int i = 0; i < size; i++) {
             addEntry(i, entries[i]);
         }
     }
@@ -97,7 +105,7 @@ public class RealTimeChartComponent implements Observer, OnChartGestureListener,
                 this.dataSetEntries.set(index, entries);
             }
 
-            synchronized(entries) {
+            synchronized (entries) {
                 data.addEntry(value, index);
                 //entries.add(value.getY());
             }
@@ -158,32 +166,33 @@ public class RealTimeChartComponent implements Observer, OnChartGestureListener,
     }
 
 
-    public void play() {
+    public void play(boolean updateState) {
         if (rawDataManagerAsyncTask != null) {
             rawDataManagerAsyncTask.stop();
             rawDataManagerAsyncTask = null;
         }
 
-        for (int index = 0; index < dataSetEntries.size(); index++)
-        {
+        for (int index = 0; index < dataSetEntries.size(); index++) {
             dataSetEntries.set(index, null);
         }
 
 
         LineData data = mChart.getData();
 
-        for(int index = data.getDataSetCount() - 1; index >= 0; index--) {
+        for (int index = data.getDataSetCount() - 1; index >= 0; index--) {
             data.removeDataSet(index);
         }
 
 
         rawDataManagerAsyncTask = new RawDataManagerAsyncTask(mBluetooth.getDataManager(), this);
+        if (updateState) this.chartFragment.setPlaying(true);
         rawDataManagerAsyncTask.execute();
     }
 
-    public void pause() {
+    public void pause(boolean updateState) {
         if (rawDataManagerAsyncTask != null) {
             rawDataManagerAsyncTask.stop();
+            if (updateState) this.chartFragment.setPlaying(false);
         }
         rawDataManagerAsyncTask = null;
     }
@@ -191,7 +200,7 @@ public class RealTimeChartComponent implements Observer, OnChartGestureListener,
 
     @Override
     public void update(Observable observable, Object o) {
-        update();
+        update(null, true);
     }
 
     public void setVisible(Integer index, boolean checked) {

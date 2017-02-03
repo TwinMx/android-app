@@ -3,6 +3,7 @@ package fr.isen.twinmx.fragments;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.annotation.BoolRes;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.content.ContextCompat;
@@ -36,6 +37,11 @@ public class ChartFragment extends BluetoothFragment {
     private int minMotorValue = 0;
     private RealTimeChartComponent chartComponent;
     private int serie1Index;
+    private boolean playing = false;
+
+    private Boolean onResumeWasPlaying = null;
+
+    private static final String STATE_PLAYING = "STATE_PLAYING";
 
     @OnClick({R.id.box1, R.id.box2, R.id.box3, R.id.box4})
     public void onBoxClick(View view) {
@@ -52,10 +58,10 @@ public class ChartFragment extends BluetoothFragment {
 
         if (this.isStarted) {
             if (context != null) image.setImageDrawable(ContextCompat.getDrawable(this.context, R.drawable.ic_play_arrow_white_24dp));
-            this.chartComponent.pause();
+            this.chartComponent.pause(true);
         } else {
             if (context != null) image.setImageDrawable(ContextCompat.getDrawable(this.context, R.drawable.ic_pause_white_24dp));
-            this.chartComponent.play();
+            this.chartComponent.play(true);
         }
 
         this.isStarted = !this.isStarted;
@@ -97,7 +103,7 @@ public class ChartFragment extends BluetoothFragment {
 
         LineChart chart = (LineChart) rootView.findViewById(R.id.graph);
 
-        this.chartComponent = new RealTimeChartComponent(this.getActivity(), chart, getBluetooth());
+        this.chartComponent = new RealTimeChartComponent(this.getActivity(), this, chart, getBluetooth());
         this.chartComponent.onCreate();
 
         return rootView;
@@ -107,11 +113,17 @@ public class ChartFragment extends BluetoothFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.isStarted = true;
+
+        if (savedInstanceState != null && savedInstanceState.containsKey(STATE_PLAYING)) {
+            this.onResumeWasPlaying = savedInstanceState.getBoolean(STATE_PLAYING);
+        } else {
+            this.onResumeWasPlaying = null;
+        }
     }
 
     public void onResume() {
         super.onResume();
-        this.chartComponent.onResume();
+        this.chartComponent.onResume(this.onResumeWasPlaying, true);
         this.setMotorLifeCycle();
     }
 
@@ -136,7 +148,7 @@ public class ChartFragment extends BluetoothFragment {
     @Override
     public void onPause() {
         super.onPause();
-        this.chartComponent.pause();
+        this.chartComponent.pause(false);
     }
 
     @Override
@@ -144,7 +156,21 @@ public class ChartFragment extends BluetoothFragment {
         return null;
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putBoolean(STATE_PLAYING, isPlaying());
+        super.onSaveInstanceState(outState);
+    }
+
     public void setContext(Context context) {
         this.context = context;
+    }
+
+    public boolean isPlaying() {
+        return playing;
+    }
+
+    public void setPlaying(boolean playing) {
+        this.playing = playing;
     }
 }
