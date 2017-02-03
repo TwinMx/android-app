@@ -25,6 +25,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import fr.isen.twinmx.R;
 import fr.isen.twinmx.activities.MainActivity;
+import fr.isen.twinmx.model.InitChartData;
 import fr.isen.twinmx.util.Bluetooth.TMBluetooth;
 
 /**
@@ -45,6 +46,10 @@ public class ChartFragment extends BluetoothFragment {
     private Boolean onResumeWasPlaying = null;
 
     private static final String STATE_PLAYING = "STATE_PLAYING";
+    private static final String STATE_NB_GRAPHS = "STATE_NB_GRAPHS";
+    private static final String STATE_GRAPH = "STATE_GRAPH_" ;
+    private static final String STATE_GRAPH_SIZE = "STATE_GRAPH_SIZE";
+
 
     @OnClick({R.id.box1, R.id.box2, R.id.box3, R.id.box4})
     public void onBoxClick(View view) {
@@ -129,7 +134,7 @@ public class ChartFragment extends BluetoothFragment {
 
         LineChart chart = (LineChart) rootView.findViewById(R.id.graph);
 
-        this.chartComponent = new RealTimeChartComponent(this.getActivity(), this, chart, getBluetooth());
+        this.chartComponent = new RealTimeChartComponent(this.getActivity(), this, chart, getBluetooth(), savedInstanceState != null ? new InitChartData(savedInstanceState, STATE_NB_GRAPHS, STATE_GRAPH_SIZE, STATE_GRAPH) : null);
         this.chartComponent.onCreate();
 
         return rootView;
@@ -186,6 +191,12 @@ public class ChartFragment extends BluetoothFragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putBoolean(STATE_PLAYING, isPlaying());
+        int nbGraphs = this.chartComponent.getNbGraphs();
+        outState.putInt(STATE_NB_GRAPHS, nbGraphs);
+        outState.putInt(STATE_GRAPH_SIZE, this.chartComponent.getGraphsSize());
+        for(int i = 0; i < nbGraphs; i++) {
+            outState.putFloatArray(STATE_GRAPH+i, this.chartComponent.getDataSetValues(i));
+        }
         super.onSaveInstanceState(outState);
     }
 
