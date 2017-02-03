@@ -1,4 +1,4 @@
-package fr.isen.twinmx.util.Bluetooth;
+package fr.isen.twinmx.util.bluetooth;
 
 import java.util.List;
 import fr.isen.twinmx.model.LimitedLinkedList;

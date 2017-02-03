@@ -5,13 +5,9 @@ import android.util.Log;
 
 import com.github.mikephil.charting.data.Entry;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import fr.isen.twinmx.model.MeasureEntry;
 import fr.isen.twinmx.model.MeasuresList;
-import fr.isen.twinmx.model.RawData;
-import fr.isen.twinmx.util.Bluetooth.TMBluetoothManager;
+import fr.isen.twinmx.util.bluetooth.TMBluetoothManager;
 
 /**
  * Created by Clement on 19/01/2017.

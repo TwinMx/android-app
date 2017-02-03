@@ -7,14 +7,10 @@ import android.view.ViewGroup;
 
 import java.util.List;
 
-import fr.isen.twinmx.R;
-import fr.isen.twinmx.Receivers.BluetoothIconReceiver;
-import fr.isen.twinmx.util.Bluetooth.SmoothBluetoothFork.TMDevice;
-import fr.isen.twinmx.util.Bluetooth.SmoothBluetoothFork.TMSmoothBluetooth;
-import fr.isen.twinmx.util.Bluetooth.TMBluetooth;
-import fr.isen.twinmx.util.Bluetooth.TMBluetoothManager;
-import io.palaima.smoothbluetooth.Device;
-import io.palaima.smoothbluetooth.SmoothBluetooth;
+import fr.isen.twinmx.receivers.BluetoothIconReceiver;
+import fr.isen.twinmx.util.bluetooth.SmoothBluetoothFork.TMDevice;
+import fr.isen.twinmx.util.bluetooth.SmoothBluetoothFork.TMSmoothBluetooth;
+import fr.isen.twinmx.util.bluetooth.TMBluetooth;
 
 /**
  * Created by cdupl on 9/27/2016.

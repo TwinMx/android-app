@@ -28,7 +28,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import fr.isen.twinmx.R;
-import fr.isen.twinmx.activities.MainActivity;
 import fr.isen.twinmx.model.InitChartData;
 import fr.isen.twinmx.TMApplication;
 import fr.isen.twinmx.database.MotoRepository;
@@ -36,7 +35,7 @@ import fr.isen.twinmx.database.model.Moto;
 import fr.isen.twinmx.listeners.OnMotoHistoryClickListener;
 import fr.isen.twinmx.model.AcquisitionSaveRequest;
 import fr.isen.twinmx.ui.adapters.DialogMotoAdapter;
-import fr.isen.twinmx.util.Bluetooth.TMBluetooth;
+import fr.isen.twinmx.util.bluetooth.TMBluetooth;
 
 /**
  * Created by pierredfc.
@@ -122,7 +121,7 @@ public class ChartFragment extends BluetoothFragment implements OnMotoHistoryCli
 
     @OnClick(R.id.save_acquisition)
     public void onSaveClick(View view) {
-        this.chartComponent.pause();
+        this.chartComponent.pause(true);
         List<LimitedEntryList> entries = this.chartComponent.getDataSetEntries();
         if (entries != null && entries.size() > 0 && entries.get(0) != null && entries.get(0).size() > 0) {
             this.acquisitionSaveRequest = new AcquisitionSaveRequest(entries);
@@ -280,7 +279,7 @@ public class ChartFragment extends BluetoothFragment implements OnMotoHistoryCli
 
                         acquisitionSaveRequest.setNote(note);
                         acquisitionSaveRequest.save();
-                        chartComponent.play();
+                        chartComponent.play(true);
                     }
                 })
                 .negativeText(R.string.form_cancel)
@@ -288,7 +287,7 @@ public class ChartFragment extends BluetoothFragment implements OnMotoHistoryCli
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                         acquisitionSaveRequest = null;
-                        chartComponent.play();
+                        chartComponent.play(true);
                     }
                 })
                 .build();

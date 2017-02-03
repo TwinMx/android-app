@@ -1,6 +1,5 @@
 package fr.isen.twinmx.util;
 
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
@@ -8,10 +7,8 @@ import android.widget.TextView;
 
 import fr.isen.twinmx.R;
 import fr.isen.twinmx.TMApplication;
-import fr.isen.twinmx.util.Bluetooth.SmoothBluetoothFork.TMDevice;
-import fr.isen.twinmx.util.Bluetooth.TMBluetooth;
-import fr.isen.twinmx.util.Bluetooth.TMBluetoothManager;
-import io.palaima.smoothbluetooth.Device;
+import fr.isen.twinmx.util.bluetooth.SmoothBluetoothFork.TMDevice;
+import fr.isen.twinmx.util.bluetooth.TMBluetooth;
 
 /**
  * Created by cdupl on 9/27/2016.

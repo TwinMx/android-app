@@ -1,4 +1,4 @@
-package fr.isen.twinmx.util.Bluetooth.SmoothBluetoothFork;
+package fr.isen.twinmx.util.bluetooth.SmoothBluetoothFork;
 
 /**
  * Created by Clement on 27/01/2017.

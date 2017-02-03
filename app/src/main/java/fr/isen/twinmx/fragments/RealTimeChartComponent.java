@@ -22,7 +22,7 @@ import java.util.Observer;
 import fr.isen.twinmx.R;
 import fr.isen.twinmx.async.RawDataManagerAsyncTask;
 import fr.isen.twinmx.model.InitChartData;
-import fr.isen.twinmx.util.Bluetooth.TMBluetooth;
+import fr.isen.twinmx.util.bluetooth.TMBluetooth;
 
 /**
  * Created by Clement on 19/01/2017.

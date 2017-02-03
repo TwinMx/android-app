@@ -1,9 +1,8 @@
-package fr.isen.twinmx.util.Bluetooth;
+package fr.isen.twinmx.util.bluetooth;
 
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
-import android.os.Handler;
 import android.util.Log;
 
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -13,16 +12,15 @@ import java.util.Comparator;
 import java.util.List;
 
 import fr.isen.twinmx.R;
-import fr.isen.twinmx.Receivers.BluetoothIconReceiver;
+import fr.isen.twinmx.receivers.BluetoothIconReceiver;
 import fr.isen.twinmx.TMApplication;
 import fr.isen.twinmx.database.RealmDeviceRepository;
 import fr.isen.twinmx.database.exceptions.RepositoryException;
 import fr.isen.twinmx.database.model.RealmDevice;
-import fr.isen.twinmx.util.Bluetooth.SmoothBluetoothFork.TMBluetoothService;
-import fr.isen.twinmx.util.Bluetooth.SmoothBluetoothFork.TMDevice;
-import fr.isen.twinmx.util.Bluetooth.SmoothBluetoothFork.TMSmoothBluetooth;
+import fr.isen.twinmx.util.bluetooth.SmoothBluetoothFork.TMBluetoothService;
+import fr.isen.twinmx.util.bluetooth.SmoothBluetoothFork.TMDevice;
+import fr.isen.twinmx.util.bluetooth.SmoothBluetoothFork.TMSmoothBluetooth;
 import fr.isen.twinmx.util.TMBluetoothDialogAdapter;
-import io.palaima.smoothbluetooth.Device;
 
 /**
  * Created by cdupl on 9/27/2016.

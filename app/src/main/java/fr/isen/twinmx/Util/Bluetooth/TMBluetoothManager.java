@@ -1,22 +1,6 @@
-package fr.isen.twinmx.util.Bluetooth;
+package fr.isen.twinmx.util.bluetooth;
 
 import android.app.Activity;
-import android.bluetooth.BluetoothAdapter;
-import android.content.Intent;
-
-import com.afollestad.materialdialogs.MaterialDialog;
-
-import java.util.List;
-import java.util.Observable;
-
-import fr.isen.twinmx.R;
-import fr.isen.twinmx.Receivers.BluetoothIconReceiver;
-import fr.isen.twinmx.TMApplication;
-import fr.isen.twinmx.util.Bluetooth.SmoothBluetoothFork.TMDevice;
-import fr.isen.twinmx.util.Bluetooth.SmoothBluetoothFork.TMSmoothBluetooth;
-import fr.isen.twinmx.util.TMBluetoothDialogAdapter;
-import io.palaima.smoothbluetooth.Device;
-import io.palaima.smoothbluetooth.SmoothBluetooth;
 
 /**
  * Created by cdupl on 10/5/2016.

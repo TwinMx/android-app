@@ -15,7 +15,6 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
-import com.github.mikephil.charting.charts.Chart;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -35,8 +34,8 @@ import fr.isen.twinmx.R;
 
 import fr.isen.twinmx.listeners.OnMotoHistoryClickListener;
 
-import fr.isen.twinmx.Receivers.BluetoothIconReceiver;
-import fr.isen.twinmx.util.Bluetooth.TMBluetooth;
+import fr.isen.twinmx.receivers.BluetoothIconReceiver;
+import fr.isen.twinmx.util.bluetooth.TMBluetooth;
 import fr.isen.twinmx.util.TMBottomNavigation;
 
 import io.realm.Realm;

@@ -1,7 +1,6 @@
 package fr.isen.twinmx.async;
 
 import android.os.AsyncTask;
-import android.util.Log;
 
 import com.github.mikephil.charting.data.Entry;
 
@@ -10,7 +9,7 @@ import java.util.List;
 import fr.isen.twinmx.fragments.RealTimeChartComponent;
 import fr.isen.twinmx.model.RawData;
 import fr.isen.twinmx.model.RawMeasures;
-import fr.isen.twinmx.util.Bluetooth.TMBluetoothDataManager;
+import fr.isen.twinmx.util.bluetooth.TMBluetoothDataManager;
 
 /**
  * Created by Clement on 20/01/2017.
