@@ -10,9 +10,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatCheckBox;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Description;
@@ -30,6 +33,7 @@ import butterknife.OnClick;
 import fr.isen.twinmx.R;
 import fr.isen.twinmx.TMApplication;
 import fr.isen.twinmx.database.MotoRepository;
+import fr.isen.twinmx.database.exceptions.RepositoryException;
 import fr.isen.twinmx.database.model.Maintenance;
 import fr.isen.twinmx.database.model.Moto;
 import fr.isen.twinmx.database.model.RealmFloat;
@@ -66,7 +70,18 @@ public class MaintenanceDetailActivity extends AppCompatActivity {
         }
     }
 
+    private long motoId;
+
+    private int maintenanceIndex;
+
     private ArrayList<LimitedEntryList> dataSetEntries = new ArrayList<>(4);
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.maintenance_menu, menu);
+        return true;
+    }
 
     public static Intent makeIntent(Context context, Moto moto, Maintenance maintenance) {
         return makeIntent(context, moto.getId(), moto.getMaintenances().indexOf(maintenance));
@@ -97,8 +112,8 @@ public class MaintenanceDetailActivity extends AppCompatActivity {
         }
 
         Bundle extras = this.getIntent().getExtras();
-        Long motoId = extras.getLong("motoId");
-        Integer maintenanceIndex =  extras.getInt("maintenanceIndex");
+        this.motoId = extras.getLong("motoId");
+        this.maintenanceIndex =  extras.getInt("maintenanceIndex");
 
         Maintenance maintenance = MotoRepository.getInstance().findById(motoId).getMaintenances().get(maintenanceIndex);
 
@@ -135,6 +150,9 @@ public class MaintenanceDetailActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId())
         {
+            case R.id.delete_maintenance:
+                deleteMaintenance();
+                break;
             case android.R.id.home:
                 finish();
                 break;
@@ -142,6 +160,17 @@ public class MaintenanceDetailActivity extends AppCompatActivity {
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void deleteMaintenance()
+    {
+        try {
+            MotoRepository instance = MotoRepository.getInstance();
+            instance.deleteMaintenance(instance.findById(this.motoId), this.maintenanceIndex);
+            finish();
+        } catch (RepositoryException e) {
+            e.printStackTrace();
+        }
     }
 
     private void initChartSettings() {

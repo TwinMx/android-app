@@ -95,6 +95,11 @@ public class Moto extends RealmObject implements AutoIncrement {
 
     public void setImage(String image) { this.image = image;}
 
+    public void removeMaintenance(int maintenanceIndex)
+    {
+        this.maintenances.remove(maintenanceIndex);
+    }
+
     public void addGraphs(String date, String note, List<List<Entry>> graphs) {
         if (this.maintenances == null) {
             this.maintenances = new RealmList<>();

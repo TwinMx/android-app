@@ -70,6 +70,12 @@ public class MotoRepository extends Repository<Moto> {
         }
     }
 
+    public void deleteMaintenance(Moto moto, final int maintenanceIndex) throws RepositoryException {
+        begin();
+        moto.removeMaintenance(maintenanceIndex);
+        end();
+    }
+
     public void deleteByNameAsync(final String name) throws RepositoryException {
         runAsync(this.realm, new Callable<Boolean>() {
             @Override

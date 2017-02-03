@@ -56,4 +56,5 @@
     <!-- Maintenance detail -->
     <string name="note">Note</string>
     <string name="no_note">Pas de note.</string>
+    <string name="menu_delete">Supprimer</string>
 </resources>
