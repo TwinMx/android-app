@@ -113,7 +113,9 @@ public class MainActivity extends AppCompatActivity implements TMBottomNavigatio
             this.mBluetooth.setBluetoothIconReceiver(this.bluetoothIconReceiver);
             Fragment fragment = getCurrentFragment();
             if (fragment instanceof ChartFragment) {
-                ((ChartFragment) fragment).setBluetooth(mBluetooth);
+                ChartFragment chartFragment = (ChartFragment) fragment;
+                chartFragment.setBluetooth(mBluetooth);
+                chartFragment.setContext(this);
             }
         }
 

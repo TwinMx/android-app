@@ -23,6 +23,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import fr.isen.twinmx.R;
+import fr.isen.twinmx.activities.MainActivity;
 import fr.isen.twinmx.util.Bluetooth.TMBluetooth;
 
 /**
@@ -141,5 +142,9 @@ public class ChartFragment extends BluetoothFragment {
     @Override
     public CoordinatorLayout getCoordinatorLayout() {
         return null;
+    }
+
+    public void setContext(Context context) {
+        this.context = context;
     }
 }
