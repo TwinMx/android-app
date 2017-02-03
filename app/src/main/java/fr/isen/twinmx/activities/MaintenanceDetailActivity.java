@@ -7,9 +7,11 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.AppCompatCheckBox;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.LineChart;
@@ -24,6 +26,7 @@ import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import fr.isen.twinmx.R;
 import fr.isen.twinmx.TMApplication;
 import fr.isen.twinmx.database.MotoRepository;
@@ -50,9 +53,20 @@ public class MaintenanceDetailActivity extends AppCompatActivity {
     @BindView(R.id.maintenance_note)
     TextView note;
 
-    private ArrayList<LimitedEntryList> dataSetEntries = new ArrayList<>(4);
+    @OnClick({R.id.box1, R.id.box2, R.id.box3, R.id.box4})
+    public void onBoxClick(View view) {
+        Integer index = Integer.valueOf((String) view.getTag());
 
-    private Maintenance maintenance;
+        if (view instanceof AppCompatCheckBox)
+        {
+            AppCompatCheckBox box = (AppCompatCheckBox) view;
+            this.graph.getLineData().getDataSetByIndex(index).setVisible(box.isChecked());
+            this.graph.notifyDataSetChanged();
+            this.graph.invalidate();
+        }
+    }
+
+    private ArrayList<LimitedEntryList> dataSetEntries = new ArrayList<>(4);
 
     public static Intent makeIntent(Context context, Moto moto, Maintenance maintenance) {
         return makeIntent(context, moto.getId(), moto.getMaintenances().indexOf(maintenance));
@@ -115,8 +129,6 @@ public class MaintenanceDetailActivity extends AppCompatActivity {
                 addEntry(index, new Entry(index, data.getValue()));
             }
         }
-        graph.notifyDataSetChanged();
-        graph.invalidate();
     }
 
     @Override
