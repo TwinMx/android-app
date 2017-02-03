@@ -1,4 +1,4 @@
-package fr.isen.twinmx.fragments;
+package fr.isen.twinmx.fragmentsabs;
 
 import com.github.mikephil.charting.data.Entry;
 

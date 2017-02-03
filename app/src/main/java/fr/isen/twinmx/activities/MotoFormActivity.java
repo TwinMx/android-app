@@ -1,4 +1,4 @@
-package fr.isen.twinmx.activitiesabc;
+package fr.isen.twinmx.activities;
 
 import android.Manifest;
 import android.content.Intent;

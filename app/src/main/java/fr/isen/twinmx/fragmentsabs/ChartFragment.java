@@ -1,4 +1,4 @@
-package fr.isen.twinmx.fragments;
+package fr.isen.twinmx.fragmentsabs;
 
 import android.content.Context;
 import android.os.Bundle;

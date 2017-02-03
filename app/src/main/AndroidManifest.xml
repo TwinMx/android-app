@@ -18,7 +18,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <activity android:name=".activitiesabc.SplashActivity">
+        <activity android:name=".activities.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -26,19 +26,19 @@
         </activity>
 
 
-        <activity android:name=".activitiesabc.MainActivity">
+        <activity android:name=".activities.MainActivity">
 
         </activity>
 
-        <activity android:name=".activitiesabc.MotoFormActivity">
+        <activity android:name=".activities.MotoFormActivity">
 
         </activity>
 
-        <activity android:name=".activitiesabc.MotoDetailActivity">
+        <activity android:name=".activities.MotoDetailActivity">
 
         </activity>
 
-        <activity android:name=".activitiesabc.MaintenanceDetailActivity">
+        <activity android:name=".activities.MaintenanceDetailActivity">
 
         </activity>
 

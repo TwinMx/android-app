@@ -1,4 +1,4 @@
-package fr.isen.twinmx.fragments;
+package fr.isen.twinmx.fragmentsabs;
 
 import android.app.Fragment;
 import android.content.Intent;
@@ -26,9 +26,9 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import fr.isen.twinmx.activitiesabc.MainActivity;
+import fr.isen.twinmx.activities.MainActivity;
 import fr.isen.twinmx.R;
-import fr.isen.twinmx.activitiesabc.MotoFormActivity;
+import fr.isen.twinmx.activities.MotoFormActivity;
 import fr.isen.twinmx.database.MotoRepository;
 import fr.isen.twinmx.database.listeners.MotoListener;
 import fr.isen.twinmx.TMApplication;

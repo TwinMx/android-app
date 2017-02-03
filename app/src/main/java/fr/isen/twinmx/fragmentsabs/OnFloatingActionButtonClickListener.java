@@ -1,4 +1,4 @@
-package fr.isen.twinmx.fragments;
+package fr.isen.twinmx.fragmentsabs;
 
 /**
  * Created by Clement on 06/01/2017.

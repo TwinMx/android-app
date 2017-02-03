@@ -1,21 +1,15 @@
 package fr.isen.twinmx.ui.adapters;
 
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.List;
 
-import fr.isen.twinmx.database.MotoRepository;
-import fr.isen.twinmx.database.exceptions.RepositoryException;
 import fr.isen.twinmx.database.model.Moto;
-import fr.isen.twinmx.fragments.ChartFragment;
 import fr.isen.twinmx.listeners.OnMotoHistoryClickListener;
 import fr.isen.twinmx.ui.holders.DialogMotoHolder;
-import fr.isen.twinmx.ui.holders.MotoHolder;
-import fr.isen.twinmx.util.TMDeviceHolder;
 
 /**
  * Created by Clement on 27/01/2017.

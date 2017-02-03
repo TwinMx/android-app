@@ -1,4 +1,4 @@
-package fr.isen.twinmx.activitiesabc;
+package fr.isen.twinmx.activities;
 
 import android.app.Fragment;
 import android.app.FragmentTransaction;
@@ -26,10 +26,10 @@ import fr.isen.twinmx.database.TMRealmModule;
 
 import fr.isen.twinmx.database.model.Moto;
 
-import fr.isen.twinmx.fragments.ChartFragment;
+import fr.isen.twinmx.fragmentsabs.ChartFragment;
 
-import fr.isen.twinmx.fragments.ManualFragment;
-import fr.isen.twinmx.fragments.HistoryFragment;
+import fr.isen.twinmx.fragmentsabs.ManualFragment;
+import fr.isen.twinmx.fragmentsabs.HistoryFragment;
 import fr.isen.twinmx.R;
 
 import fr.isen.twinmx.listeners.OnMotoHistoryClickListener;

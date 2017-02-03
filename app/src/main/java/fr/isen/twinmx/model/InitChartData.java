@@ -4,7 +4,7 @@ import android.os.Bundle;
 
 import com.github.mikephil.charting.data.Entry;
 
-import fr.isen.twinmx.fragments.LimitedEntryList;
+import fr.isen.twinmx.fragmentsabs.LimitedEntryList;
 
 /**
  * Created by Clement on 03/02/2017.

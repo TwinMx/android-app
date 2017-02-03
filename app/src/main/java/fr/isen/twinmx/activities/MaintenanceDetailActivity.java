@@ -1,4 +1,4 @@
-package fr.isen.twinmx.activitiesabc;
+package fr.isen.twinmx.activities;
 
 import android.content.Context;
 import android.content.Intent;
@@ -36,8 +36,8 @@ import fr.isen.twinmx.database.model.Maintenance;
 import fr.isen.twinmx.database.model.Moto;
 import fr.isen.twinmx.database.model.RealmFloat;
 import fr.isen.twinmx.database.model.RealmGraph;
-import fr.isen.twinmx.fragments.LimitedEntryList;
-import fr.isen.twinmx.fragments.RealTimeChartComponent;
+import fr.isen.twinmx.fragmentsabs.LimitedEntryList;
+import fr.isen.twinmx.fragmentsabs.RealTimeChartComponent;
 import io.realm.RealmList;
 
 /**

@@ -1,8 +1,6 @@
-package fr.isen.twinmx.fragments;
+package fr.isen.twinmx.fragmentsabs;
 
-import android.app.Activity;
 import android.content.Context;
-import android.support.v4.content.ContextCompat;
 import android.view.MotionEvent;
 
 import com.github.mikephil.charting.charts.LineChart;

@@ -1,4 +1,4 @@
-package fr.isen.twinmx.fragments;
+package fr.isen.twinmx.fragmentsabs;
 
 import android.app.Activity;
 import android.support.v4.content.ContextCompat;

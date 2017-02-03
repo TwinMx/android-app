@@ -8,7 +8,7 @@ import android.support.v7.widget.Toolbar;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
 
-import fr.isen.twinmx.activitiesabc.MainActivity;
+import fr.isen.twinmx.activities.MainActivity;
 import fr.isen.twinmx.R;
 
 /**
