@@ -168,11 +168,8 @@ public class ChartFragment extends BluetoothFragment implements OnMotoHistoryCli
 
     private void showChooseMotoDialog() {
         if (this.chooseMotoDialog == null || !this.chooseMotoDialog.isShowing()) {
-
             List<Moto> motos = new LinkedList<>();
-            for (int i = 0; i < 5; i++) {
-                motos.addAll(MotoRepository.getInstance().findAll());
-            }
+            motos.addAll(MotoRepository.getInstance().findAll());
 
             this.chooseMotoDialog = new MaterialDialog.Builder(this.getActivity())
                     .title(TMApplication.getContext().getResources().getString(R.string.select_moto))

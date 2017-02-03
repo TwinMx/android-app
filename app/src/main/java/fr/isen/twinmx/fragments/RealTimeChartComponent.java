@@ -29,7 +29,7 @@ import fr.isen.twinmx.util.Bluetooth.TMBluetooth;
 
 public class RealTimeChartComponent implements Observer, OnChartGestureListener, OnChartValueSelectedListener {
 
-    private static int NB_POINTS = 200;
+    public static int NB_POINTS = 200;
     private final Activity context;
     private final LineChart mChart;
     private ArrayList<LimitedEntryList> dataSetEntries = new ArrayList<>(4);

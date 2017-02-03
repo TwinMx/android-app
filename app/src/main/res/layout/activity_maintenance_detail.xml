@@ -1,8 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/maintenanceDetail"
+    android:fitsSystemWindows="true"
+    tools:context=".activities.MaintenanceDetailActivity">
 
-<!-- TODO -->
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?android:attr/actionBarSize"
+        android:background="@color/colorPrimary"
+        app:titleTextColor="@color/white"
+        android:elevation="4dp" />
 
-</LinearLayout>
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="?android:attr/actionBarSize">
+
+        <com.github.mikephil.charting.charts.LineChart
+            android:id="@+id/maintenance_graph"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:minHeight="300dp"
+            android:padding="10dp">
+
+        </com.github.mikephil.charting.charts.LineChart>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/maintenance_note"/>
+
+    </LinearLayout>
+</android.support.design.widget.CoordinatorLayout>

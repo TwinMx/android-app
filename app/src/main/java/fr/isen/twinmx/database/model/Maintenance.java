@@ -29,7 +29,6 @@ public class Maintenance extends RealmObject {
         this(maintenance.getDate(), maintenance.getNote(), RealmGraph.newRealmList(maintenance.getGraphs()));
     }
 
-
     public Maintenance(String date, String note, RealmList<RealmGraph> graphs) {
         this.date = date;
         this.note = note;

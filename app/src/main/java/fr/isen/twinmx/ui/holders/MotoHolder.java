@@ -9,6 +9,9 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import java.text.DateFormat;
+import java.util.Date;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import fr.isen.twinmx.R;
@@ -51,7 +54,7 @@ public class MotoHolder extends RecyclerView.ViewHolder implements View.OnClickL
     public void bind(Moto moto) {
         this.moto = moto;
         this.name.setText(moto.getName());
-        this.date.setText(moto.getDate());
+        this.date.setText(DateFormat.getDateTimeInstance().format(new Date(Long.valueOf(moto.getDate()))));
         Picasso.with(TMApplication.getContext())
                 .load(moto.getImage())
                 .transform(new CircleTransformation())

@@ -128,13 +128,6 @@ public class MotoDetailActivity extends AppCompatActivity implements OnMotoMaint
     @Override
     protected void onResume() {
         super.onResume();
-/*        if (this.maintenanceFinder != null) this.maintenanceFinder.removeChangeListeners();
-        this.maintenanceFinder = MaintenanceRepository.getInstance().findAllAsync(new RealmChangeListener<RealmResults<Maintenance>>() {
-            @Override
-            public void onChange(RealmResults<Maintenance> element) {
-                onMaintenanceResponseReceived(element);
-            }
-        });*/
         onMaintenanceResponseReceived(moto.getMaintenances());
     }
 
