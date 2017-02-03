@@ -12,7 +12,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import fr.isen.twinmx.R;
-import fr.isen.twinmx.receiversabc.BluetoothIconReceiver;
+import fr.isen.twinmx.receivers.BluetoothIconReceiver;
 import fr.isen.twinmx.TMApplication;
 import fr.isen.twinmx.database.RealmDeviceRepository;
 import fr.isen.twinmx.database.exceptions.RepositoryException;

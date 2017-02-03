@@ -1,4 +1,4 @@
-package fr.isen.twinmx.receiversabc;
+package fr.isen.twinmx.receivers;
 
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;

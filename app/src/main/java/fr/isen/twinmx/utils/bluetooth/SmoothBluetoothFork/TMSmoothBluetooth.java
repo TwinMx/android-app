@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Observable;
 import java.util.Set;
 
-import fr.isen.twinmx.receiversabc.BluetoothIconReceiver;
+import fr.isen.twinmx.receivers.BluetoothIconReceiver;
 
 /**
  * Created by Clement on 26/01/2017.

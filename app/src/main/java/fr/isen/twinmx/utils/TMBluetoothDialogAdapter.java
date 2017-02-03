@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 
 import java.util.List;
 
-import fr.isen.twinmx.receiversabc.BluetoothIconReceiver;
+import fr.isen.twinmx.receivers.BluetoothIconReceiver;
 import fr.isen.twinmx.utils.bluetooth.SmoothBluetoothFork.TMDevice;
 import fr.isen.twinmx.utils.bluetooth.SmoothBluetoothFork.TMSmoothBluetooth;
 import fr.isen.twinmx.utils.bluetooth.TMBluetooth;
