@@ -30,13 +30,18 @@ public class FileInfiniteReaderAsyncTask extends AsyncTask<Void, Void, Void> {
             String filename = "twinmax-moto2.txt";
             String line;
             InputStream input;
+            boolean wait = true;
             try {
                 input = this.bluetooth.getContext().getResources().getAssets().open(filename);
                 BufferedReader bfr = new BufferedReader(new InputStreamReader(input));
                 while (!stop && (line=bfr.readLine())!=null){
-                    Log.d("log", line);
                     this.bluetooth.onDataReceived(Integer.parseInt(line));
-                    Thread.sleep(0, 600000);
+                    if (wait) { //500 µs
+                        wait = false;
+                        Thread.sleep(1);
+                    } else {
+                        wait = true;
+                    }
                 }
             } catch(Exception ex) {
                 ex.printStackTrace();

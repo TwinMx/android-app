@@ -39,15 +39,19 @@ public class MotoRepository extends Repository<Moto> {
     }
 
     public Moto updateName(Moto moto, String newName) throws RepositoryException {
-        Moto updatedMoto = new Moto(moto);
-        updatedMoto.setName(newName);
-        return update(updatedMoto);
+        begin();
+        moto.setName(newName);
+        moto = this.realm.copyToRealmOrUpdate(moto);
+        end();
+        return moto;
     }
 
     public Moto updateImage(Moto moto, String newImage) throws RepositoryException {
-        Moto updatedMoto = new Moto(moto);
-        updatedMoto.setImage(newImage);
-        return update(updatedMoto);
+        begin();
+        moto.setImage(newImage);
+        moto = this.realm.copyToRealmOrUpdate(moto);
+        end();
+        return moto;
     }
 
     public Moto updateAddGraph(Moto moto, Date date, String note, List<List<Entry>> graphs) throws RepositoryException {
