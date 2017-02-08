@@ -27,7 +27,7 @@ public class RawDataManagerAsyncTask extends AsyncTask<Void, Entry, Void> {
     private int x = 0;
     private int nbResults = 0;
 
-    private static final int REFRESH_RATE = 5;
+    private static final int REFRESH_RATE = 5; //200;
 
     private boolean stop;
 

@@ -6,32 +6,25 @@ import java.io.File;
  * Created by Clement on 08/02/2017.
  */
 
-public class TMFile {
+public class TMFile extends TMInput {
 
-    private final String mName;
-    private final File mFile;
-    private final boolean mPaired;
+    private final String mFileName;
 
-    public TMFile(String name, File file, boolean paired) {
-        mName = name;
-        mFile = file;
-        mPaired = paired;
+    public TMFile(String name, String fileName, boolean paired) {
+        super(TMDeviceType.FILE, name, paired);
+        mFileName = fileName;
     }
 
-    public String getName() {
-        return mName;
+    public TMFile(File file, boolean paired) {
+        this(file.getPath(), file.getAbsolutePath(), paired);
     }
 
-    public File getFile() {
-        return mFile;
-    }
-
-    public boolean isPaired() {
-        return mPaired;
+    public String getFileName() {
+        return mFileName;
     }
 
     @Override
     public String toString() {
-        return String.format("%1$s", mName);
+        return String.format("%1$s", getName());
     }
 }
