@@ -1,6 +1,7 @@
 package fr.isen.twinmx.async;
 
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.github.mikephil.charting.data.Entry;
 
@@ -25,6 +26,8 @@ public class RawDataManagerAsyncTask extends AsyncTask<Void, Entry, Void> {
     private final TMBluetoothDataManager dataManager;
     private int x = 0;
     private int nbResults = 0;
+
+    private static final int REFRESH_RATE = 5;
 
     private boolean stop;
 
@@ -71,7 +74,7 @@ public class RawDataManagerAsyncTask extends AsyncTask<Void, Entry, Void> {
     private boolean resetRawData(int frame) {
         if (frame == HEADER) {
             clearAll();
-            if (x < 200) {
+            if (x < REFRESH_RATE) {
                 x++;
             }
             return true;
@@ -87,7 +90,7 @@ public class RawDataManagerAsyncTask extends AsyncTask<Void, Entry, Void> {
     private void addMeasures(Entry... entries) {
         chart.addEntries(entries);
         nbResults++;
-        if (nbResults > 200) {
+        if (nbResults > REFRESH_RATE) {
             if (!stop)
             {
                 publishProgress();

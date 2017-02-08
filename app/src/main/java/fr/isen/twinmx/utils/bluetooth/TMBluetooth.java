@@ -2,16 +2,23 @@ package fr.isen.twinmx.utils.bluetooth;
 
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
+import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
+import android.os.Build;
 import android.util.Log;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
 import fr.isen.twinmx.R;
+import fr.isen.twinmx.async.FileInfiniteReaderAsyncTask;
 import fr.isen.twinmx.receivers.BluetoothIconReceiver;
 import fr.isen.twinmx.TMApplication;
 import fr.isen.twinmx.database.RealmDeviceRepository;
@@ -153,6 +160,8 @@ public class TMBluetooth extends TMSmoothBluetooth implements TMSmoothBluetooth.
             return;
         }
 
+        this.stopReadingFromFileIndefinitely();
+
         BluetoothIconReceiver.sendStatusEnabled();
 
         if (this.bluetoothDevicesDialog == null || !this.bluetoothDevicesDialog.isShowing()) {
@@ -221,4 +230,48 @@ public class TMBluetooth extends TMSmoothBluetooth implements TMSmoothBluetooth.
         hideBluetoothDevicesDialog();
         this.activity = activity;
     }
+
+    private FileInfiniteReaderAsyncTask fileInfiniteReaderAsyncTask;
+
+    public void readFromFileIndefinitely() {
+        fileInfiniteReaderAsyncTask = new FileInfiniteReaderAsyncTask(this);
+        if (Build.VERSION.SDK_INT >= 11)
+            fileInfiniteReaderAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        else
+            fileInfiniteReaderAsyncTask.execute();
+        this.setChanged();
+        this.notifyObservers();
+    }
+
+    public void stopReadingFromFileIndefinitely() {
+        if (fileInfiniteReaderAsyncTask != null) {
+            fileInfiniteReaderAsyncTask.stop();
+        }
+        fileInfiniteReaderAsyncTask = null;
+    }
+
+
+    public void readAllLines() {
+        String filename = "twinmax-moto2.txt";
+        String line;
+        InputStream input;
+        try {
+            input = this.activity.getResources().getAssets().open(filename);
+            BufferedReader bfr = new BufferedReader(new InputStreamReader(input));
+            while ((line=bfr.readLine())!=null){
+                onDataReceived(Integer.parseInt(line));
+            }
+        } catch(Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public Context getContext() {
+        return activity;
+    }
+
+    public boolean hasConnectedFile() {
+        return this.fileInfiniteReaderAsyncTask != null;
+    }
+
 }

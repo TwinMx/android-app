@@ -70,6 +70,8 @@ public class Maintenance extends RealmObject {
     }
 
     public static RealmList<Maintenance> newRealmList(RealmList<Maintenance> maintenances) {
+        if (maintenances == null) return null;
+        
         RealmList<Maintenance> list = new RealmList<>();
         for(Maintenance maintenance : maintenances) {
             list.add(new Maintenance(maintenance));

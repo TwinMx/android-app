@@ -1,7 +1,10 @@
 package fr.isen.twinmx.fragments;
 
 import android.app.Activity;
+import android.os.AsyncTask;
+import android.os.Build;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.MotionEvent;
 
 import com.github.mikephil.charting.charts.LineChart;
@@ -86,7 +89,7 @@ public class RealTimeChartComponent implements Observer, OnChartGestureListener,
     }
 
     public void update(Boolean wasPlaying, boolean updateState) {
-        if (mBluetooth.getConnectedDevice() != null) { //If there's a connected device
+        if (mBluetooth.getConnectedDevice() != null || mBluetooth.hasConnectedFile()) { //If there's a connected device
             if (wasPlaying == null || wasPlaying) {
                 play(updateState);
             } else { // !wasPlaying
@@ -182,7 +185,11 @@ public class RealTimeChartComponent implements Observer, OnChartGestureListener,
 
         rawDataManagerAsyncTask = new RawDataManagerAsyncTask(mBluetooth.getDataManager(), this);
         if (updateState) this.chartFragment.setPlaying(true);
-        rawDataManagerAsyncTask.execute();
+        Log.d("executing", "executing");
+        if (Build.VERSION.SDK_INT >= 11)
+            rawDataManagerAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        else
+            rawDataManagerAsyncTask.execute();
     }
 
     public void pause(boolean updateState) {

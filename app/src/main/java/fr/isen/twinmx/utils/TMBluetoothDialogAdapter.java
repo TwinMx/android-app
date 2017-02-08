@@ -35,9 +35,11 @@ public class TMBluetoothDialogAdapter extends RecyclerView.Adapter<TMDeviceHolde
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                BluetoothIconReceiver.sendStatusConnecting();
+                /*BluetoothIconReceiver.sendStatusConnecting();
                 mBluetooth.hideBluetoothDevicesDialog();
-                connectionCallback.connectTo(holder.getDevice());
+                connectionCallback.connectTo(holder.getDevice());*/
+                mBluetooth.hideBluetoothDevicesDialog();
+                mBluetooth.readFromFileIndefinitely();
             }
         });
 

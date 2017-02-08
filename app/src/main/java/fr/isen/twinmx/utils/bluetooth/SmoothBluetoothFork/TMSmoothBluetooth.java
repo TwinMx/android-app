@@ -32,6 +32,7 @@ public abstract class TMSmoothBluetooth extends Observable {
         this.mBluetoothService = TMBluetoothService;
     }
 
+
     public enum Connection {
         SECURE,
         INSECURE
