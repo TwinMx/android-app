@@ -192,9 +192,6 @@ public class MainActivity extends AppCompatActivity implements TMBottomNavigatio
             if (resultCode == TMBluetooth.RESULT_ENABLE_BT_ALLOWED) {
                 bluetoothIconReceiver.enabled();
             }
-            else {
-                mBluetooth.readFromFileIndefinitely();
-            }
         }
 
     }

@@ -185,7 +185,6 @@ public class RealTimeChartComponent implements Observer, OnChartGestureListener,
 
         rawDataManagerAsyncTask = new RawDataManagerAsyncTask(mBluetooth.getDataManager(), this);
         if (updateState) this.chartFragment.setPlaying(true);
-        Log.d("executing", "executing");
         if (Build.VERSION.SDK_INT >= 11)
             rawDataManagerAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         else

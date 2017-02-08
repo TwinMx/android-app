@@ -62,6 +62,7 @@ public class TMBluetooth extends TMSmoothBluetooth implements TMSmoothBluetooth.
         if (this.bluetoothIconReceiver != null) {
             this.bluetoothIconReceiver.errorOrDisabled();
         }
+        this.readFromFileIndefinitely();
     }
 
     @Override
@@ -234,7 +235,9 @@ public class TMBluetooth extends TMSmoothBluetooth implements TMSmoothBluetooth.
     private FileInfiniteReaderAsyncTask fileInfiniteReaderAsyncTask;
 
     public void readFromFileIndefinitely() {
-        fileInfiniteReaderAsyncTask = new FileInfiniteReaderAsyncTask(this);
+        if (fileInfiniteReaderAsyncTask == null || fileInfiniteReaderAsyncTask.isStopped()) {
+            fileInfiniteReaderAsyncTask = new FileInfiniteReaderAsyncTask(this);
+        }
         if (Build.VERSION.SDK_INT >= 11)
             fileInfiniteReaderAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         else

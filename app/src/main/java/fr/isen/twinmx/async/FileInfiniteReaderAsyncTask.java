@@ -18,6 +18,7 @@ public class FileInfiniteReaderAsyncTask extends AsyncTask<Void, Void, Void> {
 
     private boolean stop;
     private final TMBluetooth bluetooth;
+    private boolean stopped;
 
     public FileInfiniteReaderAsyncTask(TMBluetooth bluetooth) {
         this.bluetooth = bluetooth;
@@ -52,5 +53,9 @@ public class FileInfiniteReaderAsyncTask extends AsyncTask<Void, Void, Void> {
 
     public void stop() {
         this.stop = true;
+    }
+
+    public boolean isStopped() {
+        return stopped;
     }
 }
