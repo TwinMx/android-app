@@ -19,6 +19,10 @@ import fr.isen.twinmx.utils.bluetooth.TMBluetoothDataManager;
 public class RawDataManagerAsyncTask extends AsyncTask<Void, Entry, Void> {
 
     private static int HEADER = 128;
+    private static final int AVERAGE = 4;
+    private int nbPointsInAverage = 0;
+    private float[] sum = new float[]{0, 0, 0, 0};
+
     private final List<Integer> frames;
     private final RawData raw;
     private final RawMeasures rawMeasures;
@@ -50,7 +54,7 @@ public class RawDataManagerAsyncTask extends AsyncTask<Void, Entry, Void> {
     protected Void doInBackground(Void... voids) {
         int frame;
         while (!stop) {
-            synchronized(this.frames) {
+            synchronized (this.frames) {
                 if (!this.frames.isEmpty()) {
                     synchronized (this.frames) {
                         frame = this.frames.remove(0);
@@ -59,8 +63,7 @@ public class RawDataManagerAsyncTask extends AsyncTask<Void, Entry, Void> {
                         if (!resetRawData(frame) && this.raw.add(frame) && this.rawMeasures.add(this.raw.popMeasure())) { //not header frame && raw completed (msb + lsb) && 4 measures
                             addMeasures(this.rawMeasures.toEntries(x));
                         }
-                    }
-                    catch(IndexOutOfBoundsException ex) {
+                    } catch (IndexOutOfBoundsException ex) {
                         //Missed a HEADER frame
                         addMeasures(this.rawMeasures.toEntries(x));
                     }
@@ -88,7 +91,29 @@ public class RawDataManagerAsyncTask extends AsyncTask<Void, Entry, Void> {
     }
 
     private void addMeasures(Entry... entries) {
-        chart.addEntries(entries);
+        for (int i = 0; i < entries.length; i++) {
+            sum[i] += entries[i].getY();
+        }
+        nbPointsInAverage++;
+
+        if (nbPointsInAverage >= AVERAGE) {
+            chart.addEntries(new Entry(0, sum[0] / nbPointsInAverage), new Entry(0, sum[1] / nbPointsInAverage), new Entry(0, sum[2] / nbPointsInAverage), new Entry(0, sum[3] / nbPointsInAverage));
+            for (int i = 0; i < sum.length; i++) {
+                sum[i] = 0;
+            }
+            nbPointsInAverage = 0;
+            nbResults++;
+            if (nbResults > REFRESH_RATE) {
+                if (!stop) {
+                    publishProgress();
+                    nbResults = 0;
+                }
+            }
+        }
+
+
+
+/*        chart.addEntries(entries);
         nbResults++;
         if (nbResults > REFRESH_RATE) {
             if (!stop)
@@ -96,7 +121,7 @@ public class RawDataManagerAsyncTask extends AsyncTask<Void, Entry, Void> {
                 publishProgress();
                 nbResults = 0;
             }
-        }
+        }*/
     }
 
     @Override
