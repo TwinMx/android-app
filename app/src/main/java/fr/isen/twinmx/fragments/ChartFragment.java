@@ -161,7 +161,7 @@ public class ChartFragment extends BluetoothFragment implements OnMotoHistoryCli
         this.chartComponent.onCreate();
 
         TriggerManager triggerManager = this.chartComponent.getTriggerManager();
-        //triggerManager.addOnTriggerListener(monCompteTour);
+        //triggerManager.addOnPeriodListener(monCompteTour);
 
         return rootView;
     }

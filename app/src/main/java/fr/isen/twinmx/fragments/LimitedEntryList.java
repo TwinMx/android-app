@@ -1,13 +1,13 @@
 package fr.isen.twinmx.fragments;
 
+import android.util.Log;
+
 import com.github.mikephil.charting.data.Entry;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 import fr.isen.twinmx.fragments.chart.TriggerManager;
-import fr.isen.twinmx.listeners.OnTriggerListener;
 import fr.isen.twinmx.model.GraphDirection;
 
 /**
@@ -27,6 +27,8 @@ public class LimitedEntryList extends ArrayList<Entry> {
     private float trigger = NO_TRIGGER;
     private GraphDirection direction = null;
     private long triggerIndex = NO_TRIGGER;
+
+    private static int MIN_TRIGGER_DISTANCE = 10;
 
     public LimitedEntryList(int size) {
         this(size, null);
@@ -86,7 +88,7 @@ public class LimitedEntryList extends ArrayList<Entry> {
         if (this.currentX >= size) {
             this.reset();
         }
-        if (triggerIndex != NO_TRIGGER) {
+        if (triggerIndex >= 0) {
             triggerIndex++;
         }
     }
@@ -105,11 +107,13 @@ public class LimitedEntryList extends ArrayList<Entry> {
 
     public void setSize(int period) {
         synchronized (currentX) {
-            this.clear();
-            this.size = period;
-            for (int i = 0; i < size; i++) {
-                super.add(new Entry(i, 0));
+            int rangeToRemove = this.size - period;
+            this.removeRange(0, rangeToRemove);
+            int index = 0;
+            for(Entry e : this) {
+                e.setX(index++);
             }
+            this.size = period;
             currentX = 0;
         }
     }
@@ -149,17 +153,27 @@ public class LimitedEntryList extends ArrayList<Entry> {
     }
 
     private void triggerFound(long nbPointsSinceLastTrigger) {
-        if (nbPointsSinceLastTrigger == NO_TRIGGER) {
-            nbPointsSinceLastTrigger = 0;
+        if (isTriggerOk(nbPointsSinceLastTrigger)) {
+            if (nbPointsSinceLastTrigger == NO_TRIGGER) {
+                nbPointsSinceLastTrigger = 0;
+            }
+            if (nbPointsSinceLastTrigger > 80) {
+                Log.d("too", "high");
+            }
+            onTrigger(nbPointsSinceLastTrigger);
+            resetTriggerIndex();
         }
-        onTrigger(nbPointsSinceLastTrigger);
-        resetTriggerIndex();
     }
 
     private void onTrigger(long nbPointsSinceLastTrigger) {
         if (this.triggerManager != null) {
             this.triggerManager.onTrigger(nbPointsSinceLastTrigger, this);
         }
+    }
+
+    private boolean isTriggerOk(long nbPointsSinceLastTrigger) {
+        if (nbPointsSinceLastTrigger == NO_TRIGGER) return true;
+        return nbPointsSinceLastTrigger > MIN_TRIGGER_DISTANCE;
     }
 
 }
