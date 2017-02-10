@@ -20,6 +20,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import butterknife.OnClick;
+import butterknife.OnLongClick;
 import fr.isen.twinmx.database.RealmHelper;
 import fr.isen.twinmx.database.TMRealmModule;
 
@@ -203,6 +204,12 @@ public class MainActivity extends AppCompatActivity implements TMBottomNavigatio
         } else {
             mBluetooth.enableBluetooth(); //prompt to enable bluetooth
         }
+    }
+
+    @OnLongClick(R.id.bluetoothIcon)
+    public boolean onBluetoothIconLongClick(View view) {
+        mBluetooth.showDialog();
+        return true;
     }
 
 }

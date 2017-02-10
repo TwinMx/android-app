@@ -17,6 +17,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
@@ -70,7 +71,7 @@ public class TMBluetooth extends TMSmoothBluetooth implements TMSmoothBluetooth.
         if (this.bluetoothIconReceiver != null) {
             this.bluetoothIconReceiver.errorOrDisabled();
         }
-        this.readFromFileIndefinitely(new TMFile("TwinMax Measures 2", "twinmax-moto2.txt", true));
+        this.showFilesDialog();
     }
 
     @Override
@@ -164,23 +165,24 @@ public class TMBluetooth extends TMSmoothBluetooth implements TMSmoothBluetooth.
         this.showBluetoothDevicesDialog(deviceList, connectionCallback, true);
     }
 
+    private void showFilesDialog() {
+        showBluetoothDevicesDialog(new ArrayList<TMDevice>(), null, true);
+    }
+
     private void showBluetoothDevicesDialog(List<TMDevice> devices, ConnectionCallback connectionCallback, boolean isShowFiles) {
-        if (!this.isBluetoothEnabled()) {
-            return;
+        List<TMInput> inputs = new LinkedList<>();
+        if (this.isBluetoothEnabled()) {
+            for(TMDevice d : devices) {
+                inputs.add(d);
+            }
         }
 
-        List<TMInput> inputs = new LinkedList<>();
-        for(TMDevice d : devices) {
-            inputs.add(d);
-        }
 
         if (isShowFiles) {
             for(TMFile f : getFilesFromDocumentDirectory()) {
                 inputs.add(f);
             }
         }
-
-        this.stopReadingFromFileIndefinitely();
 
         BluetoothIconReceiver.sendStatusEnabled();
 
@@ -334,5 +336,14 @@ public class TMBluetooth extends TMSmoothBluetooth implements TMSmoothBluetooth.
             Log.e("WRITE", "Directory not created");
         }
         return directory;
+    }
+
+    public void showDialog() {
+        if (this.isBluetoothEnabled()) {
+            this.scanDevices();
+        }
+        else {
+            this.showFilesDialog();
+        }
     }
 }

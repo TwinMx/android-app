@@ -27,4 +27,12 @@ public class TMFile extends TMInput {
     public String toString() {
         return String.format("%1$s", getName());
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this.mFileName != null && obj != null && obj instanceof TMFile) {
+            return this.mFileName.equals(((TMFile) obj).getFileName());
+        }
+        return super.equals(obj);
+    }
 }

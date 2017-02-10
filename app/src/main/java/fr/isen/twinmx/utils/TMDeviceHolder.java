@@ -42,9 +42,17 @@ public class TMDeviceHolder extends RecyclerView.ViewHolder {
             @Override
             public void onClick(View v) {
                 if (disconnectIcon.getVisibility() == View.VISIBLE) {
-                    bluetooth.disconnect();
-                    disconnectIcon.setVisibility(View.GONE);
-                    updateIcon();
+                    if (getConnectedDevice() != null) {
+                        bluetooth.disconnect();
+                        disconnectIcon.setVisibility(View.GONE);
+                        updateIcon();
+                    }
+                    else if (getConnectedFile() != null && getConnectedFile().equals(file)) {
+                        bluetooth.stopReadingFromFileIndefinitely();
+                        disconnectIcon.setVisibility(View.GONE);
+                        updateIcon();
+                    }
+
                 }
             }
         });
@@ -70,6 +78,7 @@ public class TMDeviceHolder extends RecyclerView.ViewHolder {
         else {
             this.disconnectIcon.setVisibility(View.GONE);
         }
+
     }
 
     public void bind(TMFile file) {
@@ -92,6 +101,7 @@ public class TMDeviceHolder extends RecyclerView.ViewHolder {
         else {
             this.disconnectIcon.setVisibility(View.GONE);
         }
+
     }
 
     public TMDevice getDevice() {
