@@ -184,8 +184,6 @@ public class TMBluetooth extends TMSmoothBluetooth implements TMSmoothBluetooth.
             }
         }
 
-        BluetoothIconReceiver.sendStatusEnabled();
-
         if (this.bluetoothDevicesDialog == null || !this.bluetoothDevicesDialog.isShowing()) {
 
             this.bluetoothDevicesDialog = new MaterialDialog.Builder(this.activity)
@@ -267,6 +265,9 @@ public class TMBluetooth extends TMSmoothBluetooth implements TMSmoothBluetooth.
             fileInfiniteReaderAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         else
             fileInfiniteReaderAsyncTask.execute();
+        if (this.bluetoothIconReceiver != null) {
+            this.bluetoothIconReceiver.fileConnected(null);
+        }
         this.setChanged();
         this.notifyObservers();
     }
@@ -275,6 +276,9 @@ public class TMBluetooth extends TMSmoothBluetooth implements TMSmoothBluetooth.
         this.connectedFile = null;
         if (fileInfiniteReaderAsyncTask != null) {
             fileInfiniteReaderAsyncTask.stop();
+        }
+        if (this.bluetoothIconReceiver != null) {
+            this.bluetoothIconReceiver.fileDisconnected(this.isBluetoothEnabled());
         }
         fileInfiniteReaderAsyncTask = null;
     }
@@ -305,27 +309,6 @@ public class TMBluetooth extends TMSmoothBluetooth implements TMSmoothBluetooth.
         }
 
         return null;
-
-
-/*        File directory = null;
-        try {
-            directory = getDocumentDirectory(TMApplication.getContext());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        if (directory != null) {
-
-            List<TMFile> result = new LinkedList<TMFile>();
-
-            File[] files = directory.listFiles();
-            for(File file : files) {
-                result.add(new TMFile(file, false));
-            }
-
-            return result;
-        }
-
-        return null;*/
     }
 
     private File getDocumentDirectory(Context context) throws IOException {

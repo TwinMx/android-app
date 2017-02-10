@@ -23,11 +23,14 @@ public class BluetoothIconReceiver extends BroadcastReceiver {
 
     public static final String ACTION = "fr.isen.twinmx.bluetooth";
     public static final String EXTRA_STATUS = "status";
-    public static final String EXTRA_STATUS_OK = "status_ok";
+    public static final String EXTRA_STATUS_CONNECTED = "status_ok";
     public static final String EXTRA_STATUS_ERROR = "status_error";
     private static final String EXTRA_STATUS_CONNECTING = "status_connecting";
     public static final String EXTRA_STATUS_ENABLED = "status_enabled";
     public static final String EXTRA_MESSAGE = "message";
+
+    public static final String EXTRA_STATUS_FILE_CONNECTING = EXTRA_STATUS_CONNECTING;
+    public static final String EXTRA_STATUS_FILE_CONNECTED = "file_status_ok";
 
 
     private final ImageView bluetoothIcon;
@@ -44,26 +47,56 @@ public class BluetoothIconReceiver extends BroadcastReceiver {
         this.updateIcon();
     }
 
+    @Override
+    public void onReceive(Context context, Intent intent) {
+        if (intent != null && intent.getAction().equals(ACTION)) {
+            this.updateIcon(intent.getStringExtra(EXTRA_STATUS));
+            this.inform(intent.getStringExtra(EXTRA_MESSAGE));
+        } else if (intent != null && intent.getAction().equals(BluetoothAdapter.ACTION_STATE_CHANGED)) {
+            this.updateIcon();
+        }
+    }
+
     private void updateIcon() {
-        if (!bluetooth.isBluetoothEnabled()) {
-            this.updateIcon(R.drawable.ic_bluetooth_disabled_white_24dp, R.drawable.circular_image_view_grey);
+        if (!bluetooth.isBluetoothEnabled() && !bluetooth.hasConnectedFile()) {
+            this.disabled();
         } else if (!bluetooth.isConnected()) {
-            this.updateIcon(R.drawable.ic_bluetooth_white_24dp, R.drawable.circular_image_view);
+            if (!bluetooth.hasConnectedFile()) {
+                this.enabled();
+            }
+            else {
+                this.fileConnected(null);
+            }
         } else {
-            this.updateIcon(R.drawable.ic_bluetooth_connected_white_24dp, R.drawable.circular_image_view_green);
+            if (bluetooth.isConnected()) {
+                this.connected(null);
+            }
+            else if (bluetooth.hasConnectedFile()) {
+                this.fileConnected(null);
+            }
         }
 
     }
 
     private void updateIcon(String status) {
-        if (status.equals(EXTRA_STATUS_OK)) {
+        if (status.equals(EXTRA_STATUS_CONNECTED)) {
             this.connected(null);
         } else if (status.equals(EXTRA_STATUS_CONNECTING)) {
             this.connecting();
         } else if (status.equals(EXTRA_STATUS_ENABLED)) {
-            this.enabled();
+            if (bluetooth.getConnectedFile() == null) {
+                this.enabled();
+            }
+            else {
+                this.fileConnected(null);
+            }
         } else if (status.equals(EXTRA_STATUS_ERROR)) {
-            this.errorOrDisabled();
+            if (bluetooth.getConnectedFile() == null) {
+                this.errorOrDisabled();
+            }
+            else {
+                this.fileConnected(null);
+            }
         }
     }
 
@@ -73,12 +106,26 @@ public class BluetoothIconReceiver extends BroadcastReceiver {
         inform(message);
     }
 
+    public void fileConnected(String message) {
+        this.showLoading(false);
+        this.updateIcon(R.drawable.ic_insert_drive_file_white_24dp, R.drawable.circular_image_view_green);
+    }
+
     public void connecting() {
         this.showLoading(true);
     }
 
     public void disconnected() {
         enabled();
+    }
+
+    public void fileDisconnected(boolean isBluetoothEnabled) {
+        if (isBluetoothEnabled) {
+            enabled();
+        }
+        else {
+            disabled();
+        }
     }
 
     public void enabled() {
@@ -117,15 +164,7 @@ public class BluetoothIconReceiver extends BroadcastReceiver {
         }
     }
 
-    @Override
-    public void onReceive(Context context, Intent intent) {
-        if (intent != null && intent.getAction().equals(ACTION)) {
-            this.updateIcon(intent.getStringExtra(EXTRA_STATUS));
-            this.inform(intent.getStringExtra(EXTRA_MESSAGE));
-        } else if (intent != null && intent.getAction().equals(BluetoothAdapter.ACTION_STATE_CHANGED)) {
-            this.updateIcon();
-        }
-    }
+
 
     public void register(Activity activity) {
         activity.registerReceiver(this, new IntentFilter(BluetoothIconReceiver.ACTION));
@@ -150,7 +189,7 @@ public class BluetoothIconReceiver extends BroadcastReceiver {
     }
 
     public static void sendStatusOk(final String message, Context context) {
-        sendStatus(context, EXTRA_STATUS_OK, message);
+        sendStatus(context, EXTRA_STATUS_CONNECTED, message);
     }
 
     public static void sendStatusError(final String message) {
