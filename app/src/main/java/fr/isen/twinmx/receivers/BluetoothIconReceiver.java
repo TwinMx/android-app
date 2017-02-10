@@ -142,6 +142,10 @@ public class BluetoothIconReceiver extends BroadcastReceiver {
     }
 
     public void disabled() {
+        if (this.bluetooth.hasConnectedFile()) {
+            this.fileConnected(null);
+            return;
+        }
         this.showLoading(false);
         this.updateIcon(R.drawable.ic_bluetooth_disabled_white_24dp, R.drawable.circular_image_view_grey);
     }

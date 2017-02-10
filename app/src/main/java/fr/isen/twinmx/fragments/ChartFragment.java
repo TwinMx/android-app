@@ -28,6 +28,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import fr.isen.twinmx.R;
+import fr.isen.twinmx.fragments.chart.RealTimeChartComponent;
+import fr.isen.twinmx.fragments.chart.TriggerManager;
 import fr.isen.twinmx.model.InitChartData;
 import fr.isen.twinmx.TMApplication;
 import fr.isen.twinmx.database.MotoRepository;
@@ -79,7 +81,7 @@ public class ChartFragment extends BluetoothFragment implements OnMotoHistoryCli
 
         if (this.isStarted) {
             setPlayImage(image, context);
-            this.chartComponent.pause(true);
+            this.chartComponent.pause(false, true);
         } else {
             setPauseImage(image, context);
             this.chartComponent.play(true);
@@ -121,7 +123,7 @@ public class ChartFragment extends BluetoothFragment implements OnMotoHistoryCli
 
     @OnClick(R.id.save_acquisition)
     public void onSaveClick(View view) {
-        this.chartComponent.pause(true);
+        this.chartComponent.pause(true, true);
         this.setPauseImage(this.playPauseImage, this.context);
         List<LimitedEntryList> entries = this.chartComponent.getDataSetEntries();
         if (entries != null && entries.size() > 0 && entries.get(0) != null && entries.get(0).size() > 0) {
@@ -157,6 +159,9 @@ public class ChartFragment extends BluetoothFragment implements OnMotoHistoryCli
 
         this.chartComponent = new RealTimeChartComponent(this.getActivity(), this, chart, getBluetooth(), savedInstanceState != null ? new InitChartData(savedInstanceState, STATE_NB_GRAPHS, STATE_GRAPH_SIZE, STATE_GRAPH) : null);
         this.chartComponent.onCreate();
+
+        TriggerManager triggerManager = this.chartComponent.getTriggerManager();
+        //triggerManager.addOnTriggerListener(monCompteTour);
 
         return rootView;
     }
@@ -201,7 +206,7 @@ public class ChartFragment extends BluetoothFragment implements OnMotoHistoryCli
     @Override
     public void onPause() {
         super.onPause();
-        this.chartComponent.pause(false);
+        this.chartComponent.pause(false, false);
     }
 
     @Override

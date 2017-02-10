@@ -37,7 +37,7 @@ import fr.isen.twinmx.database.model.Moto;
 import fr.isen.twinmx.database.model.RealmFloat;
 import fr.isen.twinmx.database.model.RealmGraph;
 import fr.isen.twinmx.fragments.LimitedEntryList;
-import fr.isen.twinmx.fragments.RealTimeChartComponent;
+import fr.isen.twinmx.fragments.chart.RealTimeChartComponent;
 import io.realm.RealmList;
 
 /**

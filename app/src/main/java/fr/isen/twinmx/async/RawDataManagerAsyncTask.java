@@ -1,13 +1,12 @@
 package fr.isen.twinmx.async;
 
 import android.os.AsyncTask;
-import android.util.Log;
 
 import com.github.mikephil.charting.data.Entry;
 
 import java.util.List;
 
-import fr.isen.twinmx.fragments.RealTimeChartComponent;
+import fr.isen.twinmx.fragments.chart.RealTimeChartComponent;
 import fr.isen.twinmx.model.RawData;
 import fr.isen.twinmx.model.RawMeasures;
 import fr.isen.twinmx.utils.bluetooth.TMBluetoothDataManager;
@@ -16,7 +15,7 @@ import fr.isen.twinmx.utils.bluetooth.TMBluetoothDataManager;
  * Created by Clement on 20/01/2017.
  */
 
-public class RawDataManagerAsyncTask extends AsyncTask<Void, Entry, Void> {
+public class RawDataManagerAsyncTask extends StoppableAsyncTask<Void, Entry, Void> {
 
     private static int HEADER = 128;
     private static final int AVERAGE = 4;
@@ -33,8 +32,6 @@ public class RawDataManagerAsyncTask extends AsyncTask<Void, Entry, Void> {
 
     private static final int REFRESH_RATE = 5; //200;
 
-    private boolean stop;
-
     public RawDataManagerAsyncTask(TMBluetoothDataManager dataManager, RealTimeChartComponent chart) {
         this.dataManager = dataManager;
         this.frames = dataManager.getFrames();
@@ -46,14 +43,13 @@ public class RawDataManagerAsyncTask extends AsyncTask<Void, Entry, Void> {
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-        stop = false;
         this.dataManager.startListening();
     }
 
     @Override
     protected Void doInBackground(Void... voids) {
         int frame;
-        while (!stop) {
+        while (!hasToStop()) {
             synchronized (this.frames) {
                 if (!this.frames.isEmpty()) {
                     synchronized (this.frames) {
@@ -104,24 +100,12 @@ public class RawDataManagerAsyncTask extends AsyncTask<Void, Entry, Void> {
             nbPointsInAverage = 0;
             nbResults++;
             if (nbResults > REFRESH_RATE) {
-                if (!stop) {
+                if (!hasToStop()) {
                     publishProgress();
                     nbResults = 0;
                 }
             }
         }
-
-
-
-/*        chart.addEntries(entries);
-        nbResults++;
-        if (nbResults > REFRESH_RATE) {
-            if (!stop)
-            {
-                publishProgress();
-                nbResults = 0;
-            }
-        }*/
     }
 
     @Override
@@ -130,11 +114,8 @@ public class RawDataManagerAsyncTask extends AsyncTask<Void, Entry, Void> {
     }
 
     @Override
-    protected void onPostExecute(Void aVoid) {
-    }
-
     public void stop() {
-        stop = true;
+        super.stop();
         this.dataManager.stopListening();
     }
 }

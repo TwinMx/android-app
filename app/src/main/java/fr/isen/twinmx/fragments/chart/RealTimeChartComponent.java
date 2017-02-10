@@ -1,4 +1,4 @@
-package fr.isen.twinmx.fragments;
+package fr.isen.twinmx.fragments.chart;
 
 import android.app.Activity;
 import android.os.AsyncTask;
@@ -18,12 +18,16 @@ import com.github.mikephil.charting.listener.OnChartGestureListener;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
 import fr.isen.twinmx.R;
 import fr.isen.twinmx.async.RawDataManagerAsyncTask;
+import fr.isen.twinmx.fragments.ChartFragment;
+import fr.isen.twinmx.fragments.LimitedEntryList;
+import fr.isen.twinmx.listeners.OnTriggerListener;
 import fr.isen.twinmx.model.GraphDirection;
 import fr.isen.twinmx.model.InitChartData;
 import fr.isen.twinmx.utils.bluetooth.TMBluetooth;
@@ -44,9 +48,10 @@ public class RealTimeChartComponent implements Observer, OnChartGestureListener,
     private ChartFragment chartFragment;
 
     private int[] colors;
+    private CalibrationManager calibrationManager;
 
-
-    private int MIN_HEIGHT = 10;
+    private List<OnTriggerListener> onTriggerListeners = new LinkedList<>();
+    private TriggerManager triggerManager;
 
     public RealTimeChartComponent(Activity context, ChartFragment chartFragment, LineChart chart, TMBluetooth bluetooth, InitChartData initChartData) {
         this.context = context;
@@ -92,22 +97,11 @@ public class RealTimeChartComponent implements Observer, OnChartGestureListener,
                 dataSetEntries.set(index, entries);
             }
         }
+        this.triggerManager = new TriggerManager(this.dataSetEntries);
+        this.calibrationManager = new CalibrationManager(mChart, triggerManager, dataSetEntries);
     }
 
-    private int findMostActiveDataSet() {
-        int selectedIndex = 0;
-        float selectedHeight = 0;
-        int index = 0;
-        for (LimitedEntryList entries : this.dataSetEntries) {
-            if (entries == null) break;
-            if (entries.getHeight() > selectedHeight) {
-                selectedIndex = index;
-                selectedHeight = entries.getHeight();
-            }
-            index++;
-        }
-        return selectedIndex;
-    }
+
 
     /**
      * onResume()
@@ -122,30 +116,15 @@ public class RealTimeChartComponent implements Observer, OnChartGestureListener,
             if (wasPlaying == null || wasPlaying) {
                 play(updateState);
             } else { // !wasPlaying
-                pause(updateState);
+                pause(false, updateState);
             }
         } else {
-            pause(updateState);
+            pause(false, updateState);
         }
     }
 
 
-    private boolean calibrationReady = false;
-    private boolean calibrationStarted = false;
-    private boolean calibrationDone = false;
-    private boolean calibration = false;
 
-    private LimitedEntryList calibratedDataSet;
-    private float triggerValue;
-    private GraphDirection direction;
-
-    private int lastTriggerIndex = -1;
-    private long lastTriggerCycle = -1;
-    private int[] triggerIndices = new int[5];
-    private long[] triggerIndexCycles = new long[5];
-    private int triggersCount = 0;
-
-    private int MIN_INDEX_DISTANCE = 20;
 
     /**
      * @param entries One entry per dataset
@@ -155,84 +134,10 @@ public class RealTimeChartComponent implements Observer, OnChartGestureListener,
         for (int i = 0; i < size; i++) {
             addEntry(i, entries[i]);
         }
-        checkCalibration();
+        this.triggerManager.checkTriggerable();
     }
 
-    private void checkCalibration() {
-        if (calibrationReady && !calibrationStarted) {
-            calibrationStarted = true;
-            this.calibratedDataSet = this.dataSetEntries.get(findMostActiveDataSet());
-            this.triggerValue = calibratedDataSet.getMiddleValue();
-            Log.d("Trigger value", "" + triggerValue);
-            float lastAddedValue = calibratedDataSet.getLastAddedValue();
-            if (lastAddedValue > triggerValue) {
-                direction = GraphDirection.DOWN;
-            } else {
-                direction = GraphDirection.UP;
-            }
-        } else if (calibrationStarted && !calibrationDone) {
-            float lastAddedValue = calibratedDataSet.getLastAddedValue();
-            if (direction == GraphDirection.DOWN) { //Going down
-                if (lastAddedValue < triggerValue) {
-                    int triggerIndex = calibratedDataSet.getCurrentX();
-                    long triggerCycle = calibratedDataSet.getCycles();
 
-
-                    if (!isIgnoreValue(triggerIndex, triggerCycle)) {
-                        triggerIndices[triggersCount] = triggerIndex;
-                        triggerIndexCycles[triggersCount++] = triggerCycle;
-                        this.lastTriggerIndex = triggerIndex;
-                        this.lastTriggerCycle = triggerCycle;
-                        Log.d("Found trigger", "at index " + triggerIndices[triggersCount - 1] + "(" + triggerIndexCycles[triggersCount - 1] + ")");
-                        direction = GraphDirection.UP;
-                        if (triggersCount == triggerIndices.length) {
-                            calibrationDone = true;
-                            Log.d("Calibration", "calibrationDone");
-                        }
-                    }
-                }
-            } else { //Going up
-                if (lastAddedValue > triggersCount) {
-                    int triggerIndex = calibratedDataSet.getCurrentX();
-                    long triggerCycle = calibratedDataSet.getCycles();
-
-                    if (!isIgnoreValue(triggerIndex, triggerCycle)) {
-                        triggerIndices[triggersCount] = triggerIndex;
-                        triggerIndexCycles[triggersCount++] = triggerCycle;
-                        this.lastTriggerIndex = triggerIndex;
-                        this.lastTriggerCycle = triggerCycle;
-                        Log.d("Found trigger", "at index " + triggerIndices[triggersCount - 1] + "(" + triggerIndexCycles[triggersCount - 1] + ")");
-                        direction = GraphDirection.DOWN;
-                        if (triggersCount == triggerIndices.length) {
-                            calibrationDone = true;
-                            Log.d("Calibration", "calibrationDone");
-                        }
-                    }
-                }
-            }
-        } else if (calibrationDone && !calibration) {
-            calibration = true;
-            long diffCycles = triggerIndexCycles[triggerIndexCycles.length - 1] - triggerIndexCycles[0] + 1;
-            int period = (int) (triggerIndices[triggerIndices.length - 1] * diffCycles - triggerIndices[0]);
-            Log.d("Period", "" + period);
-            for(LimitedEntryList entries : this.dataSetEntries) {
-                entries.setSize(period);
-            }
-            mChart.setVisibleXRangeMinimum(0);
-            mChart.setVisibleXRangeMaximum(period);
-        }
-    }
-
-    private boolean isIgnoreValue(int triggerIndex, long triggerCycle) {
-        if (lastTriggerIndex == -1) return false;
-
-        int cycleDifference = (int) (triggerCycle - lastTriggerCycle) + 1;
-
-        int previousIndex = lastTriggerIndex * cycleDifference;
-        int currentIndex = triggerIndex * cycleDifference;
-
-        return currentIndex - previousIndex < MIN_INDEX_DISTANCE;
-    }
 
     public void addEntry(int index, Entry value) {
         LineData data = mChart.getData();
@@ -246,10 +151,6 @@ public class RealTimeChartComponent implements Observer, OnChartGestureListener,
 
             synchronized (entries) {
                 data.addEntry(value, index);
-            }
-
-            if (!calibrationReady && entries.getCycles() > 1) {
-                calibrationReady = true;
             }
 
             data.notifyDataChanged();
@@ -273,7 +174,7 @@ public class RealTimeChartComponent implements Observer, OnChartGestureListener,
 
         int color = this.colors[index % this.colors.length];
 
-        LimitedEntryList entries = initEntries != null && initEntries.size() == NB_POINTS ? initEntries : new LimitedEntryList(NB_POINTS);
+        LimitedEntryList entries = initEntries != null && initEntries.size() == NB_POINTS ? initEntries : new LimitedEntryList(NB_POINTS, this.triggerManager);
 
         LineDataSet dataSet = new LineDataSet(entries, title);
         dataSet.setColor(color);
@@ -289,7 +190,7 @@ public class RealTimeChartComponent implements Observer, OnChartGestureListener,
 
     public void play(boolean updateState) {
         if (rawDataManagerAsyncTask != null) {
-            rawDataManagerAsyncTask.stop();
+            rawDataManagerAsyncTask.stopAndWait();
             rawDataManagerAsyncTask = null;
         }
 
@@ -301,9 +202,14 @@ public class RealTimeChartComponent implements Observer, OnChartGestureListener,
             rawDataManagerAsyncTask.execute();
     }
 
-    public void pause(boolean updateState) {
+    public void pause(boolean wait, boolean updateState) {
         if (rawDataManagerAsyncTask != null) {
-            rawDataManagerAsyncTask.stop();
+            if (wait) {
+                rawDataManagerAsyncTask.stopAndWait();
+            }
+            else {
+                rawDataManagerAsyncTask.stop();
+            }
             if (updateState) this.chartFragment.setPlaying(false);
         }
         rawDataManagerAsyncTask = null;
@@ -374,6 +280,16 @@ public class RealTimeChartComponent implements Observer, OnChartGestureListener,
 
     }
 
+    private void addOnTriggerListener(OnTriggerListener listener) {
+        if (!onTriggerListeners.contains(listener)) {
+            onTriggerListeners.add(listener);
+        }
+    }
+
+    public void onTrigger(int x, int cycle) {
+
+    }
+
     public int getNbGraphs() {
         int size = 0;
         for (LimitedEntryList entries : dataSetEntries) {
@@ -406,5 +322,10 @@ public class RealTimeChartComponent implements Observer, OnChartGestureListener,
 
     public List<LimitedEntryList> getDataSetEntries() {
         return dataSetEntries;
+    }
+
+
+    public TriggerManager getTriggerManager() {
+        return triggerManager;
     }
 }

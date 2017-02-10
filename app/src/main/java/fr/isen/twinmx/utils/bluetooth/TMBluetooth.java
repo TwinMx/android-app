@@ -22,6 +22,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import fr.isen.twinmx.R;
 import fr.isen.twinmx.async.FileInfiniteReaderAsyncTask;
@@ -255,12 +256,16 @@ public class TMBluetooth extends TMSmoothBluetooth implements TMSmoothBluetooth.
 
     public void readFromFileIndefinitely(TMFile file) {
         this.connectedFile = file;
-        //this.connectedFile = new TMFile("TwinMax Measures 2", "twinmax-moto2.txt", true);
         if (this.connectedFile == null) return;
 
         if (fileInfiniteReaderAsyncTask == null || fileInfiniteReaderAsyncTask.isStopped()) {
             fileInfiniteReaderAsyncTask = new FileInfiniteReaderAsyncTask(this, connectedFile);
         }
+        else {
+            fileInfiniteReaderAsyncTask.stopAndWait();
+            fileInfiniteReaderAsyncTask = new FileInfiniteReaderAsyncTask(this, connectedFile);
+        }
+
         if (Build.VERSION.SDK_INT >= 11)
             fileInfiniteReaderAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         else

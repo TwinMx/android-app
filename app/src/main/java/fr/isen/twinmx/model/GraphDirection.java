@@ -5,5 +5,5 @@ package fr.isen.twinmx.model;
  */
 public enum GraphDirection {
 
-    UP, DOWN
+    GOING_UP, GOING_DOWN
 }
