@@ -277,7 +277,7 @@ public class TMBluetooth extends TMSmoothBluetooth implements TMSmoothBluetooth.
         this.notifyObservers();
     }
 
-    public void stopReadingFromFileIndefinitely() {
+    public void stopReadingFromFile() {
         this.connectedFile = null;
         if (fileInfiniteReaderAsyncTask != null) {
             fileInfiniteReaderAsyncTask.stop();

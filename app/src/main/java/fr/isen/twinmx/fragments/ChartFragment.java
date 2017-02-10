@@ -60,6 +60,8 @@ public class ChartFragment extends BluetoothFragment implements OnMotoHistoryCli
     private static final String STATE_NB_GRAPHS = "STATE_NB_GRAPHS";
     private static final String STATE_GRAPH = "STATE_GRAPH_";
     private static final String STATE_GRAPH_SIZE = "STATE_GRAPH_SIZE";
+    private static final String STATE_TRIGGER = "STATE_TRIGGER";
+    private static final String STATE_CALIBRATION_WIDTH = "STATE_CALIBRATION_WIDTH";
 
 
     private MaterialDialog chooseMotoDialog;
@@ -157,7 +159,7 @@ public class ChartFragment extends BluetoothFragment implements OnMotoHistoryCli
 
         LineChart chart = (LineChart) rootView.findViewById(R.id.graph);
 
-        this.chartComponent = new RealTimeChartComponent(this.getActivity(), this, chart, getBluetooth(), savedInstanceState != null ? new InitChartData(savedInstanceState, STATE_NB_GRAPHS, STATE_GRAPH_SIZE, STATE_GRAPH) : null);
+        this.chartComponent = new RealTimeChartComponent(this.getActivity(), this, chart, getBluetooth(), savedInstanceState != null ? new InitChartData(savedInstanceState, STATE_NB_GRAPHS, STATE_GRAPH_SIZE, STATE_GRAPH, STATE_TRIGGER, STATE_CALIBRATION_WIDTH) : null);
         this.chartComponent.onCreate();
 
         TriggerManager triggerManager = this.chartComponent.getTriggerManager();
@@ -222,6 +224,17 @@ public class ChartFragment extends BluetoothFragment implements OnMotoHistoryCli
         outState.putInt(STATE_GRAPH_SIZE, this.chartComponent.getGraphsSize());
         for (int i = 0; i < nbGraphs; i++) {
             outState.putFloatArray(STATE_GRAPH + i, this.chartComponent.getDataSetValues(i));
+        }
+        try {
+            outState.putFloat(STATE_TRIGGER, this.chartComponent.getTriggerManager().getTriggeredDataSet().getTrigger());
+        } catch(Exception ex) {
+            //
+        }
+
+        try {
+            outState.putLong(STATE_CALIBRATION_WIDTH, this.chartComponent.getCalibrationManager().getTwoPeriods());
+        } catch(Exception ex) {
+            //
         }
         super.onSaveInstanceState(outState);
     }

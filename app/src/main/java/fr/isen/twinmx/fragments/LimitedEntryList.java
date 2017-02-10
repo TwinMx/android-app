@@ -30,10 +30,6 @@ public class LimitedEntryList extends ArrayList<Entry> {
 
     private static int MIN_TRIGGER_DISTANCE = 10;
 
-    public LimitedEntryList(int size) {
-        this(size, null);
-    }
-
     public LimitedEntryList(int size, TriggerManager triggerManager) {
         super(size);
         this.size = size;
@@ -76,7 +72,9 @@ public class LimitedEntryList extends ArrayList<Entry> {
 
     public void reset() {
         this.currentX = 0;
-        this.triggerManager.addCycle();
+        if (this.triggerManager != null) {
+            this.triggerManager.addCycle();
+        }
     }
 
     public void resetTriggerIndex() {
@@ -176,4 +174,7 @@ public class LimitedEntryList extends ArrayList<Entry> {
         return nbPointsSinceLastTrigger > MIN_TRIGGER_DISTANCE;
     }
 
+    public float getTrigger() {
+        return trigger;
+    }
 }

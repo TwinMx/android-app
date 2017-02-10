@@ -1,7 +1,5 @@
 package fr.isen.twinmx.fragments.chart;
 
-import android.util.Log;
-
 import com.github.mikephil.charting.charts.LineChart;
 
 import java.util.List;
@@ -21,7 +19,7 @@ public class CalibrationManager implements OnTriggerListener {
     private final TriggerManager triggerManager;
 
     private boolean triggersFound = false;
-    private boolean calibration = false;
+    private boolean calibrated = false;
 
     private int triggersCount = 0;
     private long twoPeriods = 0;
@@ -41,13 +39,29 @@ public class CalibrationManager implements OnTriggerListener {
             if (++this.triggersCount >= 5) {
                 triggersFound = true;
             }
-        } else if (!calibration) {
-            calibration = true;
-            for(LimitedEntryList entries : this.dataSetEntries) {
-                entries.setSize((int) twoPeriods);
-            }
-            mChart.setVisibleXRangeMinimum(0);
-            mChart.setVisibleXRangeMaximum(twoPeriods);
         }
+        if (triggersFound && !calibrated) {
+            makeCalibration();
+        }
+    }
+
+    public long getTwoPeriods() {
+        return twoPeriods;
+    }
+
+    public void setTwoPeriods(long twoPeriods) {
+        if (twoPeriods > 0) return;
+        this.twoPeriods = twoPeriods;
+        makeCalibration();
+    }
+
+    private void makeCalibration() {
+        triggersFound = true;
+        calibrated = true;
+        for(LimitedEntryList entries : this.dataSetEntries) {
+            entries.setSize((int) twoPeriods);
+        }
+        mChart.getXAxis().setAxisMinimum(0);
+        mChart.getXAxis().setAxisMaximum(twoPeriods);
     }
 }

@@ -183,6 +183,7 @@ public class MainActivity extends AppCompatActivity implements TMBottomNavigatio
 
         if(this.isFinishing())
         {
+            mBluetooth.stopReadingFromFile();
             mBluetooth.stop();
         }
     }

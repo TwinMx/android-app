@@ -224,7 +224,7 @@ public class MaintenanceDetailActivity extends AppCompatActivity {
 
         color = ContextCompat.getColor(TMApplication.getContext(), color);
 
-        LimitedEntryList entries = new LimitedEntryList(RealTimeChartComponent.NB_POINTS);
+        LimitedEntryList entries = new LimitedEntryList(RealTimeChartComponent.NB_POINTS, null);
 
         LineDataSet dataSet = new LineDataSet(entries, title);
         dataSet.setColor(color);

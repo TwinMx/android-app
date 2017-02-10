@@ -5,6 +5,7 @@ import android.os.SystemClock;
 import android.util.Log;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.concurrent.ExecutionException;
@@ -31,9 +32,9 @@ public class FileInfiniteReaderAsyncTask extends StoppableAsyncTask<Void, Void, 
     @Override
     protected Void doInBackground(Void... params) {
         String fileName = file.getFileName();
+        InputStream input;
         while (!hasToStop()) {
             String line;
-            InputStream input;
             boolean wait = true;
             try {
                 input = this.bluetooth.getContext().getResources().getAssets().open("measures/" + fileName);
@@ -47,6 +48,7 @@ public class FileInfiniteReaderAsyncTask extends StoppableAsyncTask<Void, Void, 
                         wait = true;
                     }
                 }
+                input.close();
             } catch (Exception ex) {
                 ex.printStackTrace();
             }

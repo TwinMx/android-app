@@ -1,8 +1,5 @@
 package fr.isen.twinmx.utils;
 
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffColorFilter;
-import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -48,7 +45,7 @@ public class TMDeviceHolder extends RecyclerView.ViewHolder {
                         updateIcon();
                     }
                     else if (getConnectedFile() != null && getConnectedFile().equals(file)) {
-                        bluetooth.stopReadingFromFileIndefinitely();
+                        bluetooth.stopReadingFromFile();
                         disconnectIcon.setVisibility(View.GONE);
                         updateIcon();
                     }

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import com.github.mikephil.charting.data.Entry;
 
 import fr.isen.twinmx.fragments.LimitedEntryList;
+import fr.isen.twinmx.fragments.chart.TriggerManager;
 
 /**
  * Created by Clement on 03/02/2017.
@@ -13,9 +14,19 @@ public class InitChartData {
 
 
     private final float[][] graphs;
+    private final float trigger;
+    private final long calibrationWidth;
 
-    public InitChartData(Bundle b, String stateNbGraphs, String stateGraphSize, String stateGraph) {
-        this(b.containsKey(stateNbGraphs) ? b.getInt(stateNbGraphs) : 0, b.containsKey(stateGraphSize) ? b.getInt(stateGraphSize) : 0, b, stateGraph);
+    public InitChartData(Bundle b, String stateNbGraphs, String stateGraphSize, String stateGraph, String stateTrigger, String stateCalibrationWidth) {
+        this(
+                b.containsKey(stateNbGraphs) ? b.getInt(stateNbGraphs) : 0,
+                b.containsKey(stateGraphSize) ? b.getInt(stateGraphSize) : 0,
+                b,
+                stateGraph,
+                b.containsKey(stateTrigger) ? b.getFloat(stateTrigger) : -1,
+                b.containsKey(stateCalibrationWidth) ? b.getLong(stateCalibrationWidth) : -1
+
+        );
     }
 
     private static float[][] getFloatArrays(int nbGraphs, int graphSize, Bundle b, String stateGraph) {
@@ -32,12 +43,14 @@ public class InitChartData {
         return null;
     }
 
-    public InitChartData(int nbGraphs, int graphSize, Bundle b, String stateGraph) {
-        this(getFloatArrays(nbGraphs, graphSize, b, stateGraph));
+    public InitChartData(int nbGraphs, int graphSize, Bundle b, String stateGraph, float trigger, long calibrationWidth) {
+        this(getFloatArrays(nbGraphs, graphSize, b, stateGraph), trigger, calibrationWidth);
     }
 
-    public InitChartData(float[][] graphs) {
+    public InitChartData(float[][] graphs, float trigger, long calibrationWidth) {
         this.graphs = graphs;
+        this.trigger = trigger;
+        this.calibrationWidth = calibrationWidth;
     }
 
     public boolean hasGraphs() {
@@ -48,19 +61,23 @@ public class InitChartData {
         return graphs;
     }
 
-    public LimitedEntryList getDataSetEntries(int dataSetIndex) {
+    public LimitedEntryList getDataSetEntries(int dataSetIndex, TriggerManager triggerManager) {
         try {
             float[] values = graphs[dataSetIndex];
-            LimitedEntryList entries = new LimitedEntryList(values.length);
+            LimitedEntryList entries = new LimitedEntryList(values.length, triggerManager);
 
             int i = 0;
             for(Entry entry : entries) {
                 entry.setY(values[i++]);
             }
+            entries.setTrigger(trigger);
             return entries;
         } catch(Exception ex) {
             return null;
         }
     }
 
+    public long getCalibrationWidth() {
+        return calibrationWidth;
+    }
 }

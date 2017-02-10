@@ -65,9 +65,9 @@ public class RealTimeChartComponent implements Observer, OnChartGestureListener,
      * onCreate
      **/
     public void onCreate() {
+        initColors(R.color.chartBlue, R.color.chartGreen, R.color.chartBrown, R.color.chartRed);
         mChart.setData(new LineData());
         initChartSettings();
-        initColors(R.color.chartBlue, R.color.chartGreen, R.color.chartBrown, R.color.chartRed);
     }
 
     private void initColors(int... resources) {
@@ -90,15 +90,19 @@ public class RealTimeChartComponent implements Observer, OnChartGestureListener,
         }});
         mChart.getLegend().setEnabled(false);
 
+        this.triggerManager = new TriggerManager(this.dataSetEntries);
+
         //Init
         if (this.initChartData != null && this.initChartData.hasGraphs()) {
             for (int index = 0; index < 4; index++) {
-                LimitedEntryList entries = addNewSet(this.context.getString(R.string.cylinder, index + 1), index, initChartData.getDataSetEntries(index));
+                LimitedEntryList entries = addNewSet(this.context.getString(R.string.cylinder, index + 1), index, initChartData.getDataSetEntries(index, triggerManager));
                 dataSetEntries.set(index, entries);
             }
         }
-        this.triggerManager = new TriggerManager(this.dataSetEntries);
         this.calibrationManager = new CalibrationManager(mChart, triggerManager, dataSetEntries);
+        if (this.initChartData != null && this.initChartData.getCalibrationWidth() != -1) {
+            this.calibrationManager.setTwoPeriods(initChartData.getCalibrationWidth());
+        }
     }
 
 
@@ -280,16 +284,6 @@ public class RealTimeChartComponent implements Observer, OnChartGestureListener,
 
     }
 
-    private void addOnTriggerListener(OnTriggerListener listener) {
-        if (!onTriggerListeners.contains(listener)) {
-            onTriggerListeners.add(listener);
-        }
-    }
-
-    public void onTrigger(int x, int cycle) {
-
-    }
-
     public int getNbGraphs() {
         int size = 0;
         for (LimitedEntryList entries : dataSetEntries) {
@@ -327,5 +321,9 @@ public class RealTimeChartComponent implements Observer, OnChartGestureListener,
 
     public TriggerManager getTriggerManager() {
         return triggerManager;
+    }
+
+    public CalibrationManager getCalibrationManager() {
+        return calibrationManager;
     }
 }
