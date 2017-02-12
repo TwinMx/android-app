@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +31,7 @@ import butterknife.OnClick;
 import fr.isen.twinmx.R;
 import fr.isen.twinmx.fragments.chart.RealTimeChartComponent;
 import fr.isen.twinmx.fragments.chart.TriggerManager;
+import fr.isen.twinmx.listeners.OnPeriodListener;
 import fr.isen.twinmx.model.InitChartData;
 import fr.isen.twinmx.TMApplication;
 import fr.isen.twinmx.database.MotoRepository;
@@ -42,7 +44,7 @@ import fr.isen.twinmx.utils.bluetooth.TMBluetooth;
 /**
  * Created by pierredfc.
  */
-public class ChartFragment extends BluetoothFragment implements OnMotoHistoryClickListener {
+public class ChartFragment extends BluetoothFragment implements OnMotoHistoryClickListener, OnPeriodListener {
 
     private Context context;
     private int maxMotorValue = 5000;
@@ -163,7 +165,7 @@ public class ChartFragment extends BluetoothFragment implements OnMotoHistoryCli
         this.chartComponent.onCreate();
 
         TriggerManager triggerManager = this.chartComponent.getTriggerManager();
-        //triggerManager.addOnPeriodListener(monCompteTour);
+        triggerManager.addOnPeriodListener(this);
 
         return rootView;
     }
@@ -324,5 +326,26 @@ public class ChartFragment extends BluetoothFragment implements OnMotoHistoryCli
         }
 
         dialog.show();
+    }
+
+    @Override
+    public void onPeriodListener(long nbPointsSinceLastPeriod) {
+        // TwinMax send the data every 600us and we display the data every 4 received data
+        double period = nbPointsSinceLastPeriod * 600 * 4;
+        // We need to convert us to min
+        period = period * (0.000001/60);
+
+        // We need turn by minute and one period equals 2 turns
+        double compte_tour = 2 / period;
+
+        // Update views
+        this.motorLifeCycleValue.setText(String.valueOf((int) compte_tour));
+
+        final SeriesItem seriesItem1 = new SeriesItem.Builder(ContextCompat.getColor(this.getActivity(), R.color.colorPrimary), ContextCompat.getColor(this.getActivity(), R.color.colorAccent))
+                .setRange(minMotorValue, maxMotorValue, (int) compte_tour)
+                .setLineWidth(6f)
+                .build();
+
+        serie1Index = this.motorLifeCycle.addSeries(seriesItem1);
     }
 }
