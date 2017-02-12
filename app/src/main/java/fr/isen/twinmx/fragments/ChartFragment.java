@@ -21,6 +21,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.github.mikephil.charting.charts.LineChart;
 import com.hookedonplay.decoviewlib.DecoView;
 import com.hookedonplay.decoviewlib.charts.SeriesItem;
+import com.hookedonplay.decoviewlib.events.DecoEvent;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -198,13 +199,6 @@ public class ChartFragment extends BluetoothFragment implements OnMotoHistoryCli
                 .build());
 
         this.motorLifeCycle.configureAngles(280, 0);
-
-        final SeriesItem seriesItem1 = new SeriesItem.Builder(ContextCompat.getColor(this.getActivity(), R.color.colorPrimary), ContextCompat.getColor(this.getActivity(), R.color.colorAccent))
-                .setRange(minMotorValue, maxMotorValue, (minMotorValue + maxMotorValue) / 2)
-                .setLineWidth(6f)
-                .build();
-
-        serie1Index = this.motorLifeCycle.addSeries(seriesItem1);
     }
 
     @Override
@@ -348,6 +342,7 @@ public class ChartFragment extends BluetoothFragment implements OnMotoHistoryCli
                         .build();
 
                 serie1Index = motorLifeCycle.addSeries(seriesItem1);
+                motorLifeCycle.addEvent(new DecoEvent.Builder(50).setIndex(serie1Index).build());
             }
         }));
     }
