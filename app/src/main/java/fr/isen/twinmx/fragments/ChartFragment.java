@@ -336,16 +336,19 @@ public class ChartFragment extends BluetoothFragment implements OnMotoHistoryCli
         period = period * (0.000001/60);
 
         // We need turn by minute and one period equals 2 turns
-        double compte_tour = 2 / period;
+        final double compte_tour = 2 / period;
 
         // Update views
-        this.motorLifeCycleValue.setText(String.valueOf((int) compte_tour));
+        this.getActivity().runOnUiThread (new Thread(new Runnable() {
+            public void run() {
+                motorLifeCycleValue.setText(String.valueOf((int) compte_tour));
+                final SeriesItem seriesItem1 = new SeriesItem.Builder(ContextCompat.getColor(getActivity(), R.color.colorPrimary), ContextCompat.getColor(getActivity(), R.color.colorAccent))
+                        .setRange(minMotorValue, maxMotorValue, (int) compte_tour)
+                        .setLineWidth(6f)
+                        .build();
 
-        final SeriesItem seriesItem1 = new SeriesItem.Builder(ContextCompat.getColor(this.getActivity(), R.color.colorPrimary), ContextCompat.getColor(this.getActivity(), R.color.colorAccent))
-                .setRange(minMotorValue, maxMotorValue, (int) compte_tour)
-                .setLineWidth(6f)
-                .build();
-
-        serie1Index = this.motorLifeCycle.addSeries(seriesItem1);
+                serie1Index = motorLifeCycle.addSeries(seriesItem1);
+            }
+        }));
     }
 }
