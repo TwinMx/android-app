@@ -333,20 +333,18 @@ public class ChartFragment extends BluetoothFragment implements OnMotoHistoryCli
         final double compte_tour = 2 / period;
 
         // Update views
-        this.getActivity().runOnUiThread (new Thread(new Runnable() {
+        this.getActivity().runOnUiThread(new Runnable() {
             public void run() {
                 Integer value = (int) compte_tour;
-                motorLifeCycleValue.setText(String.valueOf((int) compte_tour));
+                motorLifeCycleValue.setText(String.valueOf(value));
                 final SeriesItem seriesItem1 = new SeriesItem.Builder(ContextCompat.getColor(getActivity(), R.color.colorPrimary), ContextCompat.getColor(getActivity(), R.color.colorAccent))
                         .setRange(minMotorValue, maxMotorValue, value)
                         .setLineWidth(6f)
                         .build();
-
                 motorLifeCycle.deleteAll();
-                serie1Index = motorLifeCycle.addSeries(seriesItem1);
-                motorLifeCycle.addEvent(new DecoEvent.Builder(0).setIndex(serie1Index).build());
+                motorLifeCycle.addSeries(seriesItem1);
 
             }
-        }));
+        });
     }
 }
