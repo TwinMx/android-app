@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.support.v7.widget.AppCompatCheckBox;
+import android.view.animation.AccelerateInterpolator;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -48,7 +49,7 @@ import fr.isen.twinmx.utils.bluetooth.TMBluetooth;
 public class ChartFragment extends BluetoothFragment implements OnMotoHistoryClickListener, OnPeriodListener {
 
     private Context context;
-    private int maxMotorValue = 5000;
+    private int maxMotorValue = 8000;
     private int minMotorValue = 0;
     private RealTimeChartComponent chartComponent;
     private int serie1Index;
@@ -66,10 +67,8 @@ public class ChartFragment extends BluetoothFragment implements OnMotoHistoryCli
     private static final String STATE_TRIGGER = "STATE_TRIGGER";
     private static final String STATE_CALIBRATION_WIDTH = "STATE_CALIBRATION_WIDTH";
 
-
     private MaterialDialog chooseMotoDialog;
     private AcquisitionSaveRequest acquisitionSaveRequest = null;
-
 
     @OnClick({R.id.box1, R.id.box2, R.id.box3, R.id.box4})
     public void onBoxClick(View view) {
@@ -192,9 +191,10 @@ public class ChartFragment extends BluetoothFragment implements OnMotoHistoryCli
 
     private void setMotorLifeCycle() {
         this.motorLifeCycle.addSeries(new SeriesItem.Builder(ContextCompat.getColor(this.getActivity(), R.color.white))
-                .setRange(minMotorValue, maxMotorValue, maxMotorValue)
+                .setRange(minMotorValue, maxMotorValue, 0)
                 .setInitialVisibility(true)
                 .setLineWidth(10f)
+                .setInterpolator(new AccelerateInterpolator())
                 .setDrawAsPoint(false)
                 .build());
 
@@ -335,14 +335,17 @@ public class ChartFragment extends BluetoothFragment implements OnMotoHistoryCli
         // Update views
         this.getActivity().runOnUiThread (new Thread(new Runnable() {
             public void run() {
+                Integer value = (int) compte_tour;
                 motorLifeCycleValue.setText(String.valueOf((int) compte_tour));
                 final SeriesItem seriesItem1 = new SeriesItem.Builder(ContextCompat.getColor(getActivity(), R.color.colorPrimary), ContextCompat.getColor(getActivity(), R.color.colorAccent))
-                        .setRange(minMotorValue, maxMotorValue, (int) compte_tour)
+                        .setRange(minMotorValue, maxMotorValue, value)
                         .setLineWidth(6f)
                         .build();
 
+                motorLifeCycle.deleteAll();
                 serie1Index = motorLifeCycle.addSeries(seriesItem1);
-                motorLifeCycle.addEvent(new DecoEvent.Builder(50).setIndex(serie1Index).build());
+                motorLifeCycle.addEvent(new DecoEvent.Builder(0).setIndex(serie1Index).build());
+
             }
         }));
     }
