@@ -30,7 +30,7 @@ public class RawDataManagerAsyncTask extends StoppableAsyncTask<Void, Entry, Voi
     private int x = 0;
     private int nbResults = 0;
 
-    private static final int REFRESH_RATE = 5; //200;
+    private static final int REFRESH_RATE = 1; //200;
 
     public RawDataManagerAsyncTask(TMBluetoothDataManager dataManager, RealTimeChartComponent chart) {
         this.dataManager = dataManager;

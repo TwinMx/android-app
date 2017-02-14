@@ -6,8 +6,10 @@ import java.util.LinkedList;
 import java.util.List;
 
 import fr.isen.twinmx.fragments.LimitedEntryList;
+import fr.isen.twinmx.listeners.OnCycleListener;
 import fr.isen.twinmx.listeners.OnPeriodListener;
 import fr.isen.twinmx.listeners.OnTriggerListener;
+import fr.isen.twinmx.model.GraphDirection;
 
 /**
  * Created by Clement on 10/02/2017.
@@ -20,32 +22,20 @@ public class TriggerManager {
     private boolean triggerable = false; //calibration ready
     private LimitedEntryList triggeredDataSet;
 
-    private int nbCycles = 0;
     private int nbTriggersSinceLastPeriod = 0;
     private int nbPointsSinceLastPeriod = 0;
 
     private List<OnTriggerListener> onTriggerListeners = new LinkedList<>();
     private List<OnPeriodListener> onPeriodListeners = new LinkedList<>();
+    private List<OnCycleListener> onCycleListeners = new LinkedList<>();
 
 
     public TriggerManager(List<LimitedEntryList> dataSetEntries) {
         this.dataSetEntries = dataSetEntries;
     }
 
-    public void addCycle() {
-        if (nbCycles < 1) {
-            nbCycles++;
-        }
-    }
-
     public boolean isTriggerable() {
         return triggerable;
-    }
-
-    public void checkTriggerable() {
-        if (!triggerable && nbCycles > 0) {
-            setTriggerable(true);
-        }
     }
 
     public void setTriggerable(boolean value) {
@@ -72,14 +62,12 @@ public class TriggerManager {
     }
 
 
-    public void onTrigger(long nbPointsSinceLastTrigger, LimitedEntryList dataSet) {
+    public void onTrigger(long nbPointsSinceLastTrigger, GraphDirection direction, LimitedEntryList dataSet) {
         if (dataSet != triggeredDataSet) return;
 
         for (OnTriggerListener l : onTriggerListeners) {
-            l.onTrigger(nbPointsSinceLastTrigger);
+            l.onTrigger(nbPointsSinceLastTrigger, direction);
         }
-
-        Log.d("trigger", ""+nbPointsSinceLastTrigger);
 
         if (nbPointsSinceLastTrigger > 0) {
             nbTriggersSinceLastPeriod++;
@@ -95,18 +83,39 @@ public class TriggerManager {
 
     private void onPeriod() {
         long value = this.nbPointsSinceLastPeriod;
-        Log.d("period", "--------- " + value);
         for (OnPeriodListener l : onPeriodListeners) {
-            l.onPeriodListener(value);
+            l.onPeriod(value);
+        }
+    }
+
+    public void onCycle(LimitedEntryList dataSet) {
+        if (!triggerable) {
+            setTriggerable(true);
+            return;
+        }
+        if (dataSet == triggeredDataSet) {
+            for(OnCycleListener l : onCycleListeners) {
+                l.onCycle();
+            }
         }
     }
 
 
     public void addOnTriggerListener(OnTriggerListener onTriggerListener) {
-        this.onTriggerListeners.add(onTriggerListener);
+        if (!this.onTriggerListeners.contains(onTriggerListener)) {
+            this.onTriggerListeners.add(onTriggerListener);
+        }
     }
 
     public void addOnPeriodListener(OnPeriodListener onPeriodListener) {
-        this.onPeriodListeners.add(onPeriodListener);
+        if (!this.onPeriodListeners.contains(onPeriodListener)) {
+            this.onPeriodListeners.add(onPeriodListener);
+        }
+    }
+
+    public void addOnCycleListener(OnCycleListener onCycleListener) {
+        if (!this.onCycleListeners.contains(onCycleListener)) {
+            this.onCycleListeners.add(onCycleListener);
+        }
     }
 }

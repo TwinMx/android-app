@@ -6,6 +6,7 @@ import java.util.List;
 
 import fr.isen.twinmx.fragments.LimitedEntryList;
 import fr.isen.twinmx.listeners.OnTriggerListener;
+import fr.isen.twinmx.model.GraphDirection;
 
 /**
  * Created by Clement on 10/02/2017.
@@ -33,7 +34,7 @@ public class CalibrationManager implements OnTriggerListener {
     }
 
     @Override
-    public void onTrigger(long nbPointsSinceLastTrigger) {
+    public void onTrigger(long nbPointsSinceLastTrigger, GraphDirection direction) {
         if (!triggersFound) {
             this.twoPeriods += nbPointsSinceLastTrigger;
             if (++this.triggersCount >= 5) {

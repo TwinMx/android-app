@@ -6,5 +6,5 @@ package fr.isen.twinmx.listeners;
 
 public interface OnPeriodListener {
 
-    void onPeriodListener(long nbPointsSinceLastPeriod);
+    void onPeriod(long nbPointsSinceLastPeriod);
 }

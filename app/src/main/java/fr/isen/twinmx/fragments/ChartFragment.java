@@ -323,7 +323,7 @@ public class ChartFragment extends BluetoothFragment implements OnMotoHistoryCli
     }
 
     @Override
-    public void onPeriodListener(long nbPointsSinceLastPeriod) {
+    public void onPeriod(long nbPointsSinceLastPeriod) {
         // TwinMax send the data every 600us and we display the data every 4 received data
         double period = nbPointsSinceLastPeriod * 600 * 4;
         // We need to convert us to min

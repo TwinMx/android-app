@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 import android.view.MotionEvent;
 
 import com.github.mikephil.charting.charts.LineChart;
@@ -27,6 +26,7 @@ import fr.isen.twinmx.R;
 import fr.isen.twinmx.async.RawDataManagerAsyncTask;
 import fr.isen.twinmx.fragments.ChartFragment;
 import fr.isen.twinmx.fragments.LimitedEntryList;
+import fr.isen.twinmx.listeners.OnCycleListener;
 import fr.isen.twinmx.listeners.OnTriggerListener;
 import fr.isen.twinmx.model.GraphDirection;
 import fr.isen.twinmx.model.InitChartData;
@@ -36,7 +36,7 @@ import fr.isen.twinmx.utils.bluetooth.TMBluetooth;
  * Created by Clement on 19/01/2017.
  */
 
-public class RealTimeChartComponent implements Observer, OnChartGestureListener, OnChartValueSelectedListener {
+public class RealTimeChartComponent implements Observer, OnChartGestureListener, OnChartValueSelectedListener, OnCycleListener, OnTriggerListener {
 
     public static int NB_POINTS = 200;
     private final Activity context;
@@ -103,8 +103,10 @@ public class RealTimeChartComponent implements Observer, OnChartGestureListener,
         if (this.initChartData != null && this.initChartData.getCalibrationWidth() != -1) {
             this.calibrationManager.setTwoPeriods(initChartData.getCalibrationWidth());
         }
-    }
 
+        this.triggerManager.addOnCycleListener(this);
+        this.triggerManager.addOnTriggerListener(this);
+    }
 
 
     /**
@@ -128,8 +130,6 @@ public class RealTimeChartComponent implements Observer, OnChartGestureListener,
     }
 
 
-
-
     /**
      * @param entries One entry per dataset
      */
@@ -138,9 +138,7 @@ public class RealTimeChartComponent implements Observer, OnChartGestureListener,
         for (int i = 0; i < size; i++) {
             addEntry(i, entries[i]);
         }
-        this.triggerManager.checkTriggerable();
     }
-
 
 
     public void addEntry(int index, Entry value) {
@@ -210,8 +208,7 @@ public class RealTimeChartComponent implements Observer, OnChartGestureListener,
         if (rawDataManagerAsyncTask != null) {
             if (wait) {
                 rawDataManagerAsyncTask.stopAndWait();
-            }
-            else {
+            } else {
                 rawDataManagerAsyncTask.stop();
             }
             if (updateState) this.chartFragment.setPlaying(false);
@@ -325,5 +322,28 @@ public class RealTimeChartComponent implements Observer, OnChartGestureListener,
 
     public CalibrationManager getCalibrationManager() {
         return calibrationManager;
+    }
+
+    private boolean waitForTrigger = false;
+
+    @Override
+    public void onCycle() {
+        waitForTrigger = true;
+        for(LimitedEntryList dataSet : this.dataSetEntries) {
+            dataSet.setWaitForTrigger(true);
+        }
+    }
+
+    @Override
+    public void onTrigger(long nbPointsSinceLastTrigger, GraphDirection direction) {
+        if (waitForTrigger) {
+            if (direction == GraphDirection.GOING_UP) {
+                for(LimitedEntryList dataSet: this.dataSetEntries) {
+                    dataSet.setWaitForTrigger(false);
+                }
+                waitForTrigger = false;
+            }
+        }
+
     }
 }

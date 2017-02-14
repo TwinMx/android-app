@@ -1,12 +1,13 @@
 package fr.isen.twinmx.listeners;
 
-import fr.isen.twinmx.fragments.chart.TriggerManager;
+
+import fr.isen.twinmx.model.GraphDirection;
 
 /**
  * Created by Clement on 10/02/2017.
  */
 public interface OnTriggerListener {
 
-    void onTrigger(long nbPointsSinceLastTrigger);
+    void onTrigger(long nbPointsSinceLastTrigger, GraphDirection direction);
 
 }

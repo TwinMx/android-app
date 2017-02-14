@@ -29,6 +29,7 @@ public class LimitedEntryList extends ArrayList<Entry> {
     private long triggerIndex = NO_TRIGGER;
 
     private static int MIN_TRIGGER_DISTANCE = 10;
+    private boolean waitForTrigger = false;
 
     public LimitedEntryList(int size, TriggerManager triggerManager) {
         super(size);
@@ -47,18 +48,23 @@ public class LimitedEntryList extends ArrayList<Entry> {
 
     public void add(float entryY) {
         synchronized (currentX) {
-            get(currentX).setY(entryY);
-            if (!isMinMaxInit) {
-                if (entryY > yMax) yMax = entryY;
-                if (entryY < yMin) yMin = entryY;
-            } else {
-                yMax = entryY;
-                yMin = entryY;
-                isMinMaxInit = false;
+            if (!waitForTrigger) {
+                get(currentX).setY(entryY);
+                if (!isMinMaxInit) {
+                    if (entryY > yMax) yMax = entryY;
+                    if (entryY < yMin) yMin = entryY;
+                } else {
+                    yMax = entryY;
+                    yMin = entryY;
+                    isMinMaxInit = false;
+                }
+                incrementX();
+                checkFindTrigger(entryY, this.triggerIndex);
             }
-
-            incrementX();
-            checkFindTrigger(getCurrentX(), this.triggerIndex);
+            else {
+                this.incrementTriggerIndex();
+                checkFindTrigger(entryY, this.triggerIndex);
+            }
         }
     }
 
@@ -72,9 +78,7 @@ public class LimitedEntryList extends ArrayList<Entry> {
 
     public void reset() {
         this.currentX = 0;
-        if (this.triggerManager != null) {
-            this.triggerManager.addCycle();
-        }
+        this.onCycle();
     }
 
     public void resetTriggerIndex() {
@@ -86,6 +90,10 @@ public class LimitedEntryList extends ArrayList<Entry> {
         if (this.currentX >= size) {
             this.reset();
         }
+        this.incrementTriggerIndex();
+    }
+
+    private void incrementTriggerIndex() {
         if (triggerIndex >= 0) {
             triggerIndex++;
         }
@@ -139,33 +147,36 @@ public class LimitedEntryList extends ArrayList<Entry> {
         return direction == GraphDirection.GOING_DOWN;
     }
 
-    private void checkFindTrigger(int x, long triggerIndex) {
-        float lastAddedValue = get(x).getY();
-        if (isGoingDown() && lastAddedValue < trigger) {
-            triggerFound(triggerIndex);
+    private void checkFindTrigger(float value, long triggerIndex) {
+        //float lastAddedValue = get(x).getY();
+        if (isGoingDown() && value < trigger) {
+            triggerFound(triggerIndex, this.direction);
             this.direction = GraphDirection.GOING_UP;
-        } else if (isGoingUp() && lastAddedValue > trigger) {
-            triggerFound(triggerIndex);
+        } else if (isGoingUp() && value > trigger) {
+            triggerFound(triggerIndex, this.direction);
             this.direction = GraphDirection.GOING_DOWN;
         }
     }
 
-    private void triggerFound(long nbPointsSinceLastTrigger) {
+    private void triggerFound(long nbPointsSinceLastTrigger, GraphDirection direction) {
         if (isTriggerOk(nbPointsSinceLastTrigger)) {
             if (nbPointsSinceLastTrigger == NO_TRIGGER) {
                 nbPointsSinceLastTrigger = 0;
             }
-            if (nbPointsSinceLastTrigger > 80) {
-                Log.d("too", "high");
-            }
-            onTrigger(nbPointsSinceLastTrigger);
+            onTrigger(nbPointsSinceLastTrigger, direction);
             resetTriggerIndex();
         }
     }
 
-    private void onTrigger(long nbPointsSinceLastTrigger) {
+    private void onTrigger(long nbPointsSinceLastTrigger, GraphDirection direction) {
         if (this.triggerManager != null) {
-            this.triggerManager.onTrigger(nbPointsSinceLastTrigger, this);
+            this.triggerManager.onTrigger(nbPointsSinceLastTrigger, direction, this);
+        }
+    }
+
+    private void onCycle() {
+        if (this.triggerManager != null) {
+            this.triggerManager.onCycle(this);
         }
     }
 
@@ -176,5 +187,9 @@ public class LimitedEntryList extends ArrayList<Entry> {
 
     public float getTrigger() {
         return trigger;
+    }
+
+    public void setWaitForTrigger(boolean waitForTrigger) {
+        this.waitForTrigger = waitForTrigger;
     }
 }
