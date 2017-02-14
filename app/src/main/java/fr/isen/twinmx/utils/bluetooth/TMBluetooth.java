@@ -26,6 +26,7 @@ import java.util.concurrent.TimeUnit;
 
 import fr.isen.twinmx.R;
 import fr.isen.twinmx.async.FileInfiniteReaderAsyncTask;
+import fr.isen.twinmx.listeners.OnChangeInputListener;
 import fr.isen.twinmx.model.TMFile;
 import fr.isen.twinmx.model.TMInput;
 import fr.isen.twinmx.receivers.BluetoothIconReceiver;
@@ -56,6 +57,8 @@ public class TMBluetooth extends TMSmoothBluetooth implements TMSmoothBluetooth.
     private BluetoothIconReceiver bluetoothIconReceiver;
     private MaterialDialog bluetoothDevicesDialog;
     private TMFile connectedFile;
+
+    private List<OnChangeInputListener> onChangeInputListeners = new LinkedList<>();
 
 
     public TMBluetooth(Activity activity) {
@@ -104,6 +107,8 @@ public class TMBluetooth extends TMSmoothBluetooth implements TMSmoothBluetooth.
         } catch (RepositoryException e) {
             e.printStackTrace();
         }
+
+        this.onChangeInput();
 
         //BluetoothIconReceiver.sendStatusOk(String.format(TMApplication.getContext().getResources().getString(R.string.connected_to), device.getName()));
         this.setChanged();
@@ -273,6 +278,8 @@ public class TMBluetooth extends TMSmoothBluetooth implements TMSmoothBluetooth.
         if (this.bluetoothIconReceiver != null) {
             this.bluetoothIconReceiver.fileConnected(null);
         }
+
+        this.onChangeInput();
         this.setChanged();
         this.notifyObservers();
     }
@@ -332,6 +339,19 @@ public class TMBluetooth extends TMSmoothBluetooth implements TMSmoothBluetooth.
         }
         else {
             this.showFilesDialog();
+        }
+    }
+
+
+    public void addOnChangeInputListener(OnChangeInputListener onChangeInputListener) {
+        if (!onChangeInputListeners.contains(onChangeInputListener)) {
+            onChangeInputListeners.add(onChangeInputListener);
+        }
+    }
+
+    private void onChangeInput() {
+        for(OnChangeInputListener l : onChangeInputListeners) {
+            l.onConnect();
         }
     }
 }

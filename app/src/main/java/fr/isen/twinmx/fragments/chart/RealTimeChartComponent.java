@@ -101,11 +101,13 @@ public class RealTimeChartComponent implements Observer, OnChartGestureListener,
         }
         this.calibrationManager = new CalibrationManager(mChart, triggerManager, dataSetEntries);
         if (this.initChartData != null && this.initChartData.getCalibrationWidth() != -1) {
-            this.calibrationManager.setTwoPeriods(initChartData.getCalibrationWidth());
+            this.calibrationManager.setNbPoints(initChartData.getCalibrationWidth());
         }
 
         this.triggerManager.addOnCycleListener(this);
         this.triggerManager.addOnTriggerListener(this);
+        this.mBluetooth.addOnChangeInputListener(this.triggerManager);
+        this.mBluetooth.addOnChangeInputListener(this.calibrationManager);
     }
 
 

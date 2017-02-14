@@ -114,13 +114,25 @@ public class LimitedEntryList extends ArrayList<Entry> {
     public void setSize(int period) {
         synchronized (currentX) {
             int rangeToRemove = this.size - period;
-            this.removeRange(0, rangeToRemove);
+            if (rangeToRemove > 0) {
+                this.removeRange(0, rangeToRemove);
+            }
+            else if (-rangeToRemove > 0) {
+                this.addRange(-rangeToRemove, 0);
+            }
             int index = 0;
             for(Entry e : this) {
                 e.setX(index++);
             }
             this.size = period;
             currentX = 0;
+        }
+    }
+
+    private void addRange(int range, float defaultValue) {
+        int currentSize = this.size();
+        for(int i = 0; i < range; i++) {
+            super.add(new Entry(currentSize + i - 1, defaultValue));
         }
     }
 

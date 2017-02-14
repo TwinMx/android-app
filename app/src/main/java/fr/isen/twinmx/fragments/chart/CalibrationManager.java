@@ -5,6 +5,7 @@ import com.github.mikephil.charting.charts.LineChart;
 import java.util.List;
 
 import fr.isen.twinmx.fragments.LimitedEntryList;
+import fr.isen.twinmx.listeners.OnChangeInputListener;
 import fr.isen.twinmx.listeners.OnTriggerListener;
 import fr.isen.twinmx.model.GraphDirection;
 
@@ -12,7 +13,7 @@ import fr.isen.twinmx.model.GraphDirection;
  * Created by Clement on 10/02/2017.
  */
 
-public class CalibrationManager implements OnTriggerListener {
+public class CalibrationManager implements OnTriggerListener, OnChangeInputListener {
 
 
     private final List<LimitedEntryList> dataSetEntries;
@@ -42,27 +43,48 @@ public class CalibrationManager implements OnTriggerListener {
             }
         }
         if (triggersFound && !calibrated) {
-            makeCalibration();
+            makeCalibration((int) this.twoPeriods);
         }
     }
 
-    public long getTwoPeriods() {
+    public long getNbPoints() {
         return twoPeriods;
     }
 
-    public void setTwoPeriods(long twoPeriods) {
+    public void setNbPoints(long twoPeriods) {
         if (twoPeriods > 0) return;
         this.twoPeriods = twoPeriods;
-        makeCalibration();
+        makeCalibration((int) twoPeriods);
     }
 
-    private void makeCalibration() {
+    private void makeCalibration(int nbPoints) {
         triggersFound = true;
         calibrated = true;
-        for(LimitedEntryList entries : this.dataSetEntries) {
-            entries.setSize((int) twoPeriods);
-        }
+        setSizes(nbPoints);
         mChart.getXAxis().setAxisMinimum(0);
         mChart.getXAxis().setAxisMaximum(twoPeriods);
+    }
+
+    private void setSizes(int nbPoints) {
+        for (LimitedEntryList entries : this.dataSetEntries) {
+            if (entries != null) {
+                entries.setSize(nbPoints);
+            }
+        }
+    }
+
+    private void reset() {
+        triggersFound = false;
+        calibrated = false;
+        setSizes(RealTimeChartComponent.NB_POINTS);
+        mChart.getXAxis().setAxisMinimum(0);
+        mChart.getXAxis().setAxisMaximum(RealTimeChartComponent.NB_POINTS);
+        triggersCount = 0;
+        twoPeriods = 0;
+    }
+
+    @Override
+    public void onConnect() {
+        reset();
     }
 }

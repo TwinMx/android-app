@@ -7,7 +7,6 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,7 +21,6 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.github.mikephil.charting.charts.LineChart;
 import com.hookedonplay.decoviewlib.DecoView;
 import com.hookedonplay.decoviewlib.charts.SeriesItem;
-import com.hookedonplay.decoviewlib.events.DecoEvent;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -228,7 +226,7 @@ public class ChartFragment extends BluetoothFragment implements OnMotoHistoryCli
         }
 
         try {
-            outState.putLong(STATE_CALIBRATION_WIDTH, this.chartComponent.getCalibrationManager().getTwoPeriods());
+            outState.putLong(STATE_CALIBRATION_WIDTH, this.chartComponent.getCalibrationManager().getNbPoints());
         } catch(Exception ex) {
             //
         }

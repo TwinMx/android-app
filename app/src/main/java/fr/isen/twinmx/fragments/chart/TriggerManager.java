@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import fr.isen.twinmx.fragments.LimitedEntryList;
+import fr.isen.twinmx.listeners.OnChangeInputListener;
 import fr.isen.twinmx.listeners.OnCycleListener;
 import fr.isen.twinmx.listeners.OnPeriodListener;
 import fr.isen.twinmx.listeners.OnTriggerListener;
@@ -15,7 +16,7 @@ import fr.isen.twinmx.model.GraphDirection;
  * Created by Clement on 10/02/2017.
  */
 
-public class TriggerManager {
+public class TriggerManager implements OnChangeInputListener {
 
     private final List<LimitedEntryList> dataSetEntries;
 
@@ -117,5 +118,15 @@ public class TriggerManager {
         if (!this.onCycleListeners.contains(onCycleListener)) {
             this.onCycleListeners.add(onCycleListener);
         }
+    }
+
+
+    @Override
+    public void onConnect() {
+        this.triggerable = false;
+        this.triggeredDataSet = null;
+
+        nbTriggersSinceLastPeriod = 0;
+        nbPointsSinceLastPeriod = 0;
     }
 }
