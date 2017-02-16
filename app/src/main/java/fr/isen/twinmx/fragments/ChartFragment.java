@@ -15,6 +15,7 @@ import android.view.animation.AccelerateInterpolator;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -28,6 +29,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.OnLongClick;
 import fr.isen.twinmx.R;
 import fr.isen.twinmx.fragments.chart.RealTimeChartComponent;
 import fr.isen.twinmx.fragments.chart.TriggerManager;
@@ -55,6 +57,18 @@ public class ChartFragment extends BluetoothFragment implements OnMotoHistoryCli
 
     @BindView(R.id.match_start_pause)
     ImageView playPauseImage;
+
+    @OnLongClick(R.id.refresh)
+    public boolean onLongClick(View view) {
+        // TODO : désactiver le calibrage
+        return true;
+    }
+
+    @OnClick(R.id.refresh)
+    public void onClick(View view) {
+
+        // TODO : calibrage
+    }
 
     private Boolean onResumeWasPlaying = null;
 
