@@ -1,6 +1,7 @@
 package fr.isen.twinmx.fragments;
 
 import android.content.Context;
+import android.media.Image;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -52,22 +53,47 @@ public class ChartFragment extends BluetoothFragment implements OnMotoHistoryCli
     private int maxMotorValue = 8000;
     private int minMotorValue = 0;
     private RealTimeChartComponent chartComponent;
-    private int serie1Index;
     private boolean playing = false;
+    private boolean isCalibrationActivated = true;
 
     @BindView(R.id.match_start_pause)
     ImageView playPauseImage;
 
     @OnLongClick(R.id.refresh)
     public boolean onLongClick(View view) {
-        // TODO : désactiver le calibrage
+        if (view instanceof ImageView)
+        {
+            ImageView v = (ImageView) view;
+
+            if (isCalibrationActivated) {
+                v.setBackground(ContextCompat.getDrawable(TMApplication.getContext(), R.drawable.greyripple));
+            }
+            else {
+                v.setBackground(ContextCompat.getDrawable(TMApplication.getContext(), R.drawable.revertripple));
+                if (this.isPlaying())
+                {
+                    this.chartComponent.resetCalibration();
+                }
+            }
+
+            this.isCalibrationActivated = !isCalibrationActivated;
+        }
         return true;
     }
 
     @OnClick(R.id.refresh)
     public void onClick(View view) {
+        if (this.isPlaying())
+        {
+            this.chartComponent.resetCalibration();
 
-        // TODO : calibrage
+            if (!this.isCalibrationActivated)
+            {
+                ImageView v = (ImageView) view;
+                v.setBackground(ContextCompat.getDrawable(TMApplication.getContext(), R.drawable.revertripple));
+                this.isCalibrationActivated = true;
+            }
+        }
     }
 
     private Boolean onResumeWasPlaying = null;

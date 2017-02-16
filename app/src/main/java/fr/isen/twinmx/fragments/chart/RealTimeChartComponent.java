@@ -348,4 +348,9 @@ public class RealTimeChartComponent implements Observer, OnChartGestureListener,
         }
 
     }
+
+    public void resetCalibration() {
+        this.calibrationManager.onConnect();
+        this.triggerManager.onConnect();
+    }
 }
