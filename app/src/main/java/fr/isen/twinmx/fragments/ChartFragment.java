@@ -13,6 +13,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.support.v7.widget.AppCompatCheckBox;
 import android.view.animation.AccelerateInterpolator;
+import android.view.animation.Animation;
+import android.view.animation.LinearInterpolator;
+import android.view.animation.RotateAnimation;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -56,8 +59,13 @@ public class ChartFragment extends BluetoothFragment implements OnMotoHistoryCli
     private boolean playing = false;
     private boolean isCalibrationActivated = true;
 
+    private boolean isCalibrating = false;
+
     @BindView(R.id.match_start_pause)
     ImageView playPauseImage;
+
+    @BindView(R.id.refresh)
+    ImageView refresh;
 
     @OnLongClick(R.id.refresh)
     public boolean onLongCalibrationClick(View view) {
@@ -72,6 +80,7 @@ public class ChartFragment extends BluetoothFragment implements OnMotoHistoryCli
             else {
                 v.setBackground(ContextCompat.getDrawable(TMApplication.getContext(), R.drawable.revertripple));
                 this.chartComponent.enableCalibration();
+                this.setCalibrating(true);
                 /*if (this.isPlaying())
                 {
                     this.chartComponent.resetCalibration();
@@ -88,14 +97,36 @@ public class ChartFragment extends BluetoothFragment implements OnMotoHistoryCli
         if (this.isPlaying())
         {
             this.chartComponent.resetCalibration();
-
+            setCalibrating(true);
             if (!this.isCalibrationActivated)
             {
                 ImageView v = (ImageView) view;
                 v.setBackground(ContextCompat.getDrawable(TMApplication.getContext(), R.drawable.revertripple));
                 this.isCalibrationActivated = true;
             }
+
         }
+    }
+
+    public void setCalibrating(boolean value) {
+        this.isCalibrating = value;
+        if (value) {
+            rotate(refresh);
+        }
+        else {
+            refresh.setAnimation(null);
+        }
+    }
+
+    private void rotate(ImageView view) {
+        RotateAnimation anim = new RotateAnimation(0.0f, 360.0f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+        anim.setInterpolator(new LinearInterpolator());
+        anim.setRepeatCount(Animation.INFINITE);
+        anim.setDuration(700);
+        view.startAnimation(anim);
+
+        // Later.. stop the animation
+        //view.setAnimation(null);
     }
 
     private Boolean onResumeWasPlaying = null;
@@ -387,4 +418,5 @@ public class ChartFragment extends BluetoothFragment implements OnMotoHistoryCli
             }
         });
     }
+
 }

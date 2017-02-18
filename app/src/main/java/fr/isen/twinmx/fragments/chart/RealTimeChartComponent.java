@@ -89,6 +89,7 @@ public class RealTimeChartComponent implements Observer, OnChartGestureListener,
             setText("Pression (mBar)");
         }});
         mChart.getLegend().setEnabled(false);
+        mChart.getAxisRight().setAxisMinimum(0);
 
         this.triggerManager = new TriggerManager(this.dataSetEntries);
 
@@ -99,7 +100,7 @@ public class RealTimeChartComponent implements Observer, OnChartGestureListener,
                 dataSetEntries.set(index, entries);
             }
         }
-        this.calibrationManager = new CalibrationManager(mChart, triggerManager, dataSetEntries);
+        this.calibrationManager = new CalibrationManager(mChart, triggerManager, dataSetEntries, chartFragment);
         if (this.initChartData != null && this.initChartData.getCalibrationWidth() != -1) {
             this.calibrationManager.setNbPoints(initChartData.getCalibrationWidth());
         }
@@ -351,7 +352,6 @@ public class RealTimeChartComponent implements Observer, OnChartGestureListener,
 
     public void resetCalibration() {
         this.calibrationManager.reset();
-        this.triggerManager.reset();
     }
 
     public void disableCalibration() {
@@ -360,6 +360,6 @@ public class RealTimeChartComponent implements Observer, OnChartGestureListener,
     }
 
     public void enableCalibration() {
-        resetCalibration();
+        this.calibrationManager.recalibrate();
     }
 }
