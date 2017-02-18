@@ -60,20 +60,22 @@ public class ChartFragment extends BluetoothFragment implements OnMotoHistoryCli
     ImageView playPauseImage;
 
     @OnLongClick(R.id.refresh)
-    public boolean onLongClick(View view) {
+    public boolean onLongCalibrationClick(View view) {
         if (view instanceof ImageView)
         {
             ImageView v = (ImageView) view;
 
             if (isCalibrationActivated) {
+                this.chartComponent.disableCalibration();
                 v.setBackground(ContextCompat.getDrawable(TMApplication.getContext(), R.drawable.greyripple));
             }
             else {
                 v.setBackground(ContextCompat.getDrawable(TMApplication.getContext(), R.drawable.revertripple));
-                if (this.isPlaying())
+                this.chartComponent.enableCalibration();
+                /*if (this.isPlaying())
                 {
                     this.chartComponent.resetCalibration();
-                }
+                }*/
             }
 
             this.isCalibrationActivated = !isCalibrationActivated;
@@ -82,7 +84,7 @@ public class ChartFragment extends BluetoothFragment implements OnMotoHistoryCli
     }
 
     @OnClick(R.id.refresh)
-    public void onClick(View view) {
+    public void onCalibrationClick(View view) {
         if (this.isPlaying())
         {
             this.chartComponent.resetCalibration();

@@ -29,6 +29,7 @@ public class TriggerManager implements OnChangeInputListener {
     private List<OnTriggerListener> onTriggerListeners = new LinkedList<>();
     private List<OnPeriodListener> onPeriodListeners = new LinkedList<>();
     private List<OnCycleListener> onCycleListeners = new LinkedList<>();
+    private boolean disabled = false;
 
 
     public TriggerManager(List<LimitedEntryList> dataSetEntries) {
@@ -40,6 +41,8 @@ public class TriggerManager implements OnChangeInputListener {
     }
 
     public void setTriggerable(boolean value) {
+        if (disabled) return;
+
         this.triggerable = value;
         this.triggeredDataSet = findMostActiveDataSet();
         this.triggeredDataSet.setTrigger(this.triggeredDataSet.getMiddleValue());
@@ -123,10 +126,24 @@ public class TriggerManager implements OnChangeInputListener {
 
     @Override
     public void onConnect() {
+        reset();
+    }
+
+    public void reset() {
+        reset(false);
+    }
+
+    public void disable() {
+        reset(true);
+    }
+
+    private void reset(boolean disabled) {
         this.triggerable = false;
         this.triggeredDataSet = null;
 
         nbTriggersSinceLastPeriod = 0;
         nbPointsSinceLastPeriod = 0;
+
+        this.disabled = disabled;
     }
 }

@@ -26,6 +26,8 @@ public class CalibrationManager implements OnTriggerListener, OnChangeInputListe
     private int triggersCount = 0;
     private long twoPeriods = 0;
 
+    private boolean disabled = false;
+
 
     public CalibrationManager(LineChart chart, TriggerManager triggerManager, List<LimitedEntryList> dataSetEntries) {
         this.mChart = chart;
@@ -36,6 +38,8 @@ public class CalibrationManager implements OnTriggerListener, OnChangeInputListe
 
     @Override
     public void onTrigger(long nbPointsSinceLastTrigger, GraphDirection direction) {
+        if (disabled) return;
+
         if (!triggersFound) {
             this.twoPeriods += nbPointsSinceLastTrigger;
             if (++this.triggersCount >= 5) {
@@ -73,7 +77,11 @@ public class CalibrationManager implements OnTriggerListener, OnChangeInputListe
         }
     }
 
-    private void reset() {
+    public void reset() {
+        reset(false);
+    }
+
+    private void reset(boolean disabled) {
         triggersFound = false;
         calibrated = false;
         setSizes(RealTimeChartComponent.NB_POINTS);
@@ -81,10 +89,16 @@ public class CalibrationManager implements OnTriggerListener, OnChangeInputListe
         mChart.getXAxis().setAxisMaximum(RealTimeChartComponent.NB_POINTS);
         triggersCount = 0;
         twoPeriods = 0;
+
+        this.disabled = disabled;
     }
 
     @Override
     public void onConnect() {
         reset();
+    }
+
+    public void disable() {
+        reset(true);
     }
 }
