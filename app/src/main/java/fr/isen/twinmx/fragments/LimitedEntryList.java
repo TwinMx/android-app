@@ -60,8 +60,7 @@ public class LimitedEntryList extends ArrayList<Entry> {
                 }
                 incrementX();
                 checkFindTrigger(entryY, this.triggerIndex);
-            }
-            else {
+            } else {
                 this.incrementTriggerIndex();
                 checkFindTrigger(entryY, this.triggerIndex);
             }
@@ -116,12 +115,11 @@ public class LimitedEntryList extends ArrayList<Entry> {
             int rangeToRemove = this.size - period;
             if (rangeToRemove > 0) {
                 this.removeRange(0, rangeToRemove);
-            }
-            else if (-rangeToRemove > 0) {
+            } else if (-rangeToRemove > 0) {
                 this.addRange(-rangeToRemove, 0);
             }
             int index = 0;
-            for(Entry e : this) {
+            for (Entry e : this) {
                 e.setX(index++);
             }
             this.size = period;
@@ -131,7 +129,7 @@ public class LimitedEntryList extends ArrayList<Entry> {
 
     private void addRange(int range, float defaultValue) {
         int currentSize = this.size();
-        for(int i = 0; i < range; i++) {
+        for (int i = 0; i < range; i++) {
             super.add(new Entry(currentSize + i - 1, defaultValue));
         }
     }
@@ -142,13 +140,14 @@ public class LimitedEntryList extends ArrayList<Entry> {
     }
 
     private void updateDirection() {
+        this.direction = getDirectionForValue(getLastAddedValue());
+    }
+
+    private GraphDirection getDirectionForValue(float value) {
         if (trigger != NO_TRIGGER) {
-            if (getLastAddedValue() > trigger) {
-                direction = GraphDirection.GOING_DOWN;
-            } else {
-                direction = GraphDirection.GOING_UP;
-            }
+            return value > trigger ? GraphDirection.GOING_DOWN : GraphDirection.GOING_UP;
         }
+        return null;
     }
 
     private boolean isGoingUp() {
@@ -203,5 +202,53 @@ public class LimitedEntryList extends ArrayList<Entry> {
 
     public void setWaitForTrigger(boolean waitForTrigger) {
         this.waitForTrigger = waitForTrigger;
+    }
+
+    public int computePeriod() {
+
+        synchronized (currentX) {
+            int beginX = -1;
+            int endX = -1;
+            int triggerCount = 0;
+            int index = 0;
+
+            GraphDirection direction = getDirectionForValue(get(0).getY());
+
+            for (Entry entry : this) {
+                float value = entry.getY();
+                if (GraphDirection.GOING_DOWN == direction && value < trigger) { //Trigger found
+                    triggerCount++;
+                    if (beginX == -1) {
+                        beginX = index;
+                    } else if (index % 2 == 0) {
+                        endX = index;
+                    }
+                    direction = GraphDirection.GOING_UP;
+                } else if (GraphDirection.GOING_UP == direction && value > trigger) { //Trigger found
+                    triggerCount++;
+                    if (beginX == -1) {
+                        beginX = index;
+                    } else if (index % 2 == 0) {
+                        endX = index;
+                    }
+                    direction = GraphDirection.GOING_DOWN;
+                }
+                index++;
+            }
+
+            if (triggerCount % 2 == 1) { //Un trigger en trop
+                triggerCount--;
+            }
+
+            triggerCount--;
+
+            try {
+                return (endX - beginX) / (triggerCount / 2);
+            } catch (Exception ex) {
+                return -1;
+            }
+        }
+
+
     }
 }

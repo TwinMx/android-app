@@ -41,6 +41,16 @@ public class CalibrationManager implements OnTriggerListener, OnChangeInputListe
         if (disabled) return;
 
         if (!triggersFound) {
+            LimitedEntryList dataSet = this.triggerManager.getTriggeredDataSet();
+            if (dataSet != null) {
+                int period = dataSet.computePeriod();
+                if (period > 0) {
+                    makeCalibration(period * 2);
+                }
+            }
+        }
+
+        if (!triggersFound) {
             this.twoPeriods += nbPointsSinceLastTrigger;
             if (++this.triggersCount >= 5) {
                 triggersFound = true;
@@ -62,6 +72,7 @@ public class CalibrationManager implements OnTriggerListener, OnChangeInputListe
     }
 
     private void makeCalibration(int nbPoints) {
+        this.twoPeriods = nbPoints;
         triggersFound = true;
         calibrated = true;
         setSizes(nbPoints);
