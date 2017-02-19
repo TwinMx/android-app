@@ -50,8 +50,6 @@ public class TMDataSets implements OnChangeInputListener, OnCycleListener, OnTri
     private TriggerManager triggerManager;
     private CalibrationManager calibrationManager;
 
-    private boolean waitForTrigger = false;
-
     public TMDataSets(Activity activity, LineChart chart, int nbGraphs, int defaultNbPoints) {
         this.activity = activity;
         this.nbGraphs = nbGraphs;
@@ -136,45 +134,49 @@ public class TMDataSets implements OnChangeInputListener, OnCycleListener, OnTri
         this.calibrationManager.reset();
     }
 
-    @Override
-    public void onCycle() {
-        waitForTrigger = true;
-        for (TMDataSet dataSet : this.dataSets) {
-            dataSet.setWaitForTrigger(true);
+    private void setWaitForTrigger(boolean value) {
+        if (this.calibratedDataSet != null) {
+            this.calibratedDataSet.setWaitForTrigger(value);
         }
     }
 
-    public void notifyOnCycle() {
-        this.triggerManager.onCycle();
+    private boolean isWaitForTrigger() {
+        return this.calibratedDataSet != null ? this.calibratedDataSet.isWaitForTrigger() : false;
+    }
+
+    @Override
+    public void onCycle() {
+        setWaitForTrigger(true);
+    }
+
+    public void notifyCycle() {
+        this.triggerManager.notifyCycle();
     }
 
     public void notifyTrigger(long nbPointsSinceLastTrigger, GraphDirection direction) {
-        this.triggerManager.onTrigger(nbPointsSinceLastTrigger, direction);
+        this.triggerManager.notifyTrigger(nbPointsSinceLastTrigger, direction);
     }
 
     @Override
     public void onTrigger(long nbPointsSinceLastTrigger, GraphDirection direction) {
-        if (waitForTrigger) {
+        if (isWaitForTrigger()) {
             if (direction == GraphDirection.GOING_UP) {
-                for (TMDataSet dataSet : this.dataSets) {
-                    dataSet.setWaitForTrigger(false);
-                }
-                waitForTrigger = false;
+                setWaitForTrigger(false);
             }
         }
     }
 
     public void addEntries(Entry... entries) {
-        if (!waitForTrigger) {
+        if (!isWaitForTrigger()) {
             int size = entries.length;
             for (int i = 0; i < size; i++) {
                 addEntry(i, entries[i]);
             }
             incrementX();
         }
-        else {
+        else { //in case we wait for a trigger (before starting again the graph at index 0, we don't add a new point but check if a trigger was reached, and increment the triggerIndex (for period computation)
             if (this.calibratedDataSet != null) {
-                waitForTrigger = this.calibratedDataSet.checkTrigger(entries[calibratedIndex].getY());
+                this.calibratedDataSet.checkTrigger(entries[calibratedIndex].getY());
             }
         }
 
@@ -313,7 +315,7 @@ public class TMDataSets implements OnChangeInputListener, OnCycleListener, OnTri
 
     private void resetX() {
         this.x = 0;
-        this.notifyOnCycle();
+        this.notifyCycle();
     }
 
 

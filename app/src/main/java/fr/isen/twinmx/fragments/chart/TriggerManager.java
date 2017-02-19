@@ -54,7 +54,7 @@ public class TriggerManager implements OnChangeInputListener {
     }
 
 
-    public void onTrigger(long nbPointsSinceLastTrigger, GraphDirection direction) {
+    public void notifyTrigger(long nbPointsSinceLastTrigger, GraphDirection direction) {
         for (OnTriggerListener l : onTriggerListeners) {
             l.onTrigger(nbPointsSinceLastTrigger, direction);
         }
@@ -63,7 +63,7 @@ public class TriggerManager implements OnChangeInputListener {
             nbTriggersSinceLastPeriod++;
             nbPointsSinceLastPeriod += nbPointsSinceLastTrigger;
             if (nbTriggersSinceLastPeriod >= 2) {
-                onPeriod();
+                notifyPeriod();
                 this.nbPointsSinceLastPeriod = 0;
                 this.nbTriggersSinceLastPeriod = 0;
             }
@@ -71,14 +71,14 @@ public class TriggerManager implements OnChangeInputListener {
 
     }
 
-    private void onPeriod() {
+    private void notifyPeriod() {
         long value = this.nbPointsSinceLastPeriod;
         for (OnPeriodListener l : onPeriodListeners) {
             l.onPeriod(value);
         }
     }
 
-    public void onCycle() {
+    public void notifyCycle() {
         if (!triggerable) {
             setTriggerable(true);
             return;

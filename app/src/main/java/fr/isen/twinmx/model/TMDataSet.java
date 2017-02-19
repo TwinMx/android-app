@@ -1,14 +1,9 @@
 package fr.isen.twinmx.model;
 
-import android.util.Log;
-
 import com.github.mikephil.charting.data.Entry;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import fr.isen.twinmx.fragments.chart.TriggerManager;
-import fr.isen.twinmx.model.GraphDirection;
 
 /**
  * Created by Clement on 26/01/2017.
@@ -167,12 +162,12 @@ public class TMDataSet extends ArrayList<Entry> {
             if (nbPointsSinceLastTrigger == NO_TRIGGER) {
                 nbPointsSinceLastTrigger = 0;
             }
-            onTrigger(nbPointsSinceLastTrigger, direction);
+            notifyTrigger(nbPointsSinceLastTrigger, direction);
             resetTriggerIndex();
         }
     }
 
-    private void onTrigger(long nbPointsSinceLastTrigger, GraphDirection direction) {
+    private void notifyTrigger(long nbPointsSinceLastTrigger, GraphDirection direction) {
         if (notifyTriggers) {
             this.dataSets.notifyTrigger(nbPointsSinceLastTrigger, direction);
         }
@@ -187,9 +182,6 @@ public class TMDataSet extends ArrayList<Entry> {
         return trigger;
     }
 
-    public void setWaitForTrigger(boolean waitForTrigger) {
-        this.waitForTrigger = waitForTrigger;
-    }
 
     public int computePeriod() {
 
@@ -236,4 +228,13 @@ public class TMDataSet extends ArrayList<Entry> {
 
 
     }
+
+    public boolean isWaitForTrigger() {
+        return waitForTrigger;
+    }
+
+    public void setWaitForTrigger(boolean waitForTrigger) {
+        this.waitForTrigger = waitForTrigger;
+    }
+
 }
