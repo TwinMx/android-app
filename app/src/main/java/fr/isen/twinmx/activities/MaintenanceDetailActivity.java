@@ -36,7 +36,7 @@ import fr.isen.twinmx.database.model.Maintenance;
 import fr.isen.twinmx.database.model.Moto;
 import fr.isen.twinmx.database.model.RealmFloat;
 import fr.isen.twinmx.database.model.RealmGraph;
-import fr.isen.twinmx.fragments.LimitedEntryList;
+import fr.isen.twinmx.model.TMDataSet;
 import fr.isen.twinmx.fragments.chart.RealTimeChartComponent;
 import io.realm.RealmList;
 
@@ -72,7 +72,7 @@ public class MaintenanceDetailActivity extends AppCompatActivity {
 
     private int maintenanceIndex;
 
-    private ArrayList<LimitedEntryList> dataSetEntries = new ArrayList<>(4);
+    private ArrayList<TMDataSet> dataSetEntries = new ArrayList<>(4);
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -188,7 +188,7 @@ public class MaintenanceDetailActivity extends AppCompatActivity {
         LineData data = graph.getData();
 
         if (data != null) {
-            LimitedEntryList entries = this.dataSetEntries.get(index);
+            TMDataSet entries = this.dataSetEntries.get(index);
             if (entries == null) {
                 entries = addNewSet(TMApplication.getContext().getString(R.string.cylinder, index + 1), index);
                 this.dataSetEntries.set(index, entries);
@@ -201,7 +201,7 @@ public class MaintenanceDetailActivity extends AppCompatActivity {
         }
     }
 
-    private LimitedEntryList addNewSet(String title, int index) {
+    private TMDataSet addNewSet(String title, int index) {
 
         int color = 0;
         switch (index) {
@@ -224,7 +224,7 @@ public class MaintenanceDetailActivity extends AppCompatActivity {
 
         color = ContextCompat.getColor(TMApplication.getContext(), color);
 
-        LimitedEntryList entries = new LimitedEntryList(RealTimeChartComponent.NB_POINTS, null);
+        TMDataSet entries = new TMDataSet(RealTimeChartComponent.NB_POINTS, null);
 
         LineDataSet dataSet = new LineDataSet(entries, title);
         dataSet.setColor(color);

@@ -1,16 +1,15 @@
 package fr.isen.twinmx.fragments.chart;
 
-import android.util.Log;
-
 import java.util.LinkedList;
 import java.util.List;
 
-import fr.isen.twinmx.fragments.LimitedEntryList;
+import fr.isen.twinmx.model.TMDataSet;
 import fr.isen.twinmx.listeners.OnChangeInputListener;
 import fr.isen.twinmx.listeners.OnCycleListener;
 import fr.isen.twinmx.listeners.OnPeriodListener;
 import fr.isen.twinmx.listeners.OnTriggerListener;
 import fr.isen.twinmx.model.GraphDirection;
+import fr.isen.twinmx.model.TMDataSets;
 
 /**
  * Created by Clement on 10/02/2017.
@@ -18,10 +17,10 @@ import fr.isen.twinmx.model.GraphDirection;
 
 public class TriggerManager implements OnChangeInputListener {
 
-    private final List<LimitedEntryList> dataSetEntries;
+    private final TMDataSets dataSets;
 
     private boolean triggerable = false; //calibration ready
-    private LimitedEntryList triggeredDataSet;
+    private TMDataSet triggeredDataSet;
 
     private int nbTriggersSinceLastPeriod = 0;
     private int nbPointsSinceLastPeriod = 0;
@@ -32,8 +31,11 @@ public class TriggerManager implements OnChangeInputListener {
     private boolean disabled = false;
 
 
-    public TriggerManager(List<LimitedEntryList> dataSetEntries) {
-        this.dataSetEntries = dataSetEntries;
+
+
+
+    public TriggerManager(TMDataSets dataSets) {
+        this.dataSets = dataSets;
     }
 
     public boolean isTriggerable() {
@@ -42,33 +44,17 @@ public class TriggerManager implements OnChangeInputListener {
 
     public void setTriggerable(boolean value) {
         if (disabled) return;
-
         this.triggerable = value;
-        this.triggeredDataSet = findMostActiveDataSet();
-        this.triggeredDataSet.setTrigger(this.triggeredDataSet.getMiddleValue());
+        TMDataSet dataSet = getTriggeredDataSet();
+        dataSet.setTrigger(dataSet.getMiddleValue());
     }
 
-    public LimitedEntryList getTriggeredDataSet() {
-        return this.triggeredDataSet;
-    }
-
-    private LimitedEntryList findMostActiveDataSet() {
-        float selectedHeight = 0;
-        LimitedEntryList selectedDataSet = null;
-        for (LimitedEntryList entries : this.dataSetEntries) {
-            if (entries == null) continue;
-            if (entries.getHeight() > selectedHeight) {
-                selectedHeight = entries.getHeight();
-                selectedDataSet = entries;
-            }
-        }
-        return selectedDataSet;
+    public TMDataSet getTriggeredDataSet() {
+        return this.dataSets.getCalibratedDataSet();
     }
 
 
-    public void onTrigger(long nbPointsSinceLastTrigger, GraphDirection direction, LimitedEntryList dataSet) {
-        if (dataSet != triggeredDataSet) return;
-
+    public void onTrigger(long nbPointsSinceLastTrigger, GraphDirection direction) {
         for (OnTriggerListener l : onTriggerListeners) {
             l.onTrigger(nbPointsSinceLastTrigger, direction);
         }
@@ -92,15 +78,13 @@ public class TriggerManager implements OnChangeInputListener {
         }
     }
 
-    public void onCycle(LimitedEntryList dataSet) {
+    public void onCycle() {
         if (!triggerable) {
             setTriggerable(true);
             return;
         }
-        if (dataSet == triggeredDataSet) {
-            for(OnCycleListener l : onCycleListeners) {
-                l.onCycle();
-            }
+        for (OnCycleListener l : onCycleListeners) {
+            l.onCycle();
         }
     }
 

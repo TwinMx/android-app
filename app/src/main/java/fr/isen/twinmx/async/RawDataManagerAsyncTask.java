@@ -9,6 +9,8 @@ import java.util.List;
 import fr.isen.twinmx.fragments.chart.RealTimeChartComponent;
 import fr.isen.twinmx.model.RawData;
 import fr.isen.twinmx.model.RawMeasures;
+import fr.isen.twinmx.model.TMDataSet;
+import fr.isen.twinmx.model.TMDataSets;
 import fr.isen.twinmx.utils.bluetooth.TMBluetoothDataManager;
 
 /**
@@ -19,23 +21,23 @@ public class RawDataManagerAsyncTask extends StoppableAsyncTask<Void, Entry, Voi
 
     private static int HEADER = 128;
     private static final int AVERAGE = 4;
+    private final TMDataSets dataSets;
     private int nbPointsInAverage = 0;
     private float[] sum = new float[]{0, 0, 0, 0};
 
     private final List<Integer> frames;
     private final RawData raw;
     private final RawMeasures rawMeasures;
-    private final RealTimeChartComponent chart;
     private final TMBluetoothDataManager dataManager;
     private int x = 0;
     private int nbResults = 0;
 
     private static final int REFRESH_RATE = 1; //200;
 
-    public RawDataManagerAsyncTask(TMBluetoothDataManager dataManager, RealTimeChartComponent chart) {
+    public RawDataManagerAsyncTask(TMBluetoothDataManager dataManager, TMDataSets dataSets) {
         this.dataManager = dataManager;
         this.frames = dataManager.getFrames();
-        this.chart = chart;
+        this.dataSets = dataSets;
         this.raw = new RawData(); //needs msb + lsb
         this.rawMeasures = new RawMeasures(4); //needs 4 measures to be completed
     }
@@ -93,7 +95,7 @@ public class RawDataManagerAsyncTask extends StoppableAsyncTask<Void, Entry, Voi
         nbPointsInAverage++;
 
         if (nbPointsInAverage >= AVERAGE) {
-            chart.addEntries(new Entry(0, sum[0] / nbPointsInAverage), new Entry(0, sum[1] / nbPointsInAverage), new Entry(0, sum[2] / nbPointsInAverage), new Entry(0, sum[3] / nbPointsInAverage));
+            dataSets.addEntries(new Entry(0, sum[0] / nbPointsInAverage), new Entry(0, sum[1] / nbPointsInAverage), new Entry(0, sum[2] / nbPointsInAverage), new Entry(0, sum[3] / nbPointsInAverage));
             for (int i = 0; i < sum.length; i++) {
                 sum[i] = 0;
             }
@@ -110,7 +112,7 @@ public class RawDataManagerAsyncTask extends StoppableAsyncTask<Void, Entry, Voi
 
     @Override
     protected void onProgressUpdate(Entry... entries) {
-        chart.refreshChart();
+        dataSets.refreshChart();
     }
 
     @Override

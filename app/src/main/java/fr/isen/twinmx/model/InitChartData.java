@@ -4,7 +4,6 @@ import android.os.Bundle;
 
 import com.github.mikephil.charting.data.Entry;
 
-import fr.isen.twinmx.fragments.LimitedEntryList;
 import fr.isen.twinmx.fragments.chart.TriggerManager;
 
 /**
@@ -61,10 +60,10 @@ public class InitChartData {
         return graphs;
     }
 
-    public LimitedEntryList getDataSetEntries(int dataSetIndex, TriggerManager triggerManager) {
+    public TMDataSet getDataSetEntries(int dataSetIndex, TMDataSets dataSets) {
         try {
             float[] values = graphs[dataSetIndex];
-            LimitedEntryList entries = new LimitedEntryList(values.length, triggerManager);
+            TMDataSet entries = new TMDataSet(values.length, dataSets);
 
             int i = 0;
             for(Entry entry : entries) {
