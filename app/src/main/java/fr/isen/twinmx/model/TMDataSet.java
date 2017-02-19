@@ -202,7 +202,6 @@ public class TMDataSet extends ArrayList<Entry> {
                 this.previousGraphDirection = null;
             }
         }
-        Log.d("abc", "nbPoints: " + nbPointsSinceLastTrigger + " | direction:" + direction);
         previousGraphDirection = direction;
 
     }
