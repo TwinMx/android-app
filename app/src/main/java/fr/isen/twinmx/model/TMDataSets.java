@@ -3,6 +3,7 @@ package fr.isen.twinmx.model;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.Entry;
@@ -81,23 +82,6 @@ public class TMDataSets implements OnChangeInputListener, OnCycleListener, OnTri
             initDataSets();
         } else {
             initDataSets();
-/*            int nbDataSets = chartBundle.getNbDataSets();
-            int nbPoints = chartBundle.getNbPoints();
-
-            if (nbDataSets < this.nbGraphs || nbPoints != this.nbPoints) {
-
-            }
-
-            if (chartBundle.hasGraphs()) {
-                for (int index = 0; index < nbGraphs; index++) {
-                    TMDataSet entries = addNewSet(this.activity.getString(R.string.cylinder, index + 1), index, chartBundle.getDataSetEntries(index, this));
-                    dataSets.add(entries);
-                }
-            }
-
-            if (chartBundle.getCalibrationWidth() != -1) {
-                this.calibrationManager.setNbPoints(chartBundle.getCalibrationWidth());
-            }*/
         }
     }
 
@@ -144,19 +128,19 @@ public class TMDataSets implements OnChangeInputListener, OnCycleListener, OnTri
         this.calibrationManager.reset();
     }
 
-    private void setWaitForPeriod(boolean value) {
-        if (this.calibratedDataSet != null) {
+    private void setWaitForTrigger(boolean value) {
+        if (this.getCalibratedDataSet() != null) {
             this.calibratedDataSet.setWaitForTrigger(value);
         }
     }
 
     private boolean isWaitForTrigger() {
-        return this.calibratedDataSet != null ? this.calibratedDataSet.isWaitForTrigger() : false;
+        return this.calibratedDataSet != null && this.calibratedDataSet.isWaitForTrigger();
     }
 
     @Override
     public void onCycle() {
-        setWaitForPeriod(true);
+        setWaitForTrigger(true);
     }
 
     public void notifyCycle() {
@@ -171,16 +155,19 @@ public class TMDataSets implements OnChangeInputListener, OnCycleListener, OnTri
     public void onTrigger(long nbPointsSinceLastTrigger, GraphDirection direction) {
 /*        if (isWaitForTrigger()) {
             if (direction == GraphDirection.GOING_UP) {
-                setWaitForPeriod(false);
+                setWaitForTrigger(false);
             }
         }*/
+        if (isWaitForTrigger()) {
+            if (direction == GraphDirection.GOING_UP) {
+                setWaitForTrigger(false);
+            }
+        }
     }
 
     @Override
     public void onPeriod(long nbPointsSinceLastPeriod) {
-        if (isWaitForTrigger()) {
-            setWaitForPeriod(false);
-        }
+
     }
 
     public void addEntries(Entry... entries) {
@@ -236,6 +223,7 @@ public class TMDataSets implements OnChangeInputListener, OnCycleListener, OnTri
     public TMDataSet getCalibratedDataSet() {
         if (calibratedDataSet == null) {
             findMostActiveDataSet();
+            Log.d("Most active", ""+calibratedIndex);
         }
         return calibratedDataSet;
     }

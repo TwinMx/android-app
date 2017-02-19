@@ -196,8 +196,8 @@ public class TMDataSet extends ArrayList<Entry> {
         else {
             if (notifyTriggers) {
                 nbPointsSinceLastTrigger /= 2;
-                GraphDirection opposite = direction == GraphDirection.GOING_UP ? GraphDirection.GOING_DOWN : GraphDirection.GOING_UP;
-                this.dataSets.notifyTrigger(nbPointsSinceLastTrigger, opposite);
+                //GraphDirection opposite = direction == GraphDirection.GOING_UP ? GraphDirection.GOING_DOWN : GraphDirection.GOING_UP;
+                this.dataSets.notifyTrigger(nbPointsSinceLastTrigger, direction);
                 this.dataSets.notifyTrigger(nbPointsSinceLastTrigger, direction);
                 this.previousGraphDirection = null;
             }
