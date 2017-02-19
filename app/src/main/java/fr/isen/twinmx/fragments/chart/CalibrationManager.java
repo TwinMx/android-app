@@ -96,7 +96,13 @@ public class CalibrationManager implements OnPeriodListener, OnChangeInputListen
         return nbPoints;
     }
 
+    private boolean isComputing = false;
+
     public void recalibrate() {
-        computeCalibration();
+        if (!isComputing) {
+            isComputing = true;
+            computeCalibration();
+            isComputing = false;
+        }
     }
 }
