@@ -53,7 +53,6 @@ public class RealTimeChartComponent implements Observer {
     private void initChartSettings() {
         mChart.getAxisRight().setEnabled(false);
         mChart.getXAxis().setDrawLabels(false);
-
         mChart.setDrawGridBackground(false);
         mChart.setDescription(new Description() {{
             setText("Pression (mBar)");

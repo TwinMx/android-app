@@ -14,12 +14,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fr.isen.twinmx.R;
+import fr.isen.twinmx.database.model.RealmFloat;
+import fr.isen.twinmx.database.model.RealmGraph;
 import fr.isen.twinmx.fragments.chart.CalibrationManager;
 import fr.isen.twinmx.fragments.chart.TriggerManager;
 import fr.isen.twinmx.listeners.OnChangeInputListener;
 import fr.isen.twinmx.listeners.OnCycleListener;
 import fr.isen.twinmx.listeners.OnPeriodListener;
 import fr.isen.twinmx.listeners.OnTriggerListener;
+import io.realm.RealmList;
 
 /**
  * Created by Clement on 19/02/2017.
@@ -72,6 +75,21 @@ public class TMDataSets implements OnChangeInputListener, OnCycleListener, OnTri
         for (int i = 0; i < resources.length; i++) {
             this.colors[i] = ContextCompat.getColor(this.activity, resources[i]);
         }
+    }
+
+
+    public void load(RealmList<RealmGraph> graphs) {
+
+        chart.setData(new LineData());
+        this.nbPoints = graphs.get(0).getMeasures().size();
+
+        for(int i = 0; i < graphs.size(); i++) {
+            RealmGraph graph = graphs.get(i);
+            TMDataSet dataSet = addNewSet(this.activity.getString(R.string.cylinder, i + 1), i, new TMDataSet(graph, this));
+            dataSets.add(dataSet);
+        }
+
+        this.refreshChart();
     }
 
     public void load(ChartBundle chartBundle) {

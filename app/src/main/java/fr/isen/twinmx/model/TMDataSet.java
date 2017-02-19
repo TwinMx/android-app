@@ -8,6 +8,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import fr.isen.twinmx.database.model.RealmFloat;
+import fr.isen.twinmx.database.model.RealmGraph;
+
 /**
  * Created by Clement on 26/01/2017.
  */
@@ -37,6 +40,17 @@ public class TMDataSet extends ArrayList<Entry> {
         this.dataSets = dataSets;
         for (int i = 0; i < size; i++) {
             super.add(new Entry(i, 0));
+        }
+        this.notifyTriggers = false;
+    }
+
+    public TMDataSet(RealmGraph graph, TMDataSets dataSets) {
+        super(graph.getMeasures().size());
+        this.size = graph.getMeasures().size();
+        this.dataSets = dataSets;
+        int i = 0;
+        for(RealmFloat value : graph.getMeasures()) {
+            super.add(new Entry(i++, value.getValue()));
         }
         this.notifyTriggers = false;
     }
@@ -94,7 +108,12 @@ public class TMDataSet extends ArrayList<Entry> {
     }
 
     public List<Entry> toList() {
-        return this;
+        List<Entry> entries = new ArrayList<>(this.size());
+        int x = 0;
+        for(Entry entry : this) {
+            entries.add(new Entry(x++, entry.getY()));
+        }
+        return entries;
     }
 
     public int getPreviousX() {
