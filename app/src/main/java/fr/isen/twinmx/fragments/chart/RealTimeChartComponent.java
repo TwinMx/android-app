@@ -7,17 +7,14 @@ import android.os.Bundle;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Description;
-import com.github.mikephil.charting.data.LineData;
 
-import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
 import fr.isen.twinmx.async.RawDataManagerAsyncTask;
 import fr.isen.twinmx.fragments.ChartFragment;
 import fr.isen.twinmx.model.AcquisitionSaveRequest;
-import fr.isen.twinmx.model.TMDataSet;
-import fr.isen.twinmx.model.InitChartData;
+import fr.isen.twinmx.model.ChartBundle;
 import fr.isen.twinmx.model.TMDataSets;
 import fr.isen.twinmx.utils.bluetooth.TMBluetooth;
 
@@ -29,18 +26,18 @@ public class RealTimeChartComponent implements Observer {
 
     private final Activity activity;
     private final LineChart mChart;
-    private final InitChartData initChartData;
+    private final ChartBundle chartBundle;
     private TMDataSets dataSets;
     private TMBluetooth mBluetooth;
     private RawDataManagerAsyncTask rawDataManagerAsyncTask;
     private ChartFragment chartFragment;
 
-    public RealTimeChartComponent(Activity activity, ChartFragment chartFragment, LineChart chart, TMBluetooth bluetooth, InitChartData initChartData) {
+    public RealTimeChartComponent(Activity activity, ChartFragment chartFragment, LineChart chart, TMBluetooth bluetooth, ChartBundle chartBundle) {
         this.activity = activity;
         this.mChart = chart;
         this.chartFragment = chartFragment;
         this.mBluetooth = bluetooth;
-        this.initChartData = initChartData;
+        this.chartBundle = chartBundle;
     }
 
     /**
@@ -64,7 +61,7 @@ public class RealTimeChartComponent implements Observer {
         mChart.getLegend().setEnabled(false);
         mChart.getAxisRight().setAxisMinimum(0);
 
-        dataSets.load(initChartData);
+        dataSets.load(chartBundle);
 
         this.mBluetooth.addOnChangeInputListener(this.dataSets);
     }

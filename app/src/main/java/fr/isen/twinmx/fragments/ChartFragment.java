@@ -33,13 +33,12 @@ import fr.isen.twinmx.R;
 import fr.isen.twinmx.fragments.chart.RealTimeChartComponent;
 import fr.isen.twinmx.fragments.chart.TriggerManager;
 import fr.isen.twinmx.listeners.OnPeriodListener;
-import fr.isen.twinmx.model.InitChartData;
+import fr.isen.twinmx.model.ChartBundle;
 import fr.isen.twinmx.TMApplication;
 import fr.isen.twinmx.database.MotoRepository;
 import fr.isen.twinmx.database.model.Moto;
 import fr.isen.twinmx.listeners.OnMotoHistoryClickListener;
 import fr.isen.twinmx.model.AcquisitionSaveRequest;
-import fr.isen.twinmx.model.TMDataSet;
 import fr.isen.twinmx.model.TMDataSets;
 import fr.isen.twinmx.ui.adapters.DialogMotoAdapter;
 import fr.isen.twinmx.utils.bluetooth.TMBluetooth;
@@ -66,15 +65,13 @@ public class ChartFragment extends BluetoothFragment implements OnMotoHistoryCli
 
     @OnLongClick(R.id.refresh)
     public boolean onLongCalibrationClick(View view) {
-        if (view instanceof ImageView)
-        {
+        if (view instanceof ImageView) {
             ImageView v = (ImageView) view;
 
             if (isCalibrationActivated) {
                 this.chartComponent.disableCalibration();
                 v.setBackground(ContextCompat.getDrawable(TMApplication.getContext(), R.drawable.greyripple));
-            }
-            else {
+            } else {
                 v.setBackground(ContextCompat.getDrawable(TMApplication.getContext(), R.drawable.revertripple));
                 this.chartComponent.enableCalibration();
             }
@@ -86,11 +83,9 @@ public class ChartFragment extends BluetoothFragment implements OnMotoHistoryCli
 
     @OnClick(R.id.refresh)
     public void onCalibrationClick(View view) {
-        if (this.isPlaying())
-        {
+        if (this.isPlaying()) {
             this.chartComponent.resetCalibration();
-            if (!this.isCalibrationActivated)
-            {
+            if (!this.isCalibrationActivated) {
                 ImageView v = (ImageView) view;
                 v.setBackground(ContextCompat.getDrawable(TMApplication.getContext(), R.drawable.revertripple));
                 this.isCalibrationActivated = true;
@@ -205,14 +200,7 @@ public class ChartFragment extends BluetoothFragment implements OnMotoHistoryCli
                 this,
                 chart,
                 getBluetooth(),
-                savedInstanceState != null ?
-                        new InitChartData(savedInstanceState,
-                                TMDataSets.STATE_NB_GRAPHS,
-                                TMDataSets.STATE_GRAPH_SIZE,
-                                TMDataSets.STATE_GRAPH,
-                                TMDataSets.STATE_TRIGGER,
-                                TMDataSets.STATE_CALIBRATION_WIDTH)
-                        : null);
+                savedInstanceState != null ? new ChartBundle(savedInstanceState) : null);
 
 
         this.chartComponent.onCreate();
@@ -370,7 +358,7 @@ public class ChartFragment extends BluetoothFragment implements OnMotoHistoryCli
         // TwinMax send the data every 600us and we display the data every 4 received data
         double period = nbPointsSinceLastPeriod * 600 * 4;
         // We need to convert us to min
-        period = period * (0.000001/60);
+        period = period * (0.000001 / 60);
 
         // We need turn by minute and one period equals 2 turns
         final double compte_tour = 2 / period;

@@ -20,7 +20,6 @@ public class TriggerManager implements OnChangeInputListener {
     private final TMDataSets dataSets;
 
     private boolean triggerable = false; //calibration ready
-    private TMDataSet triggeredDataSet;
 
     private int nbTriggersSinceLastPeriod = 0;
     private int nbPointsSinceLastPeriod = 0;
@@ -41,6 +40,10 @@ public class TriggerManager implements OnChangeInputListener {
     public void setTriggerable(boolean value) {
         if (disabled) return;
         this.triggerable = value;
+        this.updateTrigger();
+    }
+
+    public void updateTrigger() {
         TMDataSet dataSet = getTriggeredDataSet();
         if (dataSet != null) {
             dataSet.setTrigger(dataSet.getMiddleValue());
@@ -121,7 +124,6 @@ public class TriggerManager implements OnChangeInputListener {
 
     private void reset(boolean disabled) {
         this.triggerable = false;
-        this.triggeredDataSet = null;
 
         nbTriggersSinceLastPeriod = 0;
         nbPointsSinceLastPeriod = 0;
@@ -134,4 +136,6 @@ public class TriggerManager implements OnChangeInputListener {
         this.onTriggerListeners.clear();
         this.onPeriodListeners.clear();
     }
+
+
 }

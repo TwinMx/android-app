@@ -1,10 +1,13 @@
 package fr.isen.twinmx.fragments.chart;
 
+import android.util.Log;
+
 import com.github.mikephil.charting.charts.LineChart;
 
 import java.util.List;
 
 import fr.isen.twinmx.fragments.ChartFragment;
+import fr.isen.twinmx.model.LimitedLinkedList;
 import fr.isen.twinmx.model.TMDataSet;
 import fr.isen.twinmx.listeners.OnChangeInputListener;
 import fr.isen.twinmx.listeners.OnPeriodListener;
@@ -26,6 +29,7 @@ public class CalibrationManager implements OnPeriodListener, OnChangeInputListen
     private boolean disabled = false;
     private long nbPoints = TMDataSets.NB_POINTS;
 
+    private LimitedLinkedList<Long> periods = new LimitedLinkedList<>(NB_PERIODS_DISPLAY);
 
     public CalibrationManager(LineChart chart, TMDataSets dataSets) {
         this.mChart = chart;
@@ -36,6 +40,8 @@ public class CalibrationManager implements OnPeriodListener, OnChangeInputListen
 
     @Override
     public void onPeriod(long nbPointsSinceLastPeriod) {
+        periods.add(nbPointsSinceLastPeriod);
+
         if (disabled) return;
 
         if (!calibrated) {
@@ -49,6 +55,12 @@ public class CalibrationManager implements OnPeriodListener, OnChangeInputListen
     }
 
     private void computeCalibration() {
+        if (periods.size() >= 2) {
+            int period = (int) (periods.get(periods.size() - 1) + periods.get(periods.size() - 2));
+            makeCalibration(period);
+            return;
+        }
+
         TMDataSet dataSet = this.triggerManager.getTriggeredDataSet();
         if (dataSet != null) {
             int period = dataSet.computePeriod();
@@ -104,5 +116,9 @@ public class CalibrationManager implements OnPeriodListener, OnChangeInputListen
             computeCalibration();
             isComputing = false;
         }
+    }
+
+    public boolean isCalibrated() {
+        return calibrated;
     }
 }

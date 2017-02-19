@@ -1,9 +1,12 @@
 package fr.isen.twinmx.model;
 
+import android.util.Log;
+
 import com.github.mikephil.charting.data.Entry;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Created by Clement on 26/01/2017.
@@ -25,6 +28,8 @@ public class TMDataSet extends ArrayList<Entry> {
 
     private static int MIN_TRIGGER_DISTANCE = 10;
     private boolean waitForTrigger = false;
+
+    public static final Object lock = new Object();
 
     public TMDataSet(int size, TMDataSets dataSets) {
         super(size);
@@ -92,10 +97,15 @@ public class TMDataSet extends ArrayList<Entry> {
         return this;
     }
 
-    public float getLastAddedValue() {
+    public int getPreviousX() {
+        int x = getX() - 1;
+        return x >= 0 ? x : size - 1;
+    }
+
+/*    public float getLastAddedValue() {
         int x = getX() - 1;
         return x >= 0 ? get(x).getY() : get(size - 1).getY();
-    }
+    }*/
 
     public void setSize(int period) {
         int rangeToRemove = this.size - period;
@@ -121,11 +131,11 @@ public class TMDataSet extends ArrayList<Entry> {
     public void setTrigger(float trigger) {
         this.trigger = trigger;
         this.notifyTriggers = true;
-        this.updateDirection();
+        this.updateDirection(getPreviousX());
     }
 
-    private void updateDirection() {
-        this.direction = getDirectionForValue(getLastAddedValue());
+    private void updateDirection(int x) {
+        this.direction = getDirectionForValue(get(x).getY());
     }
 
     private GraphDirection getDirectionForValue(float value) {
@@ -135,26 +145,34 @@ public class TMDataSet extends ArrayList<Entry> {
         return null;
     }
 
-    private boolean isGoingUp() {
+    private boolean isGoingUp(GraphDirection direction) {
         return direction == GraphDirection.GOING_UP;
     }
 
-    private boolean isGoingDown() {
+    private boolean isGoingDown(GraphDirection direction) {
         return direction == GraphDirection.GOING_DOWN;
     }
 
     private boolean checkFindTrigger(float value, long triggerIndex) {
-        //float lastAddedValue = get(x).getY();
-        if (isGoingDown() && value < trigger) {
-            triggerFound(triggerIndex, this.direction);
-            this.direction = GraphDirection.GOING_UP;
-            return true;
-        } else if (isGoingUp() && value > trigger) {
-            triggerFound(triggerIndex, this.direction);
-            this.direction = GraphDirection.GOING_DOWN;
-            return true;
+        synchronized (lock) {
+            GraphDirection direction = this.direction;
+            if (direction == null) {
+                updateDirection(getPreviousX());
+                direction = this.direction;
+            }
+
+            if (isGoingDown(direction) && value <= trigger) {
+                this.direction = GraphDirection.GOING_UP;
+                triggerFound(triggerIndex, direction);
+                return true;
+            } else if (isGoingUp(direction) && value >= trigger) {
+                this.direction = GraphDirection.GOING_DOWN;
+                triggerFound(triggerIndex, direction);
+                return true;
+            }
+
+            return false;
         }
-        return false;
     }
 
     private void triggerFound(long nbPointsSinceLastTrigger, GraphDirection direction) {
@@ -167,10 +185,26 @@ public class TMDataSet extends ArrayList<Entry> {
         }
     }
 
+    private GraphDirection previousGraphDirection = null;
+
     private void notifyTrigger(long nbPointsSinceLastTrigger, GraphDirection direction) {
-        if (notifyTriggers) {
-            this.dataSets.notifyTrigger(nbPointsSinceLastTrigger, direction);
+        if (previousGraphDirection != direction) {
+            if (notifyTriggers) {
+                this.dataSets.notifyTrigger(nbPointsSinceLastTrigger, direction);
+            }
         }
+        else {
+            if (notifyTriggers) {
+                nbPointsSinceLastTrigger /= 2;
+                GraphDirection opposite = direction == GraphDirection.GOING_UP ? GraphDirection.GOING_DOWN : GraphDirection.GOING_UP;
+                this.dataSets.notifyTrigger(nbPointsSinceLastTrigger, opposite);
+                this.dataSets.notifyTrigger(nbPointsSinceLastTrigger, direction);
+                this.previousGraphDirection = null;
+            }
+        }
+        Log.d("abc", "nbPoints: " + nbPointsSinceLastTrigger + " | direction:" + direction);
+        previousGraphDirection = direction;
+
     }
 
     private boolean isTriggerOk(long nbPointsSinceLastTrigger) {
@@ -182,6 +216,9 @@ public class TMDataSet extends ArrayList<Entry> {
         return trigger;
     }
 
+    public void setWaitForTrigger(boolean waitForTrigger) {
+        this.waitForTrigger = waitForTrigger;
+    }
 
     public int computePeriod() {
 
@@ -232,9 +269,4 @@ public class TMDataSet extends ArrayList<Entry> {
     public boolean isWaitForTrigger() {
         return waitForTrigger;
     }
-
-    public void setWaitForTrigger(boolean waitForTrigger) {
-        this.waitForTrigger = waitForTrigger;
-    }
-
 }

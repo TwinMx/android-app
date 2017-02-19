@@ -17,26 +17,22 @@ import fr.isen.twinmx.fragments.chart.CalibrationManager;
 import fr.isen.twinmx.fragments.chart.TriggerManager;
 import fr.isen.twinmx.listeners.OnChangeInputListener;
 import fr.isen.twinmx.listeners.OnCycleListener;
+import fr.isen.twinmx.listeners.OnPeriodListener;
 import fr.isen.twinmx.listeners.OnTriggerListener;
 
 /**
  * Created by Clement on 19/02/2017.
  */
 
-public class TMDataSets implements OnChangeInputListener, OnCycleListener, OnTriggerListener {
+public class TMDataSets implements OnChangeInputListener, OnCycleListener, OnTriggerListener, OnPeriodListener {
 
     public static int NB_POINTS = 200;
 
-    public static final String STATE_NB_GRAPHS = "STATE_NB_GRAPHS";
-    public static final String STATE_GRAPH = "STATE_GRAPH_";
-    public static final String STATE_GRAPH_SIZE = "STATE_GRAPH_SIZE";
-    public static final String STATE_TRIGGER = "STATE_TRIGGER";
-    public static final String STATE_CALIBRATION_WIDTH = "STATE_CALIBRATION_WIDTH";
 
     private final int nbGraphs;
     private final int defaultNbPoints;
     private int nbPoints;
-    private final List<TMDataSet> dataSets;
+    private List<TMDataSet> dataSets;
 
     private int calibratedIndex = -1;
     private TMDataSet calibratedDataSet = null;
@@ -65,9 +61,9 @@ public class TMDataSets implements OnChangeInputListener, OnCycleListener, OnTri
         this.calibrationManager = new CalibrationManager(chart, this);
         this.triggerManager.addOnCycleListener(this);
         this.triggerManager.addOnTriggerListener(this);
+        this.triggerManager.addOnPeriodListener(this);
 
-        this.dataSets = initDataSets();
-
+        this.dataSets = new ArrayList<>(nbGraphs);
     }
 
     private void initColors(int... resources) {
@@ -77,16 +73,39 @@ public class TMDataSets implements OnChangeInputListener, OnCycleListener, OnTri
         }
     }
 
-    private List<TMDataSet> initDataSets() {
+    public void load(ChartBundle chartBundle) {
 
         chart.setData(new LineData());
 
-        List<TMDataSet> dataSets = new ArrayList<>(nbGraphs);
+        if (chartBundle == null) {
+            initDataSets();
+        } else {
+            initDataSets();
+/*            int nbDataSets = chartBundle.getNbDataSets();
+            int nbPoints = chartBundle.getNbPoints();
+
+            if (nbDataSets < this.nbGraphs || nbPoints != this.nbPoints) {
+
+            }
+
+            if (chartBundle.hasGraphs()) {
+                for (int index = 0; index < nbGraphs; index++) {
+                    TMDataSet entries = addNewSet(this.activity.getString(R.string.cylinder, index + 1), index, chartBundle.getDataSetEntries(index, this));
+                    dataSets.add(entries);
+                }
+            }
+
+            if (chartBundle.getCalibrationWidth() != -1) {
+                this.calibrationManager.setNbPoints(chartBundle.getCalibrationWidth());
+            }*/
+        }
+    }
+
+    private void initDataSets() {
         for (int i = 0; i < nbGraphs; i++) {
             TMDataSet dataSet = addNewSet(this.activity.getString(R.string.cylinder, i + 1), i, null);
             dataSets.add(dataSet);
         }
-        return dataSets;
     }
 
     public int getNbGraphs() {
@@ -125,7 +144,7 @@ public class TMDataSets implements OnChangeInputListener, OnCycleListener, OnTri
         this.calibrationManager.reset();
     }
 
-    private void setWaitForTrigger(boolean value) {
+    private void setWaitForPeriod(boolean value) {
         if (this.calibratedDataSet != null) {
             this.calibratedDataSet.setWaitForTrigger(value);
         }
@@ -137,7 +156,7 @@ public class TMDataSets implements OnChangeInputListener, OnCycleListener, OnTri
 
     @Override
     public void onCycle() {
-        setWaitForTrigger(true);
+        setWaitForPeriod(true);
     }
 
     public void notifyCycle() {
@@ -150,10 +169,17 @@ public class TMDataSets implements OnChangeInputListener, OnCycleListener, OnTri
 
     @Override
     public void onTrigger(long nbPointsSinceLastTrigger, GraphDirection direction) {
-        if (isWaitForTrigger()) {
+/*        if (isWaitForTrigger()) {
             if (direction == GraphDirection.GOING_UP) {
-                setWaitForTrigger(false);
+                setWaitForPeriod(false);
             }
+        }*/
+    }
+
+    @Override
+    public void onPeriod(long nbPointsSinceLastPeriod) {
+        if (isWaitForTrigger()) {
+            setWaitForPeriod(false);
         }
     }
 
@@ -164,8 +190,7 @@ public class TMDataSets implements OnChangeInputListener, OnCycleListener, OnTri
                 addEntry(i, entries[i]);
             }
             incrementX();
-        }
-        else { //in case we wait for a trigger (before starting again the graph at index 0, we don't add a new point but check if a trigger was reached, and increment the triggerIndex (for period computation)
+        } else { //in case we wait for a trigger (before starting again the graph at index 0, we don't add a new point but check if a trigger was reached, and increment the triggerIndex (for period computation)
             if (this.calibratedDataSet != null) {
                 this.calibratedDataSet.checkTrigger(entries[calibratedIndex].getY());
             }
@@ -234,30 +259,21 @@ public class TMDataSets implements OnChangeInputListener, OnCycleListener, OnTri
 
 
     public void recalibrate() {
+        this.calibratedDataSet = null;
+        this.triggerManager.updateTrigger();
         this.calibrationManager.recalibrate();
     }
 
     public void disableCalibration() {
+        this.calibratedDataSet = null;
         this.calibrationManager.disable();
         this.triggerManager.disable();
     }
 
     public void enableCalibration() {
+        this.calibratedDataSet = null;
         this.calibrationManager.reset();
         this.triggerManager.reset();
-    }
-
-    public float[] toFloatArray(int datasetIndex) {
-        TMDataSet entries = this.dataSets.get(datasetIndex);
-        if (entries != null && entries.size() > 0) {
-            int size = entries.size();
-            float[] result = new float[size];
-            for (int i = 0; i < size; i++) {
-                result[i] = entries.get(i).getY();
-            }
-            return result;
-        }
-        return null;
     }
 
 
@@ -274,41 +290,11 @@ public class TMDataSets implements OnChangeInputListener, OnCycleListener, OnTri
     }
 
     public void save(Bundle outState) {
-        int nbGraphs = this.getNbGraphs();
-        outState.putInt(STATE_NB_GRAPHS, nbGraphs);
-        outState.putInt(STATE_GRAPH_SIZE, this.getNbPoints());
-        for (int i = 0; i < nbGraphs; i++) {
-            outState.putFloatArray(STATE_GRAPH + i, this.toFloatArray(i));
-        }
-        try {
-            outState.putFloat(STATE_TRIGGER, this.calibratedDataSet.getTrigger());
-        } catch(Exception ex) {
-            //
-        }
-
-        try {
-            outState.putLong(STATE_CALIBRATION_WIDTH, this.calibrationManager.getNbPoints());
-        } catch(Exception ex) {
-            //
-        }
+        ChartBundle.putNbGraphs(outState, getNbGraphs());
+        ChartBundle.putNbPoints(outState, getNbPoints());
+        ChartBundle.putGraphs(outState, dataSets);
     }
 
-    public void load(InitChartData initChartData) {
-
-        if (initChartData != null && initChartData.hasGraphs()) {
-
-            chart.setData(new LineData());
-
-            for (int index = 0; index < 4; index++) {
-                TMDataSet entries = addNewSet(this.activity.getString(R.string.cylinder, index + 1), index, initChartData.getDataSetEntries(index, this));
-                dataSets.set(index, entries);
-            }
-        }
-
-        if (initChartData != null && initChartData.getCalibrationWidth() != -1) {
-            this.calibrationManager.setNbPoints(initChartData.getCalibrationWidth());
-        }
-    }
 
     public int getX() {
         return x;
@@ -330,4 +316,6 @@ public class TMDataSets implements OnChangeInputListener, OnCycleListener, OnTri
     public void removeListeners() {
         this.triggerManager.removeListeners();
     }
+
+
 }
