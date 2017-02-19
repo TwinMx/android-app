@@ -27,7 +27,6 @@ import fr.isen.twinmx.utils.bluetooth.TMBluetooth;
 
 public class RealTimeChartComponent implements Observer {
 
-    public static int NB_POINTS = 200;
     private final Activity activity;
     private final LineChart mChart;
     private final InitChartData initChartData;
@@ -48,8 +47,7 @@ public class RealTimeChartComponent implements Observer {
      * onCreate
      **/
     public void onCreate() {
-        mChart.setData(new LineData());
-        this.dataSets = new TMDataSets(activity, mChart, 4, NB_POINTS);
+        this.dataSets = new TMDataSets(activity, mChart, 4, TMDataSets.NB_POINTS);
         initChartSettings();
     }
 
@@ -153,5 +151,9 @@ public class RealTimeChartComponent implements Observer {
 
     public void save(Bundle outState) {
         this.dataSets.save(outState);
+    }
+
+    public void onStop() {
+        this.dataSets.removeListeners();
     }
 }

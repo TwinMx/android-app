@@ -261,6 +261,12 @@ public class ChartFragment extends BluetoothFragment implements OnMotoHistoryCli
     }
 
     @Override
+    public void onStop() {
+        super.onStop();
+        this.chartComponent.onStop();
+    }
+
+    @Override
     public CoordinatorLayout getCoordinatorLayout() {
         return null;
     }

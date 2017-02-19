@@ -25,6 +25,8 @@ import fr.isen.twinmx.listeners.OnTriggerListener;
 
 public class TMDataSets implements OnChangeInputListener, OnCycleListener, OnTriggerListener {
 
+    public static int NB_POINTS = 200;
+
     public static final String STATE_NB_GRAPHS = "STATE_NB_GRAPHS";
     public static final String STATE_GRAPH = "STATE_GRAPH_";
     public static final String STATE_GRAPH_SIZE = "STATE_GRAPH_SIZE";
@@ -76,26 +78,15 @@ public class TMDataSets implements OnChangeInputListener, OnCycleListener, OnTri
     }
 
     private List<TMDataSet> initDataSets() {
+
+        chart.setData(new LineData());
+
         List<TMDataSet> dataSets = new ArrayList<>(nbGraphs);
         for (int i = 0; i < nbGraphs; i++) {
             TMDataSet dataSet = addNewSet(this.activity.getString(R.string.cylinder, i + 1), i, null);
             dataSets.add(dataSet);
         }
         return dataSets;
-    }
-
-    public void load(InitChartData initChartData) {
-
-        if (initChartData != null && initChartData.hasGraphs()) {
-            for (int index = 0; index < 4; index++) {
-                TMDataSet entries = addNewSet(this.activity.getString(R.string.cylinder, index + 1), index, initChartData.getDataSetEntries(index, this));
-                dataSets.set(index, entries);
-            }
-        }
-
-        if (initChartData != null && initChartData.getCalibrationWidth() != -1) {
-            this.calibrationManager.setNbPoints(initChartData.getCalibrationWidth());
-        }
     }
 
     public int getNbGraphs() {
@@ -302,6 +293,23 @@ public class TMDataSets implements OnChangeInputListener, OnCycleListener, OnTri
         }
     }
 
+    public void load(InitChartData initChartData) {
+
+        if (initChartData != null && initChartData.hasGraphs()) {
+
+            chart.setData(new LineData());
+
+            for (int index = 0; index < 4; index++) {
+                TMDataSet entries = addNewSet(this.activity.getString(R.string.cylinder, index + 1), index, initChartData.getDataSetEntries(index, this));
+                dataSets.set(index, entries);
+            }
+        }
+
+        if (initChartData != null && initChartData.getCalibrationWidth() != -1) {
+            this.calibrationManager.setNbPoints(initChartData.getCalibrationWidth());
+        }
+    }
+
     public int getX() {
         return x;
     }
@@ -319,4 +327,7 @@ public class TMDataSets implements OnChangeInputListener, OnCycleListener, OnTri
     }
 
 
+    public void removeListeners() {
+        this.triggerManager.removeListeners();
+    }
 }

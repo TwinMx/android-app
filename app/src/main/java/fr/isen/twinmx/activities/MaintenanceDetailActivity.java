@@ -38,6 +38,7 @@ import fr.isen.twinmx.database.model.RealmFloat;
 import fr.isen.twinmx.database.model.RealmGraph;
 import fr.isen.twinmx.model.TMDataSet;
 import fr.isen.twinmx.fragments.chart.RealTimeChartComponent;
+import fr.isen.twinmx.model.TMDataSets;
 import io.realm.RealmList;
 
 /**
@@ -224,7 +225,7 @@ public class MaintenanceDetailActivity extends AppCompatActivity {
 
         color = ContextCompat.getColor(TMApplication.getContext(), color);
 
-        TMDataSet entries = new TMDataSet(RealTimeChartComponent.NB_POINTS, null);
+        TMDataSet entries = new TMDataSet(TMDataSets.NB_POINTS, null);
 
         LineDataSet dataSet = new LineDataSet(entries, title);
         dataSet.setColor(color);

@@ -24,7 +24,7 @@ public class CalibrationManager implements OnPeriodListener, OnChangeInputListen
 
     private boolean calibrated = false;
     private boolean disabled = false;
-    private long nbPoints = RealTimeChartComponent.NB_POINTS;
+    private long nbPoints = TMDataSets.NB_POINTS;
 
 
     public CalibrationManager(LineChart chart, TMDataSets dataSets) {
@@ -76,9 +76,9 @@ public class CalibrationManager implements OnPeriodListener, OnChangeInputListen
 
     private void reset(boolean disabled) {
         calibrated = false;
-        setSizes(RealTimeChartComponent.NB_POINTS);
+        setSizes(TMDataSets.NB_POINTS);
         mChart.getXAxis().setAxisMinimum(0);
-        mChart.getXAxis().setAxisMaximum(RealTimeChartComponent.NB_POINTS);
+        mChart.getXAxis().setAxisMaximum(TMDataSets.NB_POINTS);
         this.disabled = disabled;
     }
 

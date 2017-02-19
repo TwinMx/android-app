@@ -30,10 +30,6 @@ public class TriggerManager implements OnChangeInputListener {
     private List<OnCycleListener> onCycleListeners = new LinkedList<>();
     private boolean disabled = false;
 
-
-
-
-
     public TriggerManager(TMDataSets dataSets) {
         this.dataSets = dataSets;
     }
@@ -46,7 +42,9 @@ public class TriggerManager implements OnChangeInputListener {
         if (disabled) return;
         this.triggerable = value;
         TMDataSet dataSet = getTriggeredDataSet();
-        dataSet.setTrigger(dataSet.getMiddleValue());
+        if (dataSet != null) {
+            dataSet.setTrigger(dataSet.getMiddleValue());
+        }
     }
 
     public TMDataSet getTriggeredDataSet() {
@@ -129,5 +127,11 @@ public class TriggerManager implements OnChangeInputListener {
         nbPointsSinceLastPeriod = 0;
 
         this.disabled = disabled;
+    }
+
+    public void removeListeners() {
+        this.onCycleListeners.clear();
+        this.onTriggerListeners.clear();
+        this.onPeriodListeners.clear();
     }
 }

@@ -354,4 +354,8 @@ public class TMBluetooth extends TMSmoothBluetooth implements TMSmoothBluetooth.
             l.onConnect();
         }
     }
+
+    public void removeListeners() {
+        onChangeInputListeners.clear();
+    }
 }
