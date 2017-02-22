@@ -1,7 +1,6 @@
 package fr.isen.twinmx.fragments;
 
 import android.content.Context;
-import android.media.Image;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -13,13 +12,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.support.v7.widget.AppCompatCheckBox;
 import android.view.animation.AccelerateInterpolator;
-import android.view.animation.Animation;
-import android.view.animation.LinearInterpolator;
-import android.view.animation.RotateAnimation;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -38,12 +33,13 @@ import fr.isen.twinmx.R;
 import fr.isen.twinmx.fragments.chart.RealTimeChartComponent;
 import fr.isen.twinmx.fragments.chart.TriggerManager;
 import fr.isen.twinmx.listeners.OnPeriodListener;
-import fr.isen.twinmx.model.InitChartData;
+import fr.isen.twinmx.model.ChartBundle;
 import fr.isen.twinmx.TMApplication;
 import fr.isen.twinmx.database.MotoRepository;
 import fr.isen.twinmx.database.model.Moto;
 import fr.isen.twinmx.listeners.OnMotoHistoryClickListener;
 import fr.isen.twinmx.model.AcquisitionSaveRequest;
+import fr.isen.twinmx.model.TMDataSets;
 import fr.isen.twinmx.ui.adapters.DialogMotoAdapter;
 import fr.isen.twinmx.utils.bluetooth.TMBluetooth;
 
@@ -69,22 +65,15 @@ public class ChartFragment extends BluetoothFragment implements OnMotoHistoryCli
 
     @OnLongClick(R.id.refresh)
     public boolean onLongCalibrationClick(View view) {
-        if (view instanceof ImageView)
-        {
+        if (view instanceof ImageView) {
             ImageView v = (ImageView) view;
 
             if (isCalibrationActivated) {
                 this.chartComponent.disableCalibration();
                 v.setBackground(ContextCompat.getDrawable(TMApplication.getContext(), R.drawable.greyripple));
-            }
-            else {
+            } else {
                 v.setBackground(ContextCompat.getDrawable(TMApplication.getContext(), R.drawable.revertripple));
                 this.chartComponent.enableCalibration();
-                this.setCalibrating(true);
-                /*if (this.isPlaying())
-                {
-                    this.chartComponent.resetCalibration();
-                }*/
             }
 
             this.isCalibrationActivated = !isCalibrationActivated;
@@ -94,12 +83,9 @@ public class ChartFragment extends BluetoothFragment implements OnMotoHistoryCli
 
     @OnClick(R.id.refresh)
     public void onCalibrationClick(View view) {
-        if (this.isPlaying())
-        {
+        if (this.isPlaying()) {
             this.chartComponent.resetCalibration();
-            setCalibrating(true);
-            if (!this.isCalibrationActivated)
-            {
+            if (!this.isCalibrationActivated) {
                 ImageView v = (ImageView) view;
                 v.setBackground(ContextCompat.getDrawable(TMApplication.getContext(), R.drawable.revertripple));
                 this.isCalibrationActivated = true;
@@ -108,35 +94,10 @@ public class ChartFragment extends BluetoothFragment implements OnMotoHistoryCli
         }
     }
 
-    public void setCalibrating(boolean value) {
-        this.isCalibrating = value;
-        if (value) {
-            rotate(refresh);
-        }
-        else {
-            refresh.setAnimation(null);
-        }
-    }
-
-    private void rotate(ImageView view) {
-        RotateAnimation anim = new RotateAnimation(0.0f, 360.0f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
-        anim.setInterpolator(new LinearInterpolator());
-        anim.setRepeatCount(Animation.INFINITE);
-        anim.setDuration(700);
-        view.startAnimation(anim);
-
-        // Later.. stop the animation
-        //view.setAnimation(null);
-    }
-
     private Boolean onResumeWasPlaying = null;
 
     private static final String STATE_PLAYING = "STATE_PLAYING";
-    private static final String STATE_NB_GRAPHS = "STATE_NB_GRAPHS";
-    private static final String STATE_GRAPH = "STATE_GRAPH_";
-    private static final String STATE_GRAPH_SIZE = "STATE_GRAPH_SIZE";
-    private static final String STATE_TRIGGER = "STATE_TRIGGER";
-    private static final String STATE_CALIBRATION_WIDTH = "STATE_CALIBRATION_WIDTH";
+
 
     private MaterialDialog chooseMotoDialog;
     private AcquisitionSaveRequest acquisitionSaveRequest = null;
@@ -198,13 +159,16 @@ public class ChartFragment extends BluetoothFragment implements OnMotoHistoryCli
 
     @OnClick(R.id.save_acquisition)
     public void onSaveClick(View view) {
-        this.chartComponent.pause(true, true);
-        this.setPauseImage(this.playPauseImage, this.context);
-        List<LimitedEntryList> entries = this.chartComponent.getDataSetEntries();
-        if (entries != null && entries.size() > 0 && entries.get(0) != null && entries.get(0).size() > 0) {
-            this.acquisitionSaveRequest = new AcquisitionSaveRequest(entries);
+        pauseChart();
+        this.acquisitionSaveRequest = this.chartComponent.createAcquisitionSaveRequest();
+        if (this.acquisitionSaveRequest != null) {
             showChooseMotoDialog();
         }
+    }
+
+    private void pauseChart() {
+        this.chartComponent.pause(true, true);
+        this.setPauseImage(this.playPauseImage, this.context);
     }
 
 
@@ -232,7 +196,13 @@ public class ChartFragment extends BluetoothFragment implements OnMotoHistoryCli
 
         LineChart chart = (LineChart) rootView.findViewById(R.id.graph);
 
-        this.chartComponent = new RealTimeChartComponent(this.getActivity(), this, chart, getBluetooth(), savedInstanceState != null ? new InitChartData(savedInstanceState, STATE_NB_GRAPHS, STATE_GRAPH_SIZE, STATE_GRAPH, STATE_TRIGGER, STATE_CALIBRATION_WIDTH) : null);
+        this.chartComponent = new RealTimeChartComponent(this.getActivity(),
+                this,
+                chart,
+                getBluetooth(),
+                savedInstanceState != null ? new ChartBundle(savedInstanceState) : null);
+
+
         this.chartComponent.onCreate();
 
         TriggerManager triggerManager = this.chartComponent.getTriggerManager();
@@ -279,6 +249,12 @@ public class ChartFragment extends BluetoothFragment implements OnMotoHistoryCli
     }
 
     @Override
+    public void onStop() {
+        super.onStop();
+        this.chartComponent.onStop();
+    }
+
+    @Override
     public CoordinatorLayout getCoordinatorLayout() {
         return null;
     }
@@ -286,23 +262,7 @@ public class ChartFragment extends BluetoothFragment implements OnMotoHistoryCli
     @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putBoolean(STATE_PLAYING, isPlaying());
-        int nbGraphs = this.chartComponent.getNbGraphs();
-        outState.putInt(STATE_NB_GRAPHS, nbGraphs);
-        outState.putInt(STATE_GRAPH_SIZE, this.chartComponent.getGraphsSize());
-        for (int i = 0; i < nbGraphs; i++) {
-            outState.putFloatArray(STATE_GRAPH + i, this.chartComponent.getDataSetValues(i));
-        }
-        try {
-            outState.putFloat(STATE_TRIGGER, this.chartComponent.getTriggerManager().getTriggeredDataSet().getTrigger());
-        } catch(Exception ex) {
-            //
-        }
-
-        try {
-            outState.putLong(STATE_CALIBRATION_WIDTH, this.chartComponent.getCalibrationManager().getNbPoints());
-        } catch(Exception ex) {
-            //
-        }
+        this.chartComponent.save(outState);
         super.onSaveInstanceState(outState);
     }
 
@@ -398,7 +358,7 @@ public class ChartFragment extends BluetoothFragment implements OnMotoHistoryCli
         // TwinMax send the data every 600us and we display the data every 4 received data
         double period = nbPointsSinceLastPeriod * 600 * 4;
         // We need to convert us to min
-        period = period * (0.000001/60);
+        period = period * (0.000001 / 60);
 
         // We need turn by minute and one period equals 2 turns
         final double compte_tour = 2 / period;
