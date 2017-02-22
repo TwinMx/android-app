@@ -357,7 +357,7 @@ public class ChartFragment extends BluetoothFragment implements OnMotoHistoryCli
 
     private void showSaveAcquistionDialog(Moto moto) {
         MaterialDialog dialog = new MaterialDialog.Builder(this.getActivity())
-                .title("Sauvegarde de l'acquisition")
+                .title(getString(R.string.save))
                 .customView(R.layout.form_acquisition_save, true)
                 .positiveText(R.string.form_save)
                 .onPositive(new MaterialDialog.SingleButtonCallback() {

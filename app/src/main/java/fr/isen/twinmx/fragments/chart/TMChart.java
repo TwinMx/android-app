@@ -15,6 +15,8 @@ import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
+import fr.isen.twinmx.R;
+import fr.isen.twinmx.TMApplication;
 import fr.isen.twinmx.async.RawDataManagerAsyncTask;
 import fr.isen.twinmx.fragments.ChartFragment;
 import fr.isen.twinmx.listeners.OnCycleListener;
@@ -69,7 +71,7 @@ public class TMChart implements Observer {
         mChart.getXAxis().setDrawLabels(false);
         mChart.setDrawGridBackground(false);
         mChart.setDescription(new Description() {{
-            setText("Pression (mBar)");
+            setText(TMApplication.getContext().getString(R.string.pressure));
         }});
         mChart.getLegend().setEnabled(false);
         mChart.getAxisRight().setAxisMinimum(0);
