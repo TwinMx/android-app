@@ -1,7 +1,6 @@
 package fr.isen.twinmx.fragments;
 
 import android.content.Context;
-import android.media.Image;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -19,7 +18,6 @@ import android.view.animation.RotateAnimation;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -35,7 +33,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnLongClick;
 import fr.isen.twinmx.R;
-import fr.isen.twinmx.fragments.chart.RealTimeChartComponent;
+import fr.isen.twinmx.fragments.chart.TMChart;
 import fr.isen.twinmx.fragments.chart.TriggerManager;
 import fr.isen.twinmx.listeners.OnPeriodListener;
 import fr.isen.twinmx.model.InitChartData;
@@ -55,7 +53,7 @@ public class ChartFragment extends BluetoothFragment implements OnMotoHistoryCli
     private Context context;
     private int maxMotorValue = 8000;
     private int minMotorValue = 0;
-    private RealTimeChartComponent chartComponent;
+    private TMChart chartComponent;
     private boolean playing = false;
     private boolean isCalibrationActivated = true;
 
@@ -137,15 +135,37 @@ public class ChartFragment extends BluetoothFragment implements OnMotoHistoryCli
     private static final String STATE_GRAPH_SIZE = "STATE_GRAPH_SIZE";
     private static final String STATE_TRIGGER = "STATE_TRIGGER";
     private static final String STATE_CALIBRATION_WIDTH = "STATE_CALIBRATION_WIDTH";
+    private static final String STATE_CURVE_1_ENABLED = "STATE_CURVE_1_ENABLED";
+    private static final String STATE_CURVE_2_ENABLED = "STATE_CURVE_2_ENABLED";
+    private static final String STATE_CURVE_3_ENABLED = "STATE_CURVE_3_ENABLED";
+    private static final String STATE_CURVE_4_ENABLED = "STATE_CURVE_4_ENABLED";
 
     private MaterialDialog chooseMotoDialog;
     private AcquisitionSaveRequest acquisitionSaveRequest = null;
 
+    @BindView(R.id.box1)
+    AppCompatCheckBox checkBoxCurveOne;
+
+    @BindView(R.id.box2)
+    AppCompatCheckBox checkBoxCurveTwo;
+
+    @BindView(R.id.box3)
+    AppCompatCheckBox checkBoxCurveThree;
+
+    @BindView(R.id.box4)
+    AppCompatCheckBox checkBoxCurveFour;
+
     @OnClick({R.id.box1, R.id.box2, R.id.box3, R.id.box4})
     public void onBoxClick(View view) {
-        Integer index = Integer.valueOf((String) view.getTag());
-
-        this.chartComponent.setVisible(index, ((AppCompatCheckBox) view).isChecked());
+        if (this.isStarted)
+        {
+            Integer index = Integer.valueOf((String) view.getTag());
+            this.chartComponent.setVisible(index, ((AppCompatCheckBox) view).isChecked());
+        }
+        else
+        {
+            ((AppCompatCheckBox) view).setChecked(true);
+        }
     }
 
     private boolean isStarted;
@@ -232,11 +252,19 @@ public class ChartFragment extends BluetoothFragment implements OnMotoHistoryCli
 
         LineChart chart = (LineChart) rootView.findViewById(R.id.graph);
 
-        this.chartComponent = new RealTimeChartComponent(this.getActivity(), this, chart, getBluetooth(), savedInstanceState != null ? new InitChartData(savedInstanceState, STATE_NB_GRAPHS, STATE_GRAPH_SIZE, STATE_GRAPH, STATE_TRIGGER, STATE_CALIBRATION_WIDTH) : null);
+        this.chartComponent = new TMChart(this.getActivity(), this, chart, getBluetooth(), savedInstanceState != null ? new InitChartData(savedInstanceState, STATE_NB_GRAPHS, STATE_GRAPH_SIZE, STATE_GRAPH, STATE_TRIGGER, STATE_CALIBRATION_WIDTH) : null);
         this.chartComponent.onCreate();
 
         TriggerManager triggerManager = this.chartComponent.getTriggerManager();
         triggerManager.addOnPeriodListener(this);
+
+        if (savedInstanceState != null)
+        {
+            this.setCheckBoxState(0, savedInstanceState, STATE_CURVE_1_ENABLED, this.checkBoxCurveOne);
+            this.setCheckBoxState(1, savedInstanceState, STATE_CURVE_2_ENABLED, this.checkBoxCurveTwo);
+            this.setCheckBoxState(2, savedInstanceState, STATE_CURVE_3_ENABLED, this.checkBoxCurveThree);
+            this.setCheckBoxState(3, savedInstanceState, STATE_CURVE_4_ENABLED, this.checkBoxCurveFour);
+        }
 
         return rootView;
     }
@@ -246,10 +274,22 @@ public class ChartFragment extends BluetoothFragment implements OnMotoHistoryCli
         super.onCreate(savedInstanceState);
         this.isStarted = true;
 
-        if (savedInstanceState != null && savedInstanceState.containsKey(STATE_PLAYING)) {
+        if (savedInstanceState != null && savedInstanceState.containsKey(STATE_PLAYING))
+        {
             this.onResumeWasPlaying = savedInstanceState.getBoolean(STATE_PLAYING);
-        } else {
+        } else
+        {
             this.onResumeWasPlaying = null;
+        }
+    }
+
+    private void setCheckBoxState(int index, Bundle savedInstanceState, String key, AppCompatCheckBox checkbox)
+    {
+        if (savedInstanceState.containsKey(key))
+        {
+            final boolean isChecked = savedInstanceState.getBoolean(key, true);
+            checkbox.setChecked(isChecked);
+            this.chartComponent.setVisible(index, isChecked);
         }
     }
 
@@ -289,6 +329,12 @@ public class ChartFragment extends BluetoothFragment implements OnMotoHistoryCli
         int nbGraphs = this.chartComponent.getNbGraphs();
         outState.putInt(STATE_NB_GRAPHS, nbGraphs);
         outState.putInt(STATE_GRAPH_SIZE, this.chartComponent.getGraphsSize());
+
+        outState.putBoolean(STATE_CURVE_1_ENABLED, checkBoxCurveOne.isChecked());
+        outState.putBoolean(STATE_CURVE_2_ENABLED, checkBoxCurveTwo.isChecked());
+        outState.putBoolean(STATE_CURVE_3_ENABLED, checkBoxCurveThree.isChecked());
+        outState.putBoolean(STATE_CURVE_4_ENABLED, checkBoxCurveFour.isChecked());
+
         for (int i = 0; i < nbGraphs; i++) {
             outState.putFloatArray(STATE_GRAPH + i, this.chartComponent.getDataSetValues(i));
         }
@@ -418,5 +464,4 @@ public class ChartFragment extends BluetoothFragment implements OnMotoHistoryCli
             }
         });
     }
-
 }

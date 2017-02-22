@@ -5,7 +5,7 @@ import android.util.Log;
 
 import com.github.mikephil.charting.data.Entry;
 
-import fr.isen.twinmx.fragments.chart.RealTimeChartComponent;
+import fr.isen.twinmx.fragments.chart.TMChart;
 import fr.isen.twinmx.model.MeasureEntry;
 import fr.isen.twinmx.model.MeasuresList;
 import fr.isen.twinmx.utils.bluetooth.TMBluetoothManager;
@@ -16,13 +16,13 @@ import fr.isen.twinmx.utils.bluetooth.TMBluetoothManager;
 
 public class LineAsyncTask extends AsyncTask<Integer, MeasureEntry, Void> {
 
-    private final RealTimeChartComponent chartComponent;
+    private final TMChart chartComponent;
     private MeasuresList data;
     private boolean stop = false;
 
     private int nbResults = 0;
 
-    public LineAsyncTask(RealTimeChartComponent chartComponent, TMBluetoothManager manager) {
+    public LineAsyncTask(TMChart chartComponent, TMBluetoothManager manager) {
         this.chartComponent = chartComponent;
         /*this.data = manager.getDataManager().getData();*/
     }

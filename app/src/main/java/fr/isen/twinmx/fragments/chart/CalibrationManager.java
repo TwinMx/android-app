@@ -8,8 +8,6 @@ import fr.isen.twinmx.fragments.ChartFragment;
 import fr.isen.twinmx.fragments.LimitedEntryList;
 import fr.isen.twinmx.listeners.OnChangeInputListener;
 import fr.isen.twinmx.listeners.OnPeriodListener;
-import fr.isen.twinmx.listeners.OnTriggerListener;
-import fr.isen.twinmx.model.GraphDirection;
 
 /**
  * Created by Clement on 10/02/2017.
@@ -26,7 +24,7 @@ public class CalibrationManager implements OnPeriodListener, OnChangeInputListen
     private boolean calibrated = false;
     private boolean disabled = false;
     private ChartFragment chartFragment;
-    private long nbPoints = RealTimeChartComponent.NB_POINTS;
+    private long nbPoints = TMChart.NB_POINTS;
 
 
     public CalibrationManager(LineChart chart, TriggerManager triggerManager, List<LimitedEntryList> dataSetEntries, ChartFragment chartFragment) {
@@ -84,9 +82,9 @@ public class CalibrationManager implements OnPeriodListener, OnChangeInputListen
 
     private void reset(boolean disabled) {
         calibrated = false;
-        setSizes(RealTimeChartComponent.NB_POINTS);
+        setSizes(TMChart.NB_POINTS);
         mChart.getXAxis().setAxisMinimum(0);
-        mChart.getXAxis().setAxisMaximum(RealTimeChartComponent.NB_POINTS);
+        mChart.getXAxis().setAxisMaximum(TMChart.NB_POINTS);
         this.disabled = disabled;
     }
 

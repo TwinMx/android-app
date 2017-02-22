@@ -37,7 +37,7 @@ import fr.isen.twinmx.database.model.Moto;
 import fr.isen.twinmx.database.model.RealmFloat;
 import fr.isen.twinmx.database.model.RealmGraph;
 import fr.isen.twinmx.fragments.LimitedEntryList;
-import fr.isen.twinmx.fragments.chart.RealTimeChartComponent;
+import fr.isen.twinmx.fragments.chart.TMChart;
 import io.realm.RealmList;
 
 /**
@@ -224,7 +224,7 @@ public class MaintenanceDetailActivity extends AppCompatActivity {
 
         color = ContextCompat.getColor(TMApplication.getContext(), color);
 
-        LimitedEntryList entries = new LimitedEntryList(RealTimeChartComponent.NB_POINTS, null);
+        LimitedEntryList entries = new LimitedEntryList(TMChart.NB_POINTS, null);
 
         LineDataSet dataSet = new LineDataSet(entries, title);
         dataSet.setColor(color);

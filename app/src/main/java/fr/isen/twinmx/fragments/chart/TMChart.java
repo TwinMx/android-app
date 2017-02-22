@@ -36,7 +36,7 @@ import fr.isen.twinmx.utils.bluetooth.TMBluetooth;
  * Created by Clement on 19/01/2017.
  */
 
-public class RealTimeChartComponent implements Observer, OnChartGestureListener, OnChartValueSelectedListener, OnCycleListener, OnTriggerListener {
+public class TMChart implements Observer, OnChartGestureListener, OnChartValueSelectedListener, OnCycleListener, OnTriggerListener {
 
     public static int NB_POINTS = 200;
     private final Activity context;
@@ -53,7 +53,7 @@ public class RealTimeChartComponent implements Observer, OnChartGestureListener,
     private List<OnTriggerListener> onTriggerListeners = new LinkedList<>();
     private TriggerManager triggerManager;
 
-    public RealTimeChartComponent(Activity context, ChartFragment chartFragment, LineChart chart, TMBluetooth bluetooth, InitChartData initChartData) {
+    public TMChart(Activity context, ChartFragment chartFragment, LineChart chart, TMBluetooth bluetooth, InitChartData initChartData) {
         this.context = context;
         this.mChart = chart;
         this.chartFragment = chartFragment;

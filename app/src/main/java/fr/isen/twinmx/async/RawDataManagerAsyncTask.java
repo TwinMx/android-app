@@ -1,12 +1,10 @@
 package fr.isen.twinmx.async;
 
-import android.os.AsyncTask;
-
 import com.github.mikephil.charting.data.Entry;
 
 import java.util.List;
 
-import fr.isen.twinmx.fragments.chart.RealTimeChartComponent;
+import fr.isen.twinmx.fragments.chart.TMChart;
 import fr.isen.twinmx.model.RawData;
 import fr.isen.twinmx.model.RawMeasures;
 import fr.isen.twinmx.utils.bluetooth.TMBluetoothDataManager;
@@ -25,14 +23,14 @@ public class RawDataManagerAsyncTask extends StoppableAsyncTask<Void, Entry, Voi
     private final List<Integer> frames;
     private final RawData raw;
     private final RawMeasures rawMeasures;
-    private final RealTimeChartComponent chart;
+    private final TMChart chart;
     private final TMBluetoothDataManager dataManager;
     private int x = 0;
     private int nbResults = 0;
 
     private static final int REFRESH_RATE = 1; //200;
 
-    public RawDataManagerAsyncTask(TMBluetoothDataManager dataManager, RealTimeChartComponent chart) {
+    public RawDataManagerAsyncTask(TMBluetoothDataManager dataManager, TMChart chart) {
         this.dataManager = dataManager;
         this.frames = dataManager.getFrames();
         this.chart = chart;
