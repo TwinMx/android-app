@@ -9,7 +9,6 @@ import java.util.List;
 import fr.isen.twinmx.database.MotoRepository;
 import fr.isen.twinmx.database.exceptions.RepositoryException;
 import fr.isen.twinmx.database.model.Moto;
-import fr.isen.twinmx.fragments.LimitedEntryList;
 
 /**
  * Created by Clement on 02/02/2017.
@@ -22,10 +21,10 @@ public class AcquisitionSaveRequest {
     private String note;
     private List<List<Entry>> graphs;
 
-    private static List<List<Entry>> toList(List<LimitedEntryList> graphs) {
+    private static List<List<Entry>> toList(List<TMDataSet> graphs) {
         if (graphs != null && graphs.size() > 0) {
             List<List<Entry>> list = new ArrayList<>(graphs.size());
-            for(LimitedEntryList entries : graphs) {
+            for(TMDataSet entries : graphs) {
                 if (entries != null) {
                     list.add(entries.toList());
                 }
@@ -35,7 +34,7 @@ public class AcquisitionSaveRequest {
         return null;
     }
 
-    public AcquisitionSaveRequest(List<LimitedEntryList> graphs) {
+    public AcquisitionSaveRequest(List<TMDataSet> graphs) {
         this(null, null, toList(graphs));
     }
 

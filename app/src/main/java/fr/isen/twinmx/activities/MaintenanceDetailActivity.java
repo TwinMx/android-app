@@ -17,12 +17,8 @@ import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Description;
-import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.data.LineData;
-import com.github.mikephil.charting.data.LineDataSet;
 
 import java.text.DateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 
 import butterknife.BindView;
@@ -34,11 +30,8 @@ import fr.isen.twinmx.database.MotoRepository;
 import fr.isen.twinmx.database.exceptions.RepositoryException;
 import fr.isen.twinmx.database.model.Maintenance;
 import fr.isen.twinmx.database.model.Moto;
-import fr.isen.twinmx.database.model.RealmFloat;
-import fr.isen.twinmx.database.model.RealmGraph;
-import fr.isen.twinmx.fragments.LimitedEntryList;
-import fr.isen.twinmx.fragments.chart.TMChart;
-import io.realm.RealmList;
+
+import fr.isen.twinmx.model.TMDataSets;
 
 /**
  * Created by pierredfc.
@@ -72,7 +65,7 @@ public class MaintenanceDetailActivity extends AppCompatActivity {
 
     private int maintenanceIndex;
 
-    private ArrayList<LimitedEntryList> dataSetEntries = new ArrayList<>(4);
+    private TMDataSets dataSets;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -126,22 +119,14 @@ public class MaintenanceDetailActivity extends AppCompatActivity {
             this.note.setText(TMApplication.getContext().getString(R.string.no_note));
         }
 
-        graph.setData(new LineData());
+        this.dataSets = new TMDataSets(this, graph, 4, 200);
         initChartSettings();
-        loadGraph(maintenance.getGraphs());
+        this.dataSets.load(maintenance.getGraphs());
     }
 
-    private void loadGraph(RealmList<RealmGraph> graphs)
-    {
-        for (int index = 0; index < graphs.size(); index++)
-        {
-            RealmGraph graph = graphs.get(index);
-
-            for (RealmFloat data : graph.getMeasures())
-            {
-                addEntry(index, new Entry(index, data.getValue()));
-            }
-        }
+    public void onResume() {
+        super.onResume();
+        dataSets.refreshChart();
     }
 
     @Override
@@ -174,67 +159,12 @@ public class MaintenanceDetailActivity extends AppCompatActivity {
     private void initChartSettings() {
         graph.getAxisRight().setEnabled(false);
         graph.getXAxis().setDrawLabels(false);
-        for(int index = 0; index < 4; index++) {
-            dataSetEntries.add(null);
-        }
         graph.setDrawGridBackground(false);
         graph.setDescription(new Description() {{
-            setText("Pression (mBar)");
+            setText(getString(R.string.pressure));
         }});
         graph.getLegend().setEnabled(false);
-    }
-
-    public void addEntry(int index, Entry value) {
-        LineData data = graph.getData();
-
-        if (data != null) {
-            LimitedEntryList entries = this.dataSetEntries.get(index);
-            if (entries == null) {
-                entries = addNewSet(TMApplication.getContext().getString(R.string.cylinder, index + 1), index);
-                this.dataSetEntries.set(index, entries);
-            }
-
-            synchronized(entries) {
-                data.addEntry(value, index);
-            }
-            data.notifyDataChanged();
-        }
-    }
-
-    private LimitedEntryList addNewSet(String title, int index) {
-
-        int color = 0;
-        switch (index) {
-            case 0:
-                color = R.color.chartBlue;
-                break;
-            case 1:
-                color = R.color.chartGreen;
-                break;
-            case 2:
-                color = R.color.chartBrown;
-                break;
-            case 3:
-                color = R.color.chartRed;
-                break;
-            default:
-                color = R.color.chartBlue;
-                break;
-        }
-
-        color = ContextCompat.getColor(TMApplication.getContext(), color);
-
-        LimitedEntryList entries = new LimitedEntryList(TMChart.NB_POINTS, null);
-
-        LineDataSet dataSet = new LineDataSet(entries, title);
-        dataSet.setColor(color);
-        dataSet.setDrawCircles(false);
-        dataSet.setValueTextSize(0);
-        dataSet.setValueTextColor(color);
-        dataSet.setCircleColor(color);
-
-        graph.getData().addDataSet(dataSet);
-        return entries;
+        graph.getAxisRight().setAxisMinimum(0);
     }
 }
 

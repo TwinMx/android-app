@@ -181,6 +181,8 @@ public class MainActivity extends AppCompatActivity implements TMBottomNavigatio
     protected void onStop() {
         super.onStop();
 
+        mBluetooth.removeListeners();
+
         if(this.isFinishing())
         {
             mBluetooth.stopReadingFromFile();

@@ -1,13 +1,15 @@
 package fr.isen.twinmx.fragments.chart;
 
+
 import com.github.mikephil.charting.charts.LineChart;
 
-import java.util.List;
-
-import fr.isen.twinmx.fragments.ChartFragment;
-import fr.isen.twinmx.fragments.LimitedEntryList;
+import fr.isen.twinmx.model.LimitedLinkedList;
+import fr.isen.twinmx.model.TMDataSet;
 import fr.isen.twinmx.listeners.OnChangeInputListener;
 import fr.isen.twinmx.listeners.OnPeriodListener;
+
+import fr.isen.twinmx.model.TMDataSets;
+
 
 /**
  * Created by Clement on 10/02/2017.
@@ -17,26 +19,27 @@ public class CalibrationManager implements OnPeriodListener, OnChangeInputListen
 
     private static final int NB_PERIODS_DISPLAY = 2;
 
-    private final List<LimitedEntryList> dataSetEntries;
     private final LineChart mChart;
     private final TriggerManager triggerManager;
+    private final TMDataSets dataSets;
 
     private boolean calibrated = false;
     private boolean disabled = false;
-    private ChartFragment chartFragment;
-    private long nbPoints = TMChart.NB_POINTS;
+    private long nbPoints = TMDataSets.NB_POINTS;
 
+    private LimitedLinkedList<Long> periods = new LimitedLinkedList<>(NB_PERIODS_DISPLAY);
 
-    public CalibrationManager(LineChart chart, TriggerManager triggerManager, List<LimitedEntryList> dataSetEntries, ChartFragment chartFragment) {
+    public CalibrationManager(LineChart chart, TMDataSets dataSets) {
         this.mChart = chart;
-        this.triggerManager = triggerManager;
+        this.triggerManager = dataSets.getTriggerManager();
         this.triggerManager.addOnPeriodListener(this);
-        this.dataSetEntries = dataSetEntries;
-        this.chartFragment = chartFragment;
+        this.dataSets = dataSets;
     }
 
     @Override
     public void onPeriod(long nbPointsSinceLastPeriod) {
+        periods.add(nbPointsSinceLastPeriod);
+
         if (disabled) return;
 
         if (!calibrated) {
@@ -50,7 +53,13 @@ public class CalibrationManager implements OnPeriodListener, OnChangeInputListen
     }
 
     private void computeCalibration() {
-        LimitedEntryList dataSet = this.triggerManager.getTriggeredDataSet();
+        if (periods.size() >= 2) {
+            int period = (int) (periods.get(periods.size() - 1) + periods.get(periods.size() - 2));
+            makeCalibration(period);
+            return;
+        }
+
+        TMDataSet dataSet = this.triggerManager.getTriggeredDataSet();
         if (dataSet != null) {
             int period = dataSet.computePeriod();
             if (period > 0) {
@@ -65,15 +74,10 @@ public class CalibrationManager implements OnPeriodListener, OnChangeInputListen
         setSizes(nbPoints);
         mChart.getXAxis().setAxisMinimum(0);
         mChart.getXAxis().setAxisMaximum(nbPoints);
-        this.chartFragment.setCalibrating(false);
     }
 
     private void setSizes(int nbPoints) {
-        for (LimitedEntryList entries : this.dataSetEntries) {
-            if (entries != null) {
-                entries.setSize(nbPoints);
-            }
-        }
+        dataSets.setNbPoints(nbPoints);
     }
 
     public void reset() {
@@ -82,9 +86,9 @@ public class CalibrationManager implements OnPeriodListener, OnChangeInputListen
 
     private void reset(boolean disabled) {
         calibrated = false;
-        setSizes(TMChart.NB_POINTS);
+        setSizes(TMDataSets.NB_POINTS);
         mChart.getXAxis().setAxisMinimum(0);
-        mChart.getXAxis().setAxisMaximum(TMChart.NB_POINTS);
+        mChart.getXAxis().setAxisMaximum(TMDataSets.NB_POINTS);
         this.disabled = disabled;
     }
 
@@ -97,12 +101,21 @@ public class CalibrationManager implements OnPeriodListener, OnChangeInputListen
         reset(true);
     }
 
-
     public long getNbPoints() {
         return nbPoints;
     }
 
+    private boolean isComputing = false;
+
     public void recalibrate() {
-        computeCalibration();
+        if (!isComputing) {
+            isComputing = true;
+            computeCalibration();
+            isComputing = false;
+        }
+    }
+
+    public boolean isCalibrated() {
+        return calibrated;
     }
 }
