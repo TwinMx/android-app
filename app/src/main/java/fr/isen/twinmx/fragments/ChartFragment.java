@@ -1,6 +1,7 @@
 package fr.isen.twinmx.fragments;
 
 import android.content.Context;
+import android.media.Image;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -11,9 +12,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.support.v7.widget.AppCompatCheckBox;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.Animation;
+import android.view.animation.LinearInterpolator;
+import android.view.animation.RotateAnimation;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -27,7 +33,11 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.OnLongClick;
 import fr.isen.twinmx.R;
+import fr.isen.twinmx.fragments.chart.RealTimeChartComponent;
+import fr.isen.twinmx.fragments.chart.TriggerManager;
+import fr.isen.twinmx.listeners.OnPeriodListener;
 import fr.isen.twinmx.model.InitChartData;
 import fr.isen.twinmx.TMApplication;
 import fr.isen.twinmx.database.MotoRepository;
@@ -40,17 +50,84 @@ import fr.isen.twinmx.utils.bluetooth.TMBluetooth;
 /**
  * Created by pierredfc.
  */
-public class ChartFragment extends BluetoothFragment implements OnMotoHistoryClickListener {
+public class ChartFragment extends BluetoothFragment implements OnMotoHistoryClickListener, OnPeriodListener {
 
     private Context context;
-    private int maxMotorValue = 5000;
+    private int maxMotorValue = 8000;
     private int minMotorValue = 0;
     private RealTimeChartComponent chartComponent;
-    private int serie1Index;
     private boolean playing = false;
+    private boolean isCalibrationActivated = true;
+
+    private boolean isCalibrating = false;
 
     @BindView(R.id.match_start_pause)
     ImageView playPauseImage;
+
+    @BindView(R.id.refresh)
+    ImageView refresh;
+
+    @OnLongClick(R.id.refresh)
+    public boolean onLongCalibrationClick(View view) {
+        if (view instanceof ImageView)
+        {
+            ImageView v = (ImageView) view;
+
+            if (isCalibrationActivated) {
+                this.chartComponent.disableCalibration();
+                v.setBackground(ContextCompat.getDrawable(TMApplication.getContext(), R.drawable.greyripple));
+            }
+            else {
+                v.setBackground(ContextCompat.getDrawable(TMApplication.getContext(), R.drawable.revertripple));
+                this.chartComponent.enableCalibration();
+                this.setCalibrating(true);
+                /*if (this.isPlaying())
+                {
+                    this.chartComponent.resetCalibration();
+                }*/
+            }
+
+            this.isCalibrationActivated = !isCalibrationActivated;
+        }
+        return true;
+    }
+
+    @OnClick(R.id.refresh)
+    public void onCalibrationClick(View view) {
+        if (this.isPlaying())
+        {
+            this.chartComponent.resetCalibration();
+            setCalibrating(true);
+            if (!this.isCalibrationActivated)
+            {
+                ImageView v = (ImageView) view;
+                v.setBackground(ContextCompat.getDrawable(TMApplication.getContext(), R.drawable.revertripple));
+                this.isCalibrationActivated = true;
+            }
+
+        }
+    }
+
+    public void setCalibrating(boolean value) {
+        this.isCalibrating = value;
+        if (value) {
+            rotate(refresh);
+        }
+        else {
+            refresh.setAnimation(null);
+        }
+    }
+
+    private void rotate(ImageView view) {
+        RotateAnimation anim = new RotateAnimation(0.0f, 360.0f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+        anim.setInterpolator(new LinearInterpolator());
+        anim.setRepeatCount(Animation.INFINITE);
+        anim.setDuration(700);
+        view.startAnimation(anim);
+
+        // Later.. stop the animation
+        //view.setAnimation(null);
+    }
 
     private Boolean onResumeWasPlaying = null;
 
@@ -58,11 +135,11 @@ public class ChartFragment extends BluetoothFragment implements OnMotoHistoryCli
     private static final String STATE_NB_GRAPHS = "STATE_NB_GRAPHS";
     private static final String STATE_GRAPH = "STATE_GRAPH_";
     private static final String STATE_GRAPH_SIZE = "STATE_GRAPH_SIZE";
-
+    private static final String STATE_TRIGGER = "STATE_TRIGGER";
+    private static final String STATE_CALIBRATION_WIDTH = "STATE_CALIBRATION_WIDTH";
 
     private MaterialDialog chooseMotoDialog;
     private AcquisitionSaveRequest acquisitionSaveRequest = null;
-
 
     @OnClick({R.id.box1, R.id.box2, R.id.box3, R.id.box4})
     public void onBoxClick(View view) {
@@ -79,7 +156,7 @@ public class ChartFragment extends BluetoothFragment implements OnMotoHistoryCli
 
         if (this.isStarted) {
             setPlayImage(image, context);
-            this.chartComponent.pause(true);
+            this.chartComponent.pause(false, true);
         } else {
             setPauseImage(image, context);
             this.chartComponent.play(true);
@@ -121,7 +198,7 @@ public class ChartFragment extends BluetoothFragment implements OnMotoHistoryCli
 
     @OnClick(R.id.save_acquisition)
     public void onSaveClick(View view) {
-        this.chartComponent.pause(true);
+        this.chartComponent.pause(true, true);
         this.setPauseImage(this.playPauseImage, this.context);
         List<LimitedEntryList> entries = this.chartComponent.getDataSetEntries();
         if (entries != null && entries.size() > 0 && entries.get(0) != null && entries.get(0).size() > 0) {
@@ -155,8 +232,11 @@ public class ChartFragment extends BluetoothFragment implements OnMotoHistoryCli
 
         LineChart chart = (LineChart) rootView.findViewById(R.id.graph);
 
-        this.chartComponent = new RealTimeChartComponent(this.getActivity(), this, chart, getBluetooth(), savedInstanceState != null ? new InitChartData(savedInstanceState, STATE_NB_GRAPHS, STATE_GRAPH_SIZE, STATE_GRAPH) : null);
+        this.chartComponent = new RealTimeChartComponent(this.getActivity(), this, chart, getBluetooth(), savedInstanceState != null ? new InitChartData(savedInstanceState, STATE_NB_GRAPHS, STATE_GRAPH_SIZE, STATE_GRAPH, STATE_TRIGGER, STATE_CALIBRATION_WIDTH) : null);
         this.chartComponent.onCreate();
+
+        TriggerManager triggerManager = this.chartComponent.getTriggerManager();
+        triggerManager.addOnPeriodListener(this);
 
         return rootView;
     }
@@ -182,26 +262,20 @@ public class ChartFragment extends BluetoothFragment implements OnMotoHistoryCli
 
     private void setMotorLifeCycle() {
         this.motorLifeCycle.addSeries(new SeriesItem.Builder(ContextCompat.getColor(this.getActivity(), R.color.white))
-                .setRange(minMotorValue, maxMotorValue, maxMotorValue)
+                .setRange(minMotorValue, maxMotorValue, 0)
                 .setInitialVisibility(true)
                 .setLineWidth(10f)
+                .setInterpolator(new AccelerateInterpolator())
                 .setDrawAsPoint(false)
                 .build());
 
         this.motorLifeCycle.configureAngles(280, 0);
-
-        final SeriesItem seriesItem1 = new SeriesItem.Builder(ContextCompat.getColor(this.getActivity(), R.color.colorPrimary), ContextCompat.getColor(this.getActivity(), R.color.colorAccent))
-                .setRange(minMotorValue, maxMotorValue, (minMotorValue + maxMotorValue) / 2)
-                .setLineWidth(6f)
-                .build();
-
-        serie1Index = this.motorLifeCycle.addSeries(seriesItem1);
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        this.chartComponent.pause(false);
+        this.chartComponent.pause(false, false);
     }
 
     @Override
@@ -217,6 +291,17 @@ public class ChartFragment extends BluetoothFragment implements OnMotoHistoryCli
         outState.putInt(STATE_GRAPH_SIZE, this.chartComponent.getGraphsSize());
         for (int i = 0; i < nbGraphs; i++) {
             outState.putFloatArray(STATE_GRAPH + i, this.chartComponent.getDataSetValues(i));
+        }
+        try {
+            outState.putFloat(STATE_TRIGGER, this.chartComponent.getTriggerManager().getTriggeredDataSet().getTrigger());
+        } catch(Exception ex) {
+            //
+        }
+
+        try {
+            outState.putLong(STATE_CALIBRATION_WIDTH, this.chartComponent.getCalibrationManager().getNbPoints());
+        } catch(Exception ex) {
+            //
         }
         super.onSaveInstanceState(outState);
     }
@@ -307,4 +392,31 @@ public class ChartFragment extends BluetoothFragment implements OnMotoHistoryCli
 
         dialog.show();
     }
+
+    @Override
+    public void onPeriod(long nbPointsSinceLastPeriod) {
+        // TwinMax send the data every 600us and we display the data every 4 received data
+        double period = nbPointsSinceLastPeriod * 600 * 4;
+        // We need to convert us to min
+        period = period * (0.000001/60);
+
+        // We need turn by minute and one period equals 2 turns
+        final double compte_tour = 2 / period;
+
+        // Update views
+        this.getActivity().runOnUiThread(new Runnable() {
+            public void run() {
+                Integer value = (int) compte_tour;
+                motorLifeCycleValue.setText(String.valueOf(value));
+                final SeriesItem seriesItem1 = new SeriesItem.Builder(ContextCompat.getColor(getActivity(), R.color.colorPrimary), ContextCompat.getColor(getActivity(), R.color.colorAccent))
+                        .setRange(minMotorValue, maxMotorValue, value)
+                        .setLineWidth(6f)
+                        .build();
+                motorLifeCycle.deleteAll();
+                motorLifeCycle.addSeries(seriesItem1);
+
+            }
+        });
+    }
+
 }

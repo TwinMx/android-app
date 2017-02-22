@@ -6,7 +6,7 @@ import com.github.mikephil.charting.data.Entry;
 
 import java.util.List;
 
-import fr.isen.twinmx.fragments.RealTimeChartComponent;
+import fr.isen.twinmx.fragments.chart.RealTimeChartComponent;
 import fr.isen.twinmx.model.RawData;
 import fr.isen.twinmx.model.RawMeasures;
 import fr.isen.twinmx.utils.bluetooth.TMBluetoothDataManager;
@@ -15,9 +15,13 @@ import fr.isen.twinmx.utils.bluetooth.TMBluetoothDataManager;
  * Created by Clement on 20/01/2017.
  */
 
-public class RawDataManagerAsyncTask extends AsyncTask<Void, Entry, Void> {
+public class RawDataManagerAsyncTask extends StoppableAsyncTask<Void, Entry, Void> {
 
     private static int HEADER = 128;
+    private static final int AVERAGE = 4;
+    private int nbPointsInAverage = 0;
+    private float[] sum = new float[]{0, 0, 0, 0};
+
     private final List<Integer> frames;
     private final RawData raw;
     private final RawMeasures rawMeasures;
@@ -26,7 +30,7 @@ public class RawDataManagerAsyncTask extends AsyncTask<Void, Entry, Void> {
     private int x = 0;
     private int nbResults = 0;
 
-    private boolean stop;
+    private static final int REFRESH_RATE = 1; //200;
 
     public RawDataManagerAsyncTask(TMBluetoothDataManager dataManager, RealTimeChartComponent chart) {
         this.dataManager = dataManager;
@@ -39,15 +43,14 @@ public class RawDataManagerAsyncTask extends AsyncTask<Void, Entry, Void> {
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-        stop = false;
         this.dataManager.startListening();
     }
 
     @Override
     protected Void doInBackground(Void... voids) {
         int frame;
-        while (!stop) {
-            synchronized(this.frames) {
+        while (!hasToStop()) {
+            synchronized (this.frames) {
                 if (!this.frames.isEmpty()) {
                     synchronized (this.frames) {
                         frame = this.frames.remove(0);
@@ -56,8 +59,7 @@ public class RawDataManagerAsyncTask extends AsyncTask<Void, Entry, Void> {
                         if (!resetRawData(frame) && this.raw.add(frame) && this.rawMeasures.add(this.raw.popMeasure())) { //not header frame && raw completed (msb + lsb) && 4 measures
                             addMeasures(this.rawMeasures.toEntries(x));
                         }
-                    }
-                    catch(IndexOutOfBoundsException ex) {
+                    } catch (IndexOutOfBoundsException ex) {
                         //Missed a HEADER frame
                         addMeasures(this.rawMeasures.toEntries(x));
                     }
@@ -71,7 +73,7 @@ public class RawDataManagerAsyncTask extends AsyncTask<Void, Entry, Void> {
     private boolean resetRawData(int frame) {
         if (frame == HEADER) {
             clearAll();
-            if (x < 200) {
+            if (x < REFRESH_RATE) {
                 x++;
             }
             return true;
@@ -85,13 +87,23 @@ public class RawDataManagerAsyncTask extends AsyncTask<Void, Entry, Void> {
     }
 
     private void addMeasures(Entry... entries) {
-        chart.addEntries(entries);
-        nbResults++;
-        if (nbResults > 200) {
-            if (!stop)
-            {
-                publishProgress();
-                nbResults = 0;
+        for (int i = 0; i < entries.length; i++) {
+            sum[i] += entries[i].getY();
+        }
+        nbPointsInAverage++;
+
+        if (nbPointsInAverage >= AVERAGE) {
+            chart.addEntries(new Entry(0, sum[0] / nbPointsInAverage), new Entry(0, sum[1] / nbPointsInAverage), new Entry(0, sum[2] / nbPointsInAverage), new Entry(0, sum[3] / nbPointsInAverage));
+            for (int i = 0; i < sum.length; i++) {
+                sum[i] = 0;
+            }
+            nbPointsInAverage = 0;
+            nbResults++;
+            if (nbResults > REFRESH_RATE) {
+                if (!hasToStop()) {
+                    publishProgress();
+                    nbResults = 0;
+                }
             }
         }
     }
@@ -102,11 +114,8 @@ public class RawDataManagerAsyncTask extends AsyncTask<Void, Entry, Void> {
     }
 
     @Override
-    protected void onPostExecute(Void aVoid) {
-    }
-
     public void stop() {
-        stop = true;
+        super.stop();
         this.dataManager.stopListening();
     }
 }

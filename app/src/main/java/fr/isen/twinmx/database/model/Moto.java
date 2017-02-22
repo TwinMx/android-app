@@ -58,7 +58,7 @@ public class Moto extends RealmObject implements AutoIncrement {
         this.name = moto.getName();
         this.date = moto.getDate();
         this.image = moto.getImage();
-        this.maintenances = Maintenance.newRealmList(this.getMaintenances());
+        this.maintenances = Maintenance.newRealmList(moto.getMaintenances());
     }
 
     @Override

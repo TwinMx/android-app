@@ -1,17 +1,34 @@
 package fr.isen.twinmx.utils.bluetooth;
 
 import android.app.Activity;
+import android.app.Application;
 import android.bluetooth.BluetoothAdapter;
+import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
+import android.os.Build;
+import android.os.Environment;
 import android.util.Log;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import fr.isen.twinmx.R;
+import fr.isen.twinmx.async.FileInfiniteReaderAsyncTask;
+import fr.isen.twinmx.listeners.OnChangeInputListener;
+import fr.isen.twinmx.model.TMFile;
+import fr.isen.twinmx.model.TMInput;
 import fr.isen.twinmx.receivers.BluetoothIconReceiver;
 import fr.isen.twinmx.TMApplication;
 import fr.isen.twinmx.database.RealmDeviceRepository;
@@ -39,6 +56,9 @@ public class TMBluetooth extends TMSmoothBluetooth implements TMSmoothBluetooth.
     private Activity activity;
     private BluetoothIconReceiver bluetoothIconReceiver;
     private MaterialDialog bluetoothDevicesDialog;
+    private TMFile connectedFile;
+
+    private List<OnChangeInputListener> onChangeInputListeners = new LinkedList<>();
 
 
     public TMBluetooth(Activity activity) {
@@ -55,6 +75,7 @@ public class TMBluetooth extends TMSmoothBluetooth implements TMSmoothBluetooth.
         if (this.bluetoothIconReceiver != null) {
             this.bluetoothIconReceiver.errorOrDisabled();
         }
+        this.showFilesDialog();
     }
 
     @Override
@@ -86,6 +107,8 @@ public class TMBluetooth extends TMSmoothBluetooth implements TMSmoothBluetooth.
         } catch (RepositoryException e) {
             e.printStackTrace();
         }
+
+        this.onChangeInput();
 
         //BluetoothIconReceiver.sendStatusOk(String.format(TMApplication.getContext().getResources().getString(R.string.connected_to), device.getName()));
         this.setChanged();
@@ -145,21 +168,33 @@ public class TMBluetooth extends TMSmoothBluetooth implements TMSmoothBluetooth.
                 return 0;
             }
         });
-        this.showBluetoothDevicesDialog(deviceList, connectionCallback);
+        this.showBluetoothDevicesDialog(deviceList, connectionCallback, true);
     }
 
-    private void showBluetoothDevicesDialog(List<TMDevice> devices, ConnectionCallback connectionCallback) {
-        if (!this.isBluetoothEnabled()) {
-            return;
+    private void showFilesDialog() {
+        showBluetoothDevicesDialog(new ArrayList<TMDevice>(), null, true);
+    }
+
+    private void showBluetoothDevicesDialog(List<TMDevice> devices, ConnectionCallback connectionCallback, boolean isShowFiles) {
+        List<TMInput> inputs = new LinkedList<>();
+        if (this.isBluetoothEnabled()) {
+            for(TMDevice d : devices) {
+                inputs.add(d);
+            }
         }
 
-        BluetoothIconReceiver.sendStatusEnabled();
+
+        if (isShowFiles) {
+            for(TMFile f : getFilesFromDocumentDirectory()) {
+                inputs.add(f);
+            }
+        }
 
         if (this.bluetoothDevicesDialog == null || !this.bluetoothDevicesDialog.isShowing()) {
 
             this.bluetoothDevicesDialog = new MaterialDialog.Builder(this.activity)
                     .title(TMApplication.getContext().getResources().getString(R.string.select_bt_device))
-                    .adapter(new TMBluetoothDialogAdapter(devices, connectionCallback, this), null)
+                    .adapter(new TMBluetoothDialogAdapter(inputs, connectionCallback, this), null)
                     .build();
 
             this.bluetoothDevicesDialog.show();
@@ -220,5 +255,103 @@ public class TMBluetooth extends TMSmoothBluetooth implements TMSmoothBluetooth.
     {
         hideBluetoothDevicesDialog();
         this.activity = activity;
+    }
+
+    private FileInfiniteReaderAsyncTask fileInfiniteReaderAsyncTask;
+
+    public void readFromFileIndefinitely(TMFile file) {
+        this.connectedFile = file;
+        if (this.connectedFile == null) return;
+
+        if (fileInfiniteReaderAsyncTask == null || fileInfiniteReaderAsyncTask.isStopped()) {
+            fileInfiniteReaderAsyncTask = new FileInfiniteReaderAsyncTask(this, connectedFile);
+        }
+        else {
+            fileInfiniteReaderAsyncTask.stopAndWait();
+            fileInfiniteReaderAsyncTask = new FileInfiniteReaderAsyncTask(this, connectedFile);
+        }
+
+        if (Build.VERSION.SDK_INT >= 11)
+            fileInfiniteReaderAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        else
+            fileInfiniteReaderAsyncTask.execute();
+        if (this.bluetoothIconReceiver != null) {
+            this.bluetoothIconReceiver.fileConnected(null);
+        }
+
+        this.onChangeInput();
+        this.setChanged();
+        this.notifyObservers();
+    }
+
+    public void stopReadingFromFile() {
+        this.connectedFile = null;
+        if (fileInfiniteReaderAsyncTask != null) {
+            fileInfiniteReaderAsyncTask.stop();
+        }
+        if (this.bluetoothIconReceiver != null) {
+            this.bluetoothIconReceiver.fileDisconnected(this.isBluetoothEnabled());
+        }
+        fileInfiniteReaderAsyncTask = null;
+    }
+
+    public Context getContext() {
+        return activity;
+    }
+
+    public boolean hasConnectedFile() {
+        return connectedFile != null;
+    }
+
+    public TMFile getConnectedFile() {
+        return connectedFile;
+    }
+
+    private List<TMFile> getFilesFromDocumentDirectory() {
+        try {
+            String[] fileNames = this.getContext().getResources().getAssets().list("measures");
+
+            List<TMFile> result = new LinkedList<>();
+            for(String fn : fileNames) {
+                result.add(new TMFile(fn,fn,false));
+            }
+            return result;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    private File getDocumentDirectory(Context context) throws IOException {
+
+        // Get the directory for the app's private pictures directory.
+        File directory = new File(context.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS), "data");
+        if (!directory.mkdirs()) {
+            Log.e("WRITE", "Directory not created");
+        }
+        return directory;
+    }
+
+    public void showDialog() {
+        if (this.isBluetoothEnabled()) {
+            this.scanDevices();
+        }
+        else {
+            this.showFilesDialog();
+        }
+    }
+
+
+    public void addOnChangeInputListener(OnChangeInputListener onChangeInputListener) {
+        if (!onChangeInputListeners.contains(onChangeInputListener)) {
+            onChangeInputListeners.add(onChangeInputListener);
+        }
+    }
+
+    private void onChangeInput() {
+        for(OnChangeInputListener l : onChangeInputListeners) {
+            l.onConnect();
+        }
     }
 }

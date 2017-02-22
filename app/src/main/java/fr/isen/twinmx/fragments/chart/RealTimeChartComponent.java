@@ -1,6 +1,8 @@
-package fr.isen.twinmx.fragments;
+package fr.isen.twinmx.fragments.chart;
 
 import android.app.Activity;
+import android.os.AsyncTask;
+import android.os.Build;
 import android.support.v4.content.ContextCompat;
 import android.view.MotionEvent;
 
@@ -15,12 +17,18 @@ import com.github.mikephil.charting.listener.OnChartGestureListener;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
 import fr.isen.twinmx.R;
 import fr.isen.twinmx.async.RawDataManagerAsyncTask;
+import fr.isen.twinmx.fragments.ChartFragment;
+import fr.isen.twinmx.fragments.LimitedEntryList;
+import fr.isen.twinmx.listeners.OnCycleListener;
+import fr.isen.twinmx.listeners.OnTriggerListener;
+import fr.isen.twinmx.model.GraphDirection;
 import fr.isen.twinmx.model.InitChartData;
 import fr.isen.twinmx.utils.bluetooth.TMBluetooth;
 
@@ -28,7 +36,7 @@ import fr.isen.twinmx.utils.bluetooth.TMBluetooth;
  * Created by Clement on 19/01/2017.
  */
 
-public class RealTimeChartComponent implements Observer, OnChartGestureListener, OnChartValueSelectedListener {
+public class RealTimeChartComponent implements Observer, OnChartGestureListener, OnChartValueSelectedListener, OnCycleListener, OnTriggerListener {
 
     public static int NB_POINTS = 200;
     private final Activity context;
@@ -38,6 +46,12 @@ public class RealTimeChartComponent implements Observer, OnChartGestureListener,
     private TMBluetooth mBluetooth;
     private RawDataManagerAsyncTask rawDataManagerAsyncTask;
     private ChartFragment chartFragment;
+
+    private int[] colors;
+    private CalibrationManager calibrationManager;
+
+    private List<OnTriggerListener> onTriggerListeners = new LinkedList<>();
+    private TriggerManager triggerManager;
 
     public RealTimeChartComponent(Activity context, ChartFragment chartFragment, LineChart chart, TMBluetooth bluetooth, InitChartData initChartData) {
         this.context = context;
@@ -51,8 +65,16 @@ public class RealTimeChartComponent implements Observer, OnChartGestureListener,
      * onCreate
      **/
     public void onCreate() {
+        initColors(R.color.chartBlue, R.color.chartGreen, R.color.chartBrown, R.color.chartRed);
         mChart.setData(new LineData());
         initChartSettings();
+    }
+
+    private void initColors(int... resources) {
+        this.colors = new int[resources.length];
+        for (int i = 0; i < resources.length; i++) {
+            this.colors[i] = ContextCompat.getColor(this.context, resources[i]);
+        }
     }
 
     private void initChartSettings() {
@@ -67,15 +89,28 @@ public class RealTimeChartComponent implements Observer, OnChartGestureListener,
             setText("Pression (mBar)");
         }});
         mChart.getLegend().setEnabled(false);
+        mChart.getAxisRight().setAxisMinimum(0);
+
+        this.triggerManager = new TriggerManager(this.dataSetEntries);
 
         //Init
         if (this.initChartData != null && this.initChartData.hasGraphs()) {
             for (int index = 0; index < 4; index++) {
-                LimitedEntryList entries = addNewSet(this.context.getString(R.string.cylinder, index + 1), index, initChartData.getDataSetEntries(index));
+                LimitedEntryList entries = addNewSet(this.context.getString(R.string.cylinder, index + 1), index, initChartData.getDataSetEntries(index, triggerManager));
                 dataSetEntries.set(index, entries);
             }
         }
+        this.calibrationManager = new CalibrationManager(mChart, triggerManager, dataSetEntries, chartFragment);
+        if (this.initChartData != null && this.initChartData.getCalibrationWidth() != -1) {
+            this.calibrationManager.setNbPoints(initChartData.getCalibrationWidth());
+        }
+
+        this.triggerManager.addOnCycleListener(this);
+        this.triggerManager.addOnTriggerListener(this);
+        this.mBluetooth.addOnChangeInputListener(this.triggerManager);
+        this.mBluetooth.addOnChangeInputListener(this.calibrationManager);
     }
+
 
     /**
      * onResume()
@@ -86,16 +121,17 @@ public class RealTimeChartComponent implements Observer, OnChartGestureListener,
     }
 
     public void update(Boolean wasPlaying, boolean updateState) {
-        if (mBluetooth.getConnectedDevice() != null) { //If there's a connected device
+        if (mBluetooth.getConnectedDevice() != null || mBluetooth.hasConnectedFile()) { //If there's a connected device
             if (wasPlaying == null || wasPlaying) {
                 play(updateState);
             } else { // !wasPlaying
-                pause(updateState);
+                pause(false, updateState);
             }
         } else {
-            pause(updateState);
+            pause(false, updateState);
         }
     }
+
 
     /**
      * @param entries One entry per dataset
@@ -106,6 +142,7 @@ public class RealTimeChartComponent implements Observer, OnChartGestureListener,
             addEntry(i, entries[i]);
         }
     }
+
 
     public void addEntry(int index, Entry value) {
         LineData data = mChart.getData();
@@ -120,6 +157,7 @@ public class RealTimeChartComponent implements Observer, OnChartGestureListener,
             synchronized (entries) {
                 data.addEntry(value, index);
             }
+
             data.notifyDataChanged();
         }
     }
@@ -139,28 +177,9 @@ public class RealTimeChartComponent implements Observer, OnChartGestureListener,
 
     private LimitedEntryList addNewSet(String title, int index, LimitedEntryList initEntries) {
 
-        int color = 0;
-        switch (index) {
-            case 0:
-                color = R.color.chartBlue;
-                break;
-            case 1:
-                color = R.color.chartGreen;
-                break;
-            case 2:
-                color = R.color.chartBrown;
-                break;
-            case 3:
-                color = R.color.chartRed;
-                break;
-            default:
-                color = R.color.chartBlue;
-                break;
-        }
+        int color = this.colors[index % this.colors.length];
 
-        color = ContextCompat.getColor(this.context, color);
-
-        LimitedEntryList entries = initEntries != null && initEntries.size() == NB_POINTS ? initEntries : new LimitedEntryList(NB_POINTS);
+        LimitedEntryList entries = initEntries != null && initEntries.size() == NB_POINTS ? initEntries : new LimitedEntryList(NB_POINTS, this.triggerManager);
 
         LineDataSet dataSet = new LineDataSet(entries, title);
         dataSet.setColor(color);
@@ -176,18 +195,25 @@ public class RealTimeChartComponent implements Observer, OnChartGestureListener,
 
     public void play(boolean updateState) {
         if (rawDataManagerAsyncTask != null) {
-            rawDataManagerAsyncTask.stop();
+            rawDataManagerAsyncTask.stopAndWait();
             rawDataManagerAsyncTask = null;
         }
 
         rawDataManagerAsyncTask = new RawDataManagerAsyncTask(mBluetooth.getDataManager(), this);
         if (updateState) this.chartFragment.setPlaying(true);
-        rawDataManagerAsyncTask.execute();
+        if (Build.VERSION.SDK_INT >= 11)
+            rawDataManagerAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        else
+            rawDataManagerAsyncTask.execute();
     }
 
-    public void pause(boolean updateState) {
+    public void pause(boolean wait, boolean updateState) {
         if (rawDataManagerAsyncTask != null) {
-            rawDataManagerAsyncTask.stop();
+            if (wait) {
+                rawDataManagerAsyncTask.stopAndWait();
+            } else {
+                rawDataManagerAsyncTask.stop();
+            }
             if (updateState) this.chartFragment.setPlaying(false);
         }
         rawDataManagerAsyncTask = null;
@@ -290,5 +316,50 @@ public class RealTimeChartComponent implements Observer, OnChartGestureListener,
 
     public List<LimitedEntryList> getDataSetEntries() {
         return dataSetEntries;
+    }
+
+
+    public TriggerManager getTriggerManager() {
+        return triggerManager;
+    }
+
+    public CalibrationManager getCalibrationManager() {
+        return calibrationManager;
+    }
+
+    private boolean waitForTrigger = false;
+
+    @Override
+    public void onCycle() {
+        waitForTrigger = true;
+        for(LimitedEntryList dataSet : this.dataSetEntries) {
+            dataSet.setWaitForTrigger(true);
+        }
+    }
+
+    @Override
+    public void onTrigger(long nbPointsSinceLastTrigger, GraphDirection direction) {
+        if (waitForTrigger) {
+            if (direction == GraphDirection.GOING_UP) {
+                for(LimitedEntryList dataSet: this.dataSetEntries) {
+                    dataSet.setWaitForTrigger(false);
+                }
+                waitForTrigger = false;
+            }
+        }
+
+    }
+
+    public void resetCalibration() {
+        this.calibrationManager.reset();
+    }
+
+    public void disableCalibration() {
+        this.calibrationManager.disable();
+        this.triggerManager.disable();
+    }
+
+    public void enableCalibration() {
+        this.calibrationManager.recalibrate();
     }
 }

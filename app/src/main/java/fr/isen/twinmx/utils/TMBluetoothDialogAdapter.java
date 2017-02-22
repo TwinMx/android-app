@@ -7,6 +7,8 @@ import android.view.ViewGroup;
 
 import java.util.List;
 
+import fr.isen.twinmx.model.TMFile;
+import fr.isen.twinmx.model.TMInput;
 import fr.isen.twinmx.receivers.BluetoothIconReceiver;
 import fr.isen.twinmx.utils.bluetooth.SmoothBluetoothFork.TMDevice;
 import fr.isen.twinmx.utils.bluetooth.SmoothBluetoothFork.TMSmoothBluetooth;
@@ -19,10 +21,10 @@ public class TMBluetoothDialogAdapter extends RecyclerView.Adapter<TMDeviceHolde
 
     private final TMSmoothBluetooth.ConnectionCallback connectionCallback;
     private final TMBluetooth mBluetooth;
-    private List<TMDevice> mDevices;
+    private List<TMInput> mInputs;
 
-    public TMBluetoothDialogAdapter(List<TMDevice> devices, TMSmoothBluetooth.ConnectionCallback connectionCallback, TMBluetooth bluetooth) {
-        this.mDevices = devices;
+    public TMBluetoothDialogAdapter(List<TMInput> inputs, TMSmoothBluetooth.ConnectionCallback connectionCallback, TMBluetooth bluetooth) {
+        this.mInputs = inputs;
         this.connectionCallback = connectionCallback;
         this.mBluetooth = bluetooth;
     }
@@ -35,9 +37,19 @@ public class TMBluetoothDialogAdapter extends RecyclerView.Adapter<TMDeviceHolde
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                BluetoothIconReceiver.sendStatusConnecting();
+                TMDevice device = holder.getDevice();
+                TMFile file = holder.getFile();
+
                 mBluetooth.hideBluetoothDevicesDialog();
-                connectionCallback.connectTo(holder.getDevice());
+
+                if (device != null) {
+                    BluetoothIconReceiver.sendStatusConnecting();
+                    connectionCallback.connectTo(device);
+                }
+                else if (file != null) {
+                    mBluetooth.readFromFileIndefinitely(file);
+                }
+
             }
         });
 
@@ -46,11 +58,17 @@ public class TMBluetoothDialogAdapter extends RecyclerView.Adapter<TMDeviceHolde
 
     @Override
     public void onBindViewHolder(TMDeviceHolder holder, int position) {
-        holder.bind(this.mDevices.get(position));
+        TMInput input = this.mInputs.get(position);
+        if (input instanceof TMDevice) {
+            holder.bind((TMDevice)input);
+        }
+        else {
+            holder.bind((TMFile)input);
+        }
     }
 
     @Override
     public int getItemCount() {
-        return this.mDevices.size();
+        return this.mInputs.size();
     }
 }

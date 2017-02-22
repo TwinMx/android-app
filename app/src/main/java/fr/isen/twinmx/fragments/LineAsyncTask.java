@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.github.mikephil.charting.data.Entry;
 
+import fr.isen.twinmx.fragments.chart.RealTimeChartComponent;
 import fr.isen.twinmx.model.MeasureEntry;
 import fr.isen.twinmx.model.MeasuresList;
 import fr.isen.twinmx.utils.bluetooth.TMBluetoothManager;

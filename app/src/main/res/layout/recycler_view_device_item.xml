@@ -18,15 +18,17 @@
         android:layout_gravity="center"/>
     <LinearLayout
         android:orientation="vertical"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:paddingLeft="@dimen/bt_devices_recycler_view_text_container_horizontal_padding"
         android:paddingRight="@dimen/bt_devices_recycler_view_text_container_horizontal_padding"
         android:layout_weight="16"
+        android:gravity="center_vertical"
         android:layout_height="wrap_content">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="@dimen/bt_devices_recycler_view_text_item_padding"
+            android:gravity="center_vertical"
             android:textColor="@android:color/black"
             android:id="@+id/recycler_view_device_item_name"/>
         <TextView
