@@ -55,6 +55,21 @@ public class TMDataSet extends ArrayList<Entry> {
         this.notifyTriggers = false;
     }
 
+    public TMDataSet(float[] floats, int nbPoints, TMDataSets dataSets) {
+        super(nbPoints);
+        this.size = nbPoints;
+        this.dataSets = dataSets;
+        for(int i = 0; i < floats.length; i++) {
+            super.add(new Entry(i, floats[i]));
+        }
+        if (floats.length < nbPoints) {
+            for(int i = floats.length; i < nbPoints; i++) {
+                super.add(new Entry(i, floats[i]));
+            }
+        }
+        this.notifyTriggers = false;
+    }
+
     @Override
     public boolean add(Entry entry) {
         add(entry.getY());

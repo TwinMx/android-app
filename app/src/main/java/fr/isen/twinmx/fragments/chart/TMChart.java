@@ -65,7 +65,6 @@ public class TMChart implements Observer {
     }
 
 
-
     private void initChartSettings() {
         mChart.getAxisRight().setEnabled(false);
         mChart.getXAxis().setDrawLabels(false);
@@ -74,9 +73,9 @@ public class TMChart implements Observer {
             setText(TMApplication.getContext().getString(R.string.pressure));
         }});
         mChart.getLegend().setEnabled(false);
-        mChart.getAxisRight().setAxisMinimum(0);
 
         dataSets.load(chartBundle);
+        mChart.getAxisRight().setAxisMinimum(0);
 
         this.mBluetooth.addOnChangeInputListener(this.dataSets);
     }
@@ -147,7 +146,9 @@ public class TMChart implements Observer {
         this.dataSets.recalibrate();
     }
 
-    public void disableCalibration() { this.dataSets.disableCalibration(); }
+    public void disableCalibration() {
+        this.dataSets.disableCalibration();
+    }
 
     public void enableCalibration() {
         this.dataSets.enableCalibration();

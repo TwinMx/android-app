@@ -47,11 +47,6 @@ public class CalibrationManager implements OnPeriodListener, OnChangeInputListen
         }
     }
 
-    public void setNbPoints(long twoPeriods) {
-        if (twoPeriods > 0) return;
-        makeCalibration((int) twoPeriods);
-    }
-
     private void computeCalibration() {
         if (periods.size() >= 2) {
             int period = (int) (periods.get(periods.size() - 1) + periods.get(periods.size() - 2));
@@ -70,10 +65,8 @@ public class CalibrationManager implements OnPeriodListener, OnChangeInputListen
 
     private void makeCalibration(int nbPoints) {
         calibrated = true;
-        this.nbPoints = nbPoints;
         setSizes(nbPoints);
-        mChart.getXAxis().setAxisMinimum(0);
-        mChart.getXAxis().setAxisMaximum(nbPoints);
+        this.setNbPoints(nbPoints);
     }
 
     private void setSizes(int nbPoints) {
@@ -117,5 +110,24 @@ public class CalibrationManager implements OnPeriodListener, OnChangeInputListen
 
     public boolean isCalibrated() {
         return calibrated;
+    }
+
+    public boolean isDisabled() {
+        return disabled;
+    }
+
+    public void setDisabled(boolean disabled) {
+        this.disabled = disabled;
+    }
+
+    public void setNbPoints(long nbPoints) {
+        this.nbPoints = nbPoints;
+        mChart.getXAxis().setAxisMinimum(0);
+        mChart.getXAxis().setAxisMaximum(nbPoints);
+        mChart.getAxisRight().setAxisMinimum(0);
+    }
+
+    public void setCalibrated(boolean calibrated) {
+        this.calibrated = calibrated;
     }
 }

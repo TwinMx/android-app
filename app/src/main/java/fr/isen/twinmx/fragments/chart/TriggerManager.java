@@ -138,4 +138,7 @@ public class TriggerManager implements OnChangeInputListener {
     }
 
 
+    public boolean isDisabled() {
+        return disabled;
+    }
 }

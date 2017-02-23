@@ -2,71 +2,63 @@ package fr.isen.twinmx.model;
 
 import android.os.Bundle;
 
+import java.util.LinkedList;
 import java.util.List;
+
+import fr.isen.twinmx.fragments.chart.CalibrationManager;
+import fr.isen.twinmx.fragments.chart.TriggerManager;
 
 /**
  * Created by Clement on 03/02/2017.
  */
 public class ChartBundle {
 
-    public static final String STATE_NB_DATASETS = "STATE_NB_DATASETS";
-    public static final String STATE_DATASET = "STATE_DATASET_";
-    public static final String STATE_NB_POINTS = "STATE_NB_POINTS";
+    /**** SAVE ****/
+
+    //TriggerManager
+    private static final String TRIGGER_MGR_DISABLED = "trigger-manager-disabled";
+
+    //CalibrationManager
+    private static final String CALIBRATION_MGR_CALIBRATED = "calibration-manager-calibrated";
+    private static final String CALIBRATION_MGR_DISABLED = "calibration-manager-disabled";
+    private static final String CALIBRATION_MGR_NB_POINTS = "calibration-manager-nb-points";
+
+    //TMDataSets
+    private static final String TM_DATASETS_NB_GRAPHS = "tm-datasets-nb-graphs";
+    private static final String TM_DATASETS_NB_POINTS = "tm-datasets-nb-points";
+    private static final String TM_DATASETS_GRAPH_ = "tm-datasets-graph-";
+
+    private static String TM_DATASETS_GRAPH(int index) {
+        return TM_DATASETS_GRAPH_ + index;
+    }
 
     private final Bundle b;
 /*    public static final String STATE_TRIGGER = "STATE_TRIGGER";*/
 
-
-
-    public ChartBundle(Bundle b) {
-        this.b = b;
+    public static void save(Bundle b, TMDataSets tm, TriggerManager tr, CalibrationManager cm) {
+        save(b, tr);
+        save(b, cm);
+        save(b, tm);
     }
 
-    public int getNbDataSets() {
-        return b.containsKey(STATE_NB_DATASETS) ? b.getInt(STATE_NB_DATASETS) : 0;
+    private static void save(Bundle b, TriggerManager tr) {
+        b.putBoolean(TRIGGER_MGR_DISABLED, tr.isDisabled());
     }
 
-    public int getNbPoints() {
-        return b.containsKey(STATE_NB_POINTS) ? b.getInt(STATE_NB_POINTS) : 0;
+    private static void save(Bundle b, CalibrationManager cm) {
+        b.putBoolean(CALIBRATION_MGR_CALIBRATED, cm.isCalibrated());
+        b.putBoolean(CALIBRATION_MGR_DISABLED, cm.isDisabled());
+        b.putLong(CALIBRATION_MGR_NB_POINTS, cm.getNbPoints());
     }
 
-    public float[] getDataSet(int index) {
-        try {
-            return b.containsKey(STATE_DATASET+index) ?
-                    b.getFloatArray(STATE_DATASET+index)
-                    : null;
-        } catch(Exception ex) {
-            return null;
+    private static void save(Bundle b, TMDataSets tm) {
+        int nbGraphs = tm.getNbGraphs();
+        b.putInt(TM_DATASETS_NB_GRAPHS, nbGraphs);
+        b.putInt(TM_DATASETS_NB_POINTS, tm.getNbPoints());
+        for (int i = 0; i < nbGraphs; i++) {
+            b.putFloatArray(TM_DATASETS_GRAPH(i), toFloatArray(tm.getDataset(i)));
         }
     }
-
-
-    public static void putNbGraphs(Bundle outState, int nbGraphs) {
-        outState.putInt(ChartBundle.STATE_NB_DATASETS, nbGraphs);
-    }
-
-    public static void putNbPoints(Bundle outState, int nbPoints) {
-        outState.putInt(ChartBundle.STATE_NB_POINTS, nbPoints);
-    }
-
-    public static void putGraphs(Bundle outState, List<TMDataSet> dataSets) {
-        for(int i = 0; i < dataSets.size(); i++) {
-            putGraph(outState, i, toFloatArray(dataSets.get(i)));
-        }
-    }
-
-    private static void putGraph(Bundle outState, int index, float[] values) {
-        outState.putFloatArray(ChartBundle.STATE_DATASET + index, values);
-    }
-
-/*    public static void putTrigger(Bundle outState, TMDataSet calibratedDataSet) {
-        try {
-            outState.putFloat(ChartBundle.STATE_TRIGGER, calibratedDataSet.getTrigger());
-        }
-        catch(Exception ex) {
-            // No trigger
-        }
-    }*/
 
     public static float[] toFloatArray(TMDataSet dataSet) {
         if (dataSet != null && dataSet.size() > 0) {
@@ -79,4 +71,52 @@ public class ChartBundle {
         }
         return null;
     }
+
+
+    /**** LOAD ****/
+
+    public ChartBundle(Bundle b) {
+        this.b = b;
+    }
+
+    public boolean isTriggerManagerDisabled() {
+        return b.getBoolean(TRIGGER_MGR_DISABLED);
+    }
+
+    public boolean isCalibrationManagerCalibrated() {
+        return b.getBoolean(CALIBRATION_MGR_CALIBRATED);
+    }
+
+    public boolean isCalibrationManagerDisabled() {
+        return b.getBoolean(CALIBRATION_MGR_DISABLED);
+    }
+
+    public long getCalibrationManagerNbPoints() {
+        return b.getLong(CALIBRATION_MGR_NB_POINTS);
+    }
+
+    public int getTMDataSetsNbGraphs() {
+        return b.getInt(TM_DATASETS_NB_GRAPHS);
+    }
+
+    public int getTMDataSetsNbPoints() {
+        return b.getInt(TM_DATASETS_NB_POINTS);
+    }
+
+    public List<TMDataSet> getTMDataSetsValues(TMDataSets tmDataSets) {
+        int nbGraphs = getTMDataSetsNbGraphs();
+        int nbPoints = getTMDataSetsNbPoints();
+        List<TMDataSet> dataSets = new LinkedList<>();
+        for(int i = 0; i < nbGraphs; i++) {
+            float[] floats = getFloatArray(i);
+            dataSets.add(new TMDataSet(floats, nbPoints, tmDataSets));
+        }
+        return dataSets;
+    }
+
+    private float[] getFloatArray(int index) {
+        return b.getFloatArray(TM_DATASETS_GRAPH(index));
+    }
+
+
 }

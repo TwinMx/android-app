@@ -39,7 +39,6 @@ import fr.isen.twinmx.database.MotoRepository;
 import fr.isen.twinmx.database.model.Moto;
 import fr.isen.twinmx.listeners.OnMotoHistoryClickListener;
 import fr.isen.twinmx.model.AcquisitionSaveRequest;
-import fr.isen.twinmx.model.TMDataSets;
 import fr.isen.twinmx.ui.adapters.DialogMotoAdapter;
 import fr.isen.twinmx.utils.bluetooth.TMBluetooth;
 
@@ -53,7 +52,7 @@ public class ChartFragment extends BluetoothFragment implements OnMotoHistoryCli
     private int minMotorValue = 0;
     private TMChart chartComponent;
     private boolean playing = false;
-    private boolean isCalibrationActivated = true;
+    private boolean isCalibrationEnabled = true;
 
     private boolean isCalibrating = false;
 
@@ -61,14 +60,14 @@ public class ChartFragment extends BluetoothFragment implements OnMotoHistoryCli
     ImageView playPauseImage;
 
     @BindView(R.id.refresh)
-    ImageView refresh;
+    ImageView calibrationButton;
 
     @OnLongClick(R.id.refresh)
     public boolean onLongCalibrationClick(View view) {
         if (view instanceof ImageView) {
             ImageView v = (ImageView) view;
 
-            if (isCalibrationActivated) {
+            if (isCalibrationEnabled) {
                 this.chartComponent.disableCalibration();
                 v.setBackground(ContextCompat.getDrawable(TMApplication.getContext(), R.drawable.greyripple));
             } else {
@@ -76,7 +75,7 @@ public class ChartFragment extends BluetoothFragment implements OnMotoHistoryCli
                 this.chartComponent.enableCalibration();
             }
 
-            this.isCalibrationActivated = !isCalibrationActivated;
+            this.isCalibrationEnabled = !isCalibrationEnabled;
         }
         return true;
     }
@@ -85,10 +84,10 @@ public class ChartFragment extends BluetoothFragment implements OnMotoHistoryCli
     public void onCalibrationClick(View view) {
         if (this.isPlaying()) {
             this.chartComponent.resetCalibration();
-            if (!this.isCalibrationActivated) {
+            if (!this.isCalibrationEnabled) {
                 ImageView v = (ImageView) view;
                 v.setBackground(ContextCompat.getDrawable(TMApplication.getContext(), R.drawable.revertripple));
-                this.isCalibrationActivated = true;
+                this.isCalibrationEnabled = true;
             }
 
         }
@@ -98,15 +97,11 @@ public class ChartFragment extends BluetoothFragment implements OnMotoHistoryCli
 
     private static final String STATE_PLAYING = "STATE_PLAYING";
 
-    private static final String STATE_NB_GRAPHS = "STATE_NB_GRAPHS";
-    private static final String STATE_GRAPH = "STATE_GRAPH_";
-    private static final String STATE_GRAPH_SIZE = "STATE_GRAPH_SIZE";
-    private static final String STATE_TRIGGER = "STATE_TRIGGER";
-    private static final String STATE_CALIBRATION_WIDTH = "STATE_CALIBRATION_WIDTH";
     private static final String STATE_CURVE_1_ENABLED = "STATE_CURVE_1_ENABLED";
     private static final String STATE_CURVE_2_ENABLED = "STATE_CURVE_2_ENABLED";
     private static final String STATE_CURVE_3_ENABLED = "STATE_CURVE_3_ENABLED";
     private static final String STATE_CURVE_4_ENABLED = "STATE_CURVE_4_ENABLED";
+    private static final String STATE_CALIBRATION_BTN_ENABLED = "STATE_CALIBRATION_BTN_ENABLED";
 
     private MaterialDialog chooseMotoDialog;
     private AcquisitionSaveRequest acquisitionSaveRequest = null;
@@ -239,6 +234,7 @@ public class ChartFragment extends BluetoothFragment implements OnMotoHistoryCli
             this.setCheckBoxState(1, savedInstanceState, STATE_CURVE_2_ENABLED, this.checkBoxCurveTwo);
             this.setCheckBoxState(2, savedInstanceState, STATE_CURVE_3_ENABLED, this.checkBoxCurveThree);
             this.setCheckBoxState(3, savedInstanceState, STATE_CURVE_4_ENABLED, this.checkBoxCurveFour);
+            this.setCalibrationButtonState(savedInstanceState, this.calibrationButton);
         }
 
         return rootView;
@@ -265,6 +261,16 @@ public class ChartFragment extends BluetoothFragment implements OnMotoHistoryCli
             final boolean isChecked = savedInstanceState.getBoolean(key, true);
             checkbox.setChecked(isChecked);
             this.chartComponent.setVisible(index, isChecked);
+        }
+    }
+
+    private void setCalibrationButtonState(Bundle savedInstanceState, ImageView refresh) {
+        if (savedInstanceState.containsKey(STATE_CALIBRATION_BTN_ENABLED)) {
+            final boolean isEnabled = savedInstanceState.getBoolean(STATE_CALIBRATION_BTN_ENABLED);
+            if (!isEnabled) {
+                refresh.setBackground(ContextCompat.getDrawable(TMApplication.getContext(), R.drawable.greyripple));
+            }
+            isCalibrationEnabled = isEnabled;
         }
     }
 
@@ -311,7 +317,7 @@ public class ChartFragment extends BluetoothFragment implements OnMotoHistoryCli
         outState.putBoolean(STATE_CURVE_2_ENABLED, checkBoxCurveTwo.isChecked());
         outState.putBoolean(STATE_CURVE_3_ENABLED, checkBoxCurveThree.isChecked());
         outState.putBoolean(STATE_CURVE_4_ENABLED, checkBoxCurveFour.isChecked());
-
+        outState.putBoolean(STATE_CALIBRATION_BTN_ENABLED, isCalibrationEnabled);
         this.chartComponent.save(outState);
         super.onSaveInstanceState(outState);
     }
