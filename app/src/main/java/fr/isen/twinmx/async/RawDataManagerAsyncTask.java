@@ -4,10 +4,8 @@ import com.github.mikephil.charting.data.Entry;
 
 import java.util.List;
 
-import fr.isen.twinmx.fragments.chart.TMChart;
 import fr.isen.twinmx.model.RawData;
 import fr.isen.twinmx.model.RawMeasures;
-import fr.isen.twinmx.model.TMDataSet;
 import fr.isen.twinmx.model.TMDataSets;
 import fr.isen.twinmx.utils.bluetooth.TMBluetoothDataManager;
 
@@ -17,7 +15,7 @@ import fr.isen.twinmx.utils.bluetooth.TMBluetoothDataManager;
 
 public class RawDataManagerAsyncTask extends StoppableAsyncTask<Void, Entry, Void> {
 
-    private static final int[] TUBES_ORDER = new int[]{4, 3, 2, 1};
+    private static final int[] PIPES_ORDER = new int[]{3,2,1,0};
 
     private static int HEADER = 128;
     private static final int AVERAGE = 4;
@@ -101,10 +99,10 @@ public class RawDataManagerAsyncTask extends StoppableAsyncTask<Void, Entry, Voi
 
         if (nbPointsInAverage >= AVERAGE) {
             dataSets.addEntries(
-                    createEntry(sum[TUBES_ORDER[0]] / nbPointsInAverage),
-                    createEntry(sum[TUBES_ORDER[1]] / nbPointsInAverage),
-                    createEntry(sum[TUBES_ORDER[2]] / nbPointsInAverage),
-                    createEntry(sum[TUBES_ORDER[3]] / nbPointsInAverage)
+                    createEntry(sum[PIPES_ORDER[0]] / nbPointsInAverage),
+                    createEntry(sum[PIPES_ORDER[1]] / nbPointsInAverage),
+                    createEntry(sum[PIPES_ORDER[2]] / nbPointsInAverage),
+                    createEntry(sum[PIPES_ORDER[3]] / nbPointsInAverage)
             );
             for (int i = 0; i < sum.length; i++) {
                 sum[i] = 0;
