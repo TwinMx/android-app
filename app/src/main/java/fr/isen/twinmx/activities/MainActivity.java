@@ -8,6 +8,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -72,6 +73,9 @@ public class MainActivity extends AppCompatActivity implements TMBottomNavigatio
     private static TMBluetooth mBluetooth; //Keep a pointer to avoid GC
 
     private static final String FRAGMENT_TAG = "FRAGMENT_TAG";
+    private static final String ACTION_SHORTCUT_ACQUISITION = "shortcut_acquisition";
+    private static final String ACTION_SHORTCUT_HISTORY = "shortcut_history";
+    private static final String ACTION_SHORTCUT_INSTRUCTION = "shortcut_instruction";
 
 
     @Override
@@ -104,8 +108,23 @@ public class MainActivity extends AppCompatActivity implements TMBottomNavigatio
             MainActivity.mBluetooth = new TMBluetooth(this);
             this.bluetoothIconReceiver = new BluetoothIconReceiver(bluetoothIcon, bluetoothProgressBar, viewPager, mBluetooth);
             MainActivity.mBluetooth.setBluetoothIconReceiver(this.bluetoothIconReceiver);
-            final ChartFragment chartFragment = ChartFragment.newInstance(this, mBluetooth);
-            this.launchFragment(chartFragment, false);
+
+            final Intent intent = getIntent();
+            if (intent != null && intent.getAction() != null) {
+                int tabPosition = findTabPosition(intent.getAction());
+                if (tabPosition >= 0) {
+                    this.navigation.setCurrentItem(tabPosition, false);
+                    this.onTabSelected(tabPosition);
+                }
+                else {
+                    final ChartFragment chartFragment = ChartFragment.newInstance(this, mBluetooth);
+                    this.launchFragment(chartFragment, false);
+                }
+            }
+            else {
+                final ChartFragment chartFragment = ChartFragment.newInstance(this, mBluetooth);
+                this.launchFragment(chartFragment, false);
+            }
         }
         else
         {
@@ -119,6 +138,9 @@ public class MainActivity extends AppCompatActivity implements TMBottomNavigatio
                 chartFragment.setActivity(this);
             }
         }
+
+        final Intent intent = this.getIntent();
+        Log.d("Action: ", intent.getAction());
 
 
     }
@@ -137,6 +159,19 @@ public class MainActivity extends AppCompatActivity implements TMBottomNavigatio
     protected void onPause() {
         super.onPause();
         this.unregisterReceiver(bluetoothIconReceiver);
+    }
+
+    private int findTabPosition(String action) {
+        switch(action) {
+            case ACTION_SHORTCUT_ACQUISITION:
+                return 0;
+            case ACTION_SHORTCUT_HISTORY:
+                return 1;
+            case ACTION_SHORTCUT_INSTRUCTION:
+                return 2;
+            default:
+                return -1;
+        }
     }
 
     @Override
