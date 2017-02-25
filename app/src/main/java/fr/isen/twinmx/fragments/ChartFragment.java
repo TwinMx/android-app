@@ -56,7 +56,7 @@ public class ChartFragment extends BluetoothFragment implements OnMotoHistoryCli
     private int minMotorValue = 0;
     private TMChart chartComponent;
     private boolean playing = false;
-    private Boolean wasPlaying = null;
+    private static Boolean wasPlaying = null;
     private boolean isCalibrationEnabled = true;
 
     private static final String STATE_PLAYING = "STATE_PLAYING";
@@ -134,34 +134,9 @@ public class ChartFragment extends BluetoothFragment implements OnMotoHistoryCli
         this.chartComponent.setVisible(index, ((AppCompatCheckBox) view).isChecked());
     }
 
-
     @OnClick(R.id.match_start_pause)
     public void onControlsClick(View view) {
         this.playPause();
-    }
-
-    private void setPlayPauseImage(ImageView image, Context context, Boolean value) {
-        if (value == null) {
-            return;
-        }
-
-        if (value) {
-            setPauseImage(image, context);
-            this.setPlaying(true);
-        } else {
-            setPlayImage(image, context);
-            this.setPlaying(false);
-        }
-    }
-
-    private void setPlayImage(ImageView image, Context context) {
-        if (context != null)
-            image.setImageDrawable(ContextCompat.getDrawable(this.context, R.drawable.ic_play_arrow_white_24dp));
-    }
-
-    private void setPauseImage(ImageView image, Context context) {
-        if (context != null)
-            image.setImageDrawable(ContextCompat.getDrawable(this.context, R.drawable.ic_pause_white_24dp));
     }
 
     @OnClick(R.id.auto_focus)
@@ -171,17 +146,14 @@ public class ChartFragment extends BluetoothFragment implements OnMotoHistoryCli
 
     @OnClick(R.id.save_acquisition)
     public void onSaveClick(View view) {
-        pauseChart();
+        pauseBeforeSaving();
         this.acquisitionSaveRequest = this.chartComponent.createAcquisitionSaveRequest();
         if (this.acquisitionSaveRequest != null) {
             showChooseMotoDialog();
         }
     }
 
-    private void pauseChart() {
-        this.chartComponent.pause(true);
-        this.setPauseImage(this.playPauseImage, this.context);
-    }
+
 
 
     public static ChartFragment newInstance(Context context, TMBluetooth bluetooth) {
@@ -219,9 +191,6 @@ public class ChartFragment extends BluetoothFragment implements OnMotoHistoryCli
             this.setCheckBoxState(3, savedInstanceState, STATE_CURVE_4_ENABLED, this.checkBoxCurveFour);
             this.setCalibrationButtonState(savedInstanceState, this.calibrationButton);
             this.wasPlaying = savedInstanceState.getBoolean(STATE_PLAYING);
-        }
-        else {
-            this.wasPlaying = null;
         }
 
         return rootView;
@@ -426,11 +395,40 @@ public class ChartFragment extends BluetoothFragment implements OnMotoHistoryCli
         this.setPlaying(false);
     }
 
+    private void pauseBeforeSaving() {
+        this.chartComponent.pause(true);
+        this.setPauseImage(this.playPauseImage, this.context);
+    }
+
     public boolean isPlaying() {
         return playing;
     }
 
     public void setPlaying(boolean playing) {
         this.playing = playing;
+    }
+
+    private void setPlayPauseImage(ImageView image, Context context, Boolean value) {
+        if (value == null) {
+            return;
+        }
+
+        if (value) {
+            setPauseImage(image, context);
+            this.setPlaying(true);
+        } else {
+            setPlayImage(image, context);
+            this.setPlaying(false);
+        }
+    }
+
+    private void setPlayImage(ImageView image, Context context) {
+        if (context != null)
+            image.setImageDrawable(ContextCompat.getDrawable(this.context, R.drawable.ic_play_arrow_white_24dp));
+    }
+
+    private void setPauseImage(ImageView image, Context context) {
+        if (context != null)
+            image.setImageDrawable(ContextCompat.getDrawable(this.context, R.drawable.ic_pause_white_24dp));
     }
 }
