@@ -1,7 +1,6 @@
 package fr.isen.twinmx.utils.bluetooth;
 
 import android.app.Activity;
-import android.app.Application;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.content.Intent;
@@ -12,17 +11,13 @@ import android.util.Log;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import fr.isen.twinmx.R;
 import fr.isen.twinmx.async.FileInfiniteReaderAsyncTask;
@@ -110,7 +105,7 @@ public class TMBluetooth extends TMSmoothBluetooth implements TMSmoothBluetooth.
 
         this.onChangeInput();
 
-        //BluetoothIconReceiver.sendStatusOk(String.format(TMApplication.getContext().getResources().getString(R.string.connected_to), device.getName()));
+        //BluetoothIconReceiver.sendStatusOk(String.format(TMApplication.getActivity().getResources().getString(R.string.connected_to), device.getName()));
         this.setChanged();
         this.notifyObservers();
     }
@@ -126,7 +121,7 @@ public class TMBluetooth extends TMSmoothBluetooth implements TMSmoothBluetooth.
     @Override
     public void onConnectionFailed(TMDevice device) {
         Log.d("TMBluetooth", "onConnectionFailed ["+device+"]");
-        //BluetoothIconReceiver.sendStatusError(String.format(TMApplication.getContext().getResources().getString(R.string.connection_failed_to),device.getName()));
+        //BluetoothIconReceiver.sendStatusError(String.format(TMApplication.getActivity().getResources().getString(R.string.connection_failed_to),device.getName()));
         if (this.bluetoothIconReceiver != null) {
             this.bluetoothIconReceiver.error(TMApplication.loadString(R.string.connection_failed_to, device != null ? device.getName() : ""));
         }
@@ -295,7 +290,7 @@ public class TMBluetooth extends TMSmoothBluetooth implements TMSmoothBluetooth.
         fileInfiniteReaderAsyncTask = null;
     }
 
-    public Context getContext() {
+    public Activity getActivity() {
         return activity;
     }
 
@@ -309,7 +304,7 @@ public class TMBluetooth extends TMSmoothBluetooth implements TMSmoothBluetooth.
 
     private List<TMFile> getFilesFromDocumentDirectory() {
         try {
-            String[] fileNames = this.getContext().getResources().getAssets().list("measures");
+            String[] fileNames = this.getActivity().getResources().getAssets().list("measures");
 
             List<TMFile> result = new LinkedList<>();
             for(String fn : fileNames) {

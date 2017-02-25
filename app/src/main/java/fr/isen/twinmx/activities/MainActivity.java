@@ -101,22 +101,22 @@ public class MainActivity extends AppCompatActivity implements TMBottomNavigatio
         RealmHelper.setRealm(Realm.getInstance(this.realmConfiguration));
 
         if (savedInstanceState == null) {
-            this.mBluetooth = new TMBluetooth(this);
+            MainActivity.mBluetooth = new TMBluetooth(this);
             this.bluetoothIconReceiver = new BluetoothIconReceiver(bluetoothIcon, bluetoothProgressBar, viewPager, mBluetooth);
-            this.mBluetooth.setBluetoothIconReceiver(this.bluetoothIconReceiver);
+            MainActivity.mBluetooth.setBluetoothIconReceiver(this.bluetoothIconReceiver);
             final ChartFragment chartFragment = ChartFragment.newInstance(this, mBluetooth);
             this.launchFragment(chartFragment, false);
         }
         else
         {
-            this.mBluetooth.setActivity(this);
+            MainActivity.mBluetooth.setActivity(this);
             this.bluetoothIconReceiver = new BluetoothIconReceiver(bluetoothIcon, bluetoothProgressBar, viewPager, mBluetooth);
-            this.mBluetooth.setBluetoothIconReceiver(this.bluetoothIconReceiver);
+            MainActivity.mBluetooth.setBluetoothIconReceiver(this.bluetoothIconReceiver);
             Fragment fragment = getCurrentFragment();
             if (fragment instanceof ChartFragment) {
                 ChartFragment chartFragment = (ChartFragment) fragment;
                 chartFragment.setBluetooth(mBluetooth);
-                chartFragment.setContext(this);
+                chartFragment.setActivity(this);
             }
         }
 

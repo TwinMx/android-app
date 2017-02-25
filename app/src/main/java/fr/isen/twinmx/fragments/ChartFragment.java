@@ -1,5 +1,6 @@
 package fr.isen.twinmx.fragments;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -7,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,7 +53,7 @@ public class ChartFragment extends BluetoothFragment implements OnMotoHistoryCli
      * Properties
      **/
 
-    private Context context;
+    private Context activity;
     private int maxMotorValue = 8000;
     private int minMotorValue = 0;
     private TMChart chartComponent;
@@ -154,11 +156,9 @@ public class ChartFragment extends BluetoothFragment implements OnMotoHistoryCli
     }
 
 
-
-
-    public static ChartFragment newInstance(Context context, TMBluetooth bluetooth) {
+    public static ChartFragment newInstance(Activity activity, TMBluetooth bluetooth) {
         final ChartFragment chartFragment = new ChartFragment();
-        chartFragment.context = context;
+        chartFragment.activity = activity;
         chartFragment.setBluetooth(bluetooth);
         return chartFragment;
     }
@@ -167,6 +167,8 @@ public class ChartFragment extends BluetoothFragment implements OnMotoHistoryCli
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View rootView = inflater.inflate(R.layout.fragment_chart, container, false);
+
+        Log.d("chartFragment", this.toString());
 
         ButterKnife.bind(this, rootView);
 
@@ -181,8 +183,7 @@ public class ChartFragment extends BluetoothFragment implements OnMotoHistoryCli
                 savedInstanceState != null ? new ChartBundle(savedInstanceState) : null);
         this.chartComponent.onCreate();
 
-        TriggerManager triggerManager = this.chartComponent.getTriggerManager();
-        triggerManager.addOnPeriodListener(this);
+        this.chartComponent.getTriggerManager().addOnPeriodListener(this);
 
         if (savedInstanceState != null) {
             this.setCheckBoxState(0, savedInstanceState, STATE_CURVE_1_ENABLED, this.checkBoxCurveOne);
@@ -196,23 +197,6 @@ public class ChartFragment extends BluetoothFragment implements OnMotoHistoryCli
         return rootView;
     }
 
-    private void setCheckBoxState(int index, Bundle savedInstanceState, String key, AppCompatCheckBox checkbox) {
-        if (savedInstanceState.containsKey(key)) {
-            final boolean isChecked = savedInstanceState.getBoolean(key, true);
-            checkbox.setChecked(isChecked);
-            this.chartComponent.setVisible(index, isChecked);
-        }
-    }
-
-    private void setCalibrationButtonState(Bundle savedInstanceState, ImageView refresh) {
-        if (savedInstanceState.containsKey(STATE_CALIBRATION_BTN_ENABLED)) {
-            final boolean isEnabled = savedInstanceState.getBoolean(STATE_CALIBRATION_BTN_ENABLED);
-            if (!isEnabled) {
-                refresh.setBackground(ContextCompat.getDrawable(TMApplication.getContext(), R.drawable.greyripple));
-            }
-            isCalibrationEnabled = isEnabled;
-        }
-    }
 
     public void onResume() {
         super.onResume();
@@ -263,11 +247,27 @@ public class ChartFragment extends BluetoothFragment implements OnMotoHistoryCli
         super.onSaveInstanceState(outState);
     }
 
-    public void setContext(Context context) {
-        this.context = context;
+    public void setActivity(Context activity) {
+        this.activity = activity;
     }
 
+    private void setCheckBoxState(int index, Bundle savedInstanceState, String key, AppCompatCheckBox checkbox) {
+        if (savedInstanceState.containsKey(key)) {
+            final boolean isChecked = savedInstanceState.getBoolean(key, true);
+            checkbox.setChecked(isChecked);
+            this.chartComponent.setVisible(index, isChecked);
+        }
+    }
 
+    private void setCalibrationButtonState(Bundle savedInstanceState, ImageView refresh) {
+        if (savedInstanceState.containsKey(STATE_CALIBRATION_BTN_ENABLED)) {
+            final boolean isEnabled = savedInstanceState.getBoolean(STATE_CALIBRATION_BTN_ENABLED);
+            if (!isEnabled) {
+                refresh.setBackground(ContextCompat.getDrawable(TMApplication.getContext(), R.drawable.greyripple));
+            }
+            isCalibrationEnabled = isEnabled;
+        }
+    }
 
     public void onMotoHistoryClick(Moto moto) {
         this.acquisitionSaveRequest.setMoto(moto);
@@ -373,8 +373,7 @@ public class ChartFragment extends BluetoothFragment implements OnMotoHistoryCli
     public void playPause() {
         if (this.isPlaying()) {
             this.pause();
-        }
-        else {
+        } else {
             this.play();
         }
     }
@@ -384,20 +383,20 @@ public class ChartFragment extends BluetoothFragment implements OnMotoHistoryCli
         if (!hasConnectedDevice) {
             return;
         }
-        setPauseImage(this.playPauseImage, context); //next possible icon is 'pause'
+        setPauseImage(this.playPauseImage, activity); //next possible icon is 'pause'
         this.chartComponent.play();
         this.setPlaying(true);
     }
 
     public void pause() {
-        setPlayImage(this.playPauseImage, context); //next possible icon 'play'
+        setPlayImage(this.playPauseImage, activity); //next possible icon 'play'
         this.chartComponent.pause(false);
         this.setPlaying(false);
     }
 
     private void pauseBeforeSaving() {
         this.chartComponent.pause(true);
-        this.setPauseImage(this.playPauseImage, this.context);
+        this.setPauseImage(this.playPauseImage, this.activity);
     }
 
     public boolean isPlaying() {
@@ -424,11 +423,11 @@ public class ChartFragment extends BluetoothFragment implements OnMotoHistoryCli
 
     private void setPlayImage(ImageView image, Context context) {
         if (context != null)
-            image.setImageDrawable(ContextCompat.getDrawable(this.context, R.drawable.ic_play_arrow_white_24dp));
+            image.setImageDrawable(ContextCompat.getDrawable(this.activity, R.drawable.ic_play_arrow_white_24dp));
     }
 
     private void setPauseImage(ImageView image, Context context) {
         if (context != null)
-            image.setImageDrawable(ContextCompat.getDrawable(this.context, R.drawable.ic_pause_white_24dp));
+            image.setImageDrawable(ContextCompat.getDrawable(this.activity, R.drawable.ic_pause_white_24dp));
     }
 }
