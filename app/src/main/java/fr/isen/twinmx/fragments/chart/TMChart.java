@@ -42,12 +42,6 @@ public class TMChart implements Observer {
     private ChartFragment chartFragment;
 
 
-    private int[] colors;
-    private CalibrationManager calibrationManager;
-
-    private List<OnTriggerListener> onTriggerListeners = new LinkedList<>();
-    private TriggerManager triggerManager;
-
     public TMChart(Activity activity, ChartFragment chartFragment, LineChart chart, TMBluetooth bluetooth, ChartBundle chartBundle) {
         this.activity = activity;
         this.mChart = chart;
@@ -84,45 +78,45 @@ public class TMChart implements Observer {
     /**
      * onResume()
      **/
-    public void onResume(Boolean wasPlaying, boolean updateState) {
+    public void onResume(Boolean wasPlaying) {
         mBluetooth.addObserver(this);
-        update(wasPlaying, updateState);
+        update(wasPlaying != null ? wasPlaying : true);
     }
 
-    public void update(Boolean wasPlaying, boolean updateState) {
+    public void update(boolean wasPlaying) {
         if (mBluetooth.getConnectedDevice() != null || mBluetooth.hasConnectedFile()) { //If there's a connected device
-            if (wasPlaying == null || wasPlaying) {
-                play(updateState);
+            if (wasPlaying) {
+                play();
             } else { // !wasPlaying
-                pause(false, updateState);
+                pause(false);
             }
         } else {
-            pause(false, updateState);
+            pause(false);
         }
     }
 
-    public void play(boolean updateState) {
+    public void play() {
         if (rawDataManagerAsyncTask != null) {
             rawDataManagerAsyncTask.stopAndWait();
             rawDataManagerAsyncTask = null;
         }
 
         rawDataManagerAsyncTask = new RawDataManagerAsyncTask(mBluetooth.getDataManager(), this.dataSets);
-        if (updateState) this.chartFragment.setPlaying(true);
+        this.chartFragment.setPlaying(true);
         if (Build.VERSION.SDK_INT >= 11)
             rawDataManagerAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         else
             rawDataManagerAsyncTask.execute();
     }
 
-    public void pause(boolean wait, boolean updateState) {
+    public void pause(boolean wait) {
         if (rawDataManagerAsyncTask != null) {
             if (wait) {
                 rawDataManagerAsyncTask.stopAndWait();
             } else {
                 rawDataManagerAsyncTask.stop();
             }
-            if (updateState) this.chartFragment.setPlaying(false);
+            this.chartFragment.setPlaying(false);
         }
         rawDataManagerAsyncTask = null;
     }
@@ -130,7 +124,7 @@ public class TMChart implements Observer {
 
     @Override
     public void update(Observable observable, Object o) {
-        update(null, true);
+        update(true);
     }
 
     public void setVisible(Integer index, boolean checked) {

@@ -47,20 +47,55 @@ import fr.isen.twinmx.utils.bluetooth.TMBluetooth;
  */
 public class ChartFragment extends BluetoothFragment implements OnMotoHistoryClickListener, OnPeriodListener {
 
+    /**
+     * Properties
+     **/
+
     private Context context;
     private int maxMotorValue = 8000;
     private int minMotorValue = 0;
     private TMChart chartComponent;
     private boolean playing = false;
+    private Boolean wasPlaying = null;
     private boolean isCalibrationEnabled = true;
 
-    private boolean isCalibrating = false;
+    private static final String STATE_PLAYING = "STATE_PLAYING";
+    private static final String STATE_CURVE_1_ENABLED = "STATE_CURVE_1_ENABLED";
+    private static final String STATE_CURVE_2_ENABLED = "STATE_CURVE_2_ENABLED";
+    private static final String STATE_CURVE_3_ENABLED = "STATE_CURVE_3_ENABLED";
+    private static final String STATE_CURVE_4_ENABLED = "STATE_CURVE_4_ENABLED";
+    private static final String STATE_CALIBRATION_BTN_ENABLED = "STATE_CALIBRATION_BTN_ENABLED";
+
+    private MaterialDialog chooseMotoDialog;
+    private AcquisitionSaveRequest acquisitionSaveRequest = null;
+
+    @BindView(R.id.box1)
+    AppCompatCheckBox checkBoxCurveOne;
+
+    @BindView(R.id.box2)
+    AppCompatCheckBox checkBoxCurveTwo;
+
+    @BindView(R.id.box3)
+    AppCompatCheckBox checkBoxCurveThree;
+
+    @BindView(R.id.box4)
+    AppCompatCheckBox checkBoxCurveFour;
 
     @BindView(R.id.match_start_pause)
     ImageView playPauseImage;
 
     @BindView(R.id.refresh)
     ImageView calibrationButton;
+
+    @BindView(R.id.motorLifeCycleValue)
+    TextView motorLifeCycleValue;
+
+    @BindView(R.id.motorLifeCycle)
+    DecoView motorLifeCycle;
+
+    /**
+     * Listeners
+     **/
 
     @OnLongClick(R.id.refresh)
     public boolean onLongCalibrationClick(View view) {
@@ -93,61 +128,16 @@ public class ChartFragment extends BluetoothFragment implements OnMotoHistoryCli
         }
     }
 
-    private Boolean onResumeWasPlaying = null;
-
-    private static final String STATE_PLAYING = "STATE_PLAYING";
-
-    private static final String STATE_CURVE_1_ENABLED = "STATE_CURVE_1_ENABLED";
-    private static final String STATE_CURVE_2_ENABLED = "STATE_CURVE_2_ENABLED";
-    private static final String STATE_CURVE_3_ENABLED = "STATE_CURVE_3_ENABLED";
-    private static final String STATE_CURVE_4_ENABLED = "STATE_CURVE_4_ENABLED";
-    private static final String STATE_CALIBRATION_BTN_ENABLED = "STATE_CALIBRATION_BTN_ENABLED";
-
-    private MaterialDialog chooseMotoDialog;
-    private AcquisitionSaveRequest acquisitionSaveRequest = null;
-
-    @BindView(R.id.box1)
-    AppCompatCheckBox checkBoxCurveOne;
-
-    @BindView(R.id.box2)
-    AppCompatCheckBox checkBoxCurveTwo;
-
-    @BindView(R.id.box3)
-    AppCompatCheckBox checkBoxCurveThree;
-
-    @BindView(R.id.box4)
-    AppCompatCheckBox checkBoxCurveFour;
-
     @OnClick({R.id.box1, R.id.box2, R.id.box3, R.id.box4})
     public void onBoxClick(View view) {
-        if (this.isStarted)
-        {
-            Integer index = Integer.valueOf((String) view.getTag());
-            this.chartComponent.setVisible(index, ((AppCompatCheckBox) view).isChecked());
-        }
-        else
-        {
-            ((AppCompatCheckBox) view).setChecked(true);
-        }
+        Integer index = Integer.valueOf((String) view.getTag());
+        this.chartComponent.setVisible(index, ((AppCompatCheckBox) view).isChecked());
     }
 
-    private boolean isStarted;
 
     @OnClick(R.id.match_start_pause)
     public void onControlsClick(View view) {
-        ImageView image = (ImageView) view;
-
-        if (this.isStarted) {
-            setPlayImage(image, context);
-            this.chartComponent.pause(false, true);
-        } else {
-            setPauseImage(image, context);
-            this.chartComponent.play(true);
-        }
-
-        this.isStarted = !this.isStarted;
-
-        // TODO
+        this.playPause();
     }
 
     private void setPlayPauseImage(ImageView image, Context context, Boolean value) {
@@ -157,10 +147,10 @@ public class ChartFragment extends BluetoothFragment implements OnMotoHistoryCli
 
         if (value) {
             setPauseImage(image, context);
-            this.isStarted = true;
+            this.setPlaying(true);
         } else {
             setPlayImage(image, context);
-            this.isStarted = false;
+            this.setPlaying(false);
         }
     }
 
@@ -189,16 +179,10 @@ public class ChartFragment extends BluetoothFragment implements OnMotoHistoryCli
     }
 
     private void pauseChart() {
-        this.chartComponent.pause(true, true);
+        this.chartComponent.pause(true);
         this.setPauseImage(this.playPauseImage, this.context);
     }
 
-
-    @BindView(R.id.motorLifeCycleValue)
-    TextView motorLifeCycleValue;
-
-    @BindView(R.id.motorLifeCycle)
-    DecoView motorLifeCycle;
 
     public static ChartFragment newInstance(Context context, TMBluetooth bluetooth) {
         final ChartFragment chartFragment = new ChartFragment();
@@ -228,36 +212,23 @@ public class ChartFragment extends BluetoothFragment implements OnMotoHistoryCli
         TriggerManager triggerManager = this.chartComponent.getTriggerManager();
         triggerManager.addOnPeriodListener(this);
 
-        if (savedInstanceState != null)
-        {
+        if (savedInstanceState != null) {
             this.setCheckBoxState(0, savedInstanceState, STATE_CURVE_1_ENABLED, this.checkBoxCurveOne);
             this.setCheckBoxState(1, savedInstanceState, STATE_CURVE_2_ENABLED, this.checkBoxCurveTwo);
             this.setCheckBoxState(2, savedInstanceState, STATE_CURVE_3_ENABLED, this.checkBoxCurveThree);
             this.setCheckBoxState(3, savedInstanceState, STATE_CURVE_4_ENABLED, this.checkBoxCurveFour);
             this.setCalibrationButtonState(savedInstanceState, this.calibrationButton);
+            this.wasPlaying = savedInstanceState.getBoolean(STATE_PLAYING);
+        }
+        else {
+            this.wasPlaying = null;
         }
 
         return rootView;
     }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        this.isStarted = true;
-
-        if (savedInstanceState != null && savedInstanceState.containsKey(STATE_PLAYING))
-        {
-            this.onResumeWasPlaying = savedInstanceState.getBoolean(STATE_PLAYING);
-        } else
-        {
-            this.onResumeWasPlaying = null;
-        }
-    }
-
-    private void setCheckBoxState(int index, Bundle savedInstanceState, String key, AppCompatCheckBox checkbox)
-    {
-        if (savedInstanceState.containsKey(key))
-        {
+    private void setCheckBoxState(int index, Bundle savedInstanceState, String key, AppCompatCheckBox checkbox) {
+        if (savedInstanceState.containsKey(key)) {
             final boolean isChecked = savedInstanceState.getBoolean(key, true);
             checkbox.setChecked(isChecked);
             this.chartComponent.setVisible(index, isChecked);
@@ -276,8 +247,8 @@ public class ChartFragment extends BluetoothFragment implements OnMotoHistoryCli
 
     public void onResume() {
         super.onResume();
-        this.setPlayPauseImage(this.playPauseImage, this.getActivity(), this.onResumeWasPlaying);
-        this.chartComponent.onResume(this.onResumeWasPlaying, true);
+        this.setPlayPauseImage(this.playPauseImage, this.getActivity(), this.wasPlaying);
+        this.chartComponent.onResume(this.wasPlaying);
         this.setMotorLifeCycle();
     }
 
@@ -296,7 +267,8 @@ public class ChartFragment extends BluetoothFragment implements OnMotoHistoryCli
     @Override
     public void onPause() {
         super.onPause();
-        this.chartComponent.pause(false, false);
+        this.wasPlaying = this.isPlaying();
+        this.chartComponent.pause(false);
     }
 
     @Override
@@ -312,7 +284,7 @@ public class ChartFragment extends BluetoothFragment implements OnMotoHistoryCli
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putBoolean(STATE_PLAYING, isPlaying());
+        outState.putBoolean(STATE_PLAYING, this.wasPlaying);
         outState.putBoolean(STATE_CURVE_1_ENABLED, checkBoxCurveOne.isChecked());
         outState.putBoolean(STATE_CURVE_2_ENABLED, checkBoxCurveTwo.isChecked());
         outState.putBoolean(STATE_CURVE_3_ENABLED, checkBoxCurveThree.isChecked());
@@ -326,13 +298,7 @@ public class ChartFragment extends BluetoothFragment implements OnMotoHistoryCli
         this.context = context;
     }
 
-    public boolean isPlaying() {
-        return playing;
-    }
 
-    public void setPlaying(boolean playing) {
-        this.playing = playing;
-    }
 
     public void onMotoHistoryClick(Moto moto) {
         this.acquisitionSaveRequest.setMoto(moto);
@@ -381,7 +347,7 @@ public class ChartFragment extends BluetoothFragment implements OnMotoHistoryCli
 
                         acquisitionSaveRequest.setNote(note);
                         acquisitionSaveRequest.save();
-                        chartComponent.play(true);
+                        chartComponent.play();
                     }
                 })
                 .negativeText(R.string.form_cancel)
@@ -389,7 +355,7 @@ public class ChartFragment extends BluetoothFragment implements OnMotoHistoryCli
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                         acquisitionSaveRequest = null;
-                        chartComponent.play(true);
+                        chartComponent.play();
                     }
                 })
                 .build();
@@ -433,5 +399,38 @@ public class ChartFragment extends BluetoothFragment implements OnMotoHistoryCli
 
             }
         });
+    }
+
+    public void playPause() {
+        if (this.isPlaying()) {
+            this.pause();
+        }
+        else {
+            this.play();
+        }
+    }
+
+    public void play() {
+        boolean hasConnectedDevice = this.getBluetooth().getConnectedDevice() != null || this.getBluetooth().hasConnectedFile();
+        if (!hasConnectedDevice) {
+            return;
+        }
+        setPauseImage(this.playPauseImage, context); //next possible icon is 'pause'
+        this.chartComponent.play();
+        this.setPlaying(true);
+    }
+
+    public void pause() {
+        setPlayImage(this.playPauseImage, context); //next possible icon 'play'
+        this.chartComponent.pause(false);
+        this.setPlaying(false);
+    }
+
+    public boolean isPlaying() {
+        return playing;
+    }
+
+    public void setPlaying(boolean playing) {
+        this.playing = playing;
     }
 }
