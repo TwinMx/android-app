@@ -8,8 +8,6 @@ public class RawData {
     private Integer msb;
     private Integer lsb;
 
-    private static double CONVERSION_FACTOR = 1.837;
-
     public RawData() {
     }
 
@@ -42,7 +40,7 @@ public class RawData {
     public double getRawMeasure() {
         double msbValue = this.msb << 5;
         double lsbValue = this.lsb >> 1;
-        return (msbValue + lsbValue)/1.837;
+        return (msbValue + lsbValue);
     }
 
     public double popMeasure() {

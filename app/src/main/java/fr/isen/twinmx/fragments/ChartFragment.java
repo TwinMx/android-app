@@ -33,7 +33,6 @@ import butterknife.OnClick;
 import butterknife.OnLongClick;
 import fr.isen.twinmx.R;
 import fr.isen.twinmx.fragments.chart.TMChart;
-import fr.isen.twinmx.fragments.chart.TriggerManager;
 import fr.isen.twinmx.listeners.OnPeriodListener;
 import fr.isen.twinmx.model.ChartBundle;
 import fr.isen.twinmx.TMApplication;
@@ -247,6 +246,8 @@ public class ChartFragment extends BluetoothFragment implements OnMotoHistoryCli
         super.onSaveInstanceState(outState);
     }
 
+
+
     public void setActivity(Context activity) {
         this.activity = activity;
     }
@@ -359,7 +360,7 @@ public class ChartFragment extends BluetoothFragment implements OnMotoHistoryCli
             public void run() {
                 Integer value = (int) compte_tour;
                 motorLifeCycleValue.setText(String.valueOf(value));
-                final SeriesItem seriesItem1 = new SeriesItem.Builder(ContextCompat.getColor(getActivity(), R.color.colorPrimary), ContextCompat.getColor(getActivity(), R.color.colorAccent))
+                final SeriesItem seriesItem1 = new SeriesItem.Builder(ContextCompat.getColor(TMApplication.getContext(), R.color.colorPrimary), ContextCompat.getColor(TMApplication.getContext(), R.color.colorAccent))
                         .setRange(minMotorValue, maxMotorValue, value)
                         .setLineWidth(6f)
                         .build();

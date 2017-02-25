@@ -214,5 +214,4 @@ public class MainActivity extends AppCompatActivity implements TMBottomNavigatio
         mBluetooth.showDialog();
         return true;
     }
-
 }

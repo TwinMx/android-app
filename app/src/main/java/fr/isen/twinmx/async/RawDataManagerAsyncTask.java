@@ -17,6 +17,8 @@ import fr.isen.twinmx.utils.bluetooth.TMBluetoothDataManager;
 
 public class RawDataManagerAsyncTask extends StoppableAsyncTask<Void, Entry, Void> {
 
+    private static final int[] TUBES_ORDER = new int[]{4, 3, 2, 1};
+
     private static int HEADER = 128;
     private static final int AVERAGE = 4;
     private final TMDataSets dataSets;
@@ -32,6 +34,9 @@ public class RawDataManagerAsyncTask extends StoppableAsyncTask<Void, Entry, Voi
     private int nbResults = 0;
 
     private static final int REFRESH_RATE = 1; //200;
+
+    private static final int DIF_FACTOR = 0;//315;
+    private static final float CONV_FACTOR = 1.837f;
 
 
     public RawDataManagerAsyncTask(TMBluetoothDataManager dataManager, TMDataSets dataSets) {
@@ -95,7 +100,12 @@ public class RawDataManagerAsyncTask extends StoppableAsyncTask<Void, Entry, Voi
         nbPointsInAverage++;
 
         if (nbPointsInAverage >= AVERAGE) {
-            dataSets.addEntries(new Entry(0, sum[0] / nbPointsInAverage), new Entry(0, sum[1] / nbPointsInAverage), new Entry(0, sum[2] / nbPointsInAverage), new Entry(0, sum[3] / nbPointsInAverage));
+            dataSets.addEntries(
+                    createEntry(sum[TUBES_ORDER[0]] / nbPointsInAverage),
+                    createEntry(sum[TUBES_ORDER[1]] / nbPointsInAverage),
+                    createEntry(sum[TUBES_ORDER[2]] / nbPointsInAverage),
+                    createEntry(sum[TUBES_ORDER[3]] / nbPointsInAverage)
+            );
             for (int i = 0; i < sum.length; i++) {
                 sum[i] = 0;
             }
@@ -108,6 +118,14 @@ public class RawDataManagerAsyncTask extends StoppableAsyncTask<Void, Entry, Voi
                 }
             }
         }
+    }
+
+    private Entry createEntry(float value) {
+        return new Entry(0, convertToMBar(value));
+    }
+
+    private float convertToMBar(float value) {
+        return (value - DIF_FACTOR) / CONV_FACTOR;
     }
 
     @Override
