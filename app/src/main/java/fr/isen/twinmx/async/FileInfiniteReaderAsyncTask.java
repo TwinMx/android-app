@@ -27,17 +27,15 @@ public class FileInfiniteReaderAsyncTask extends StoppableAsyncTask<Void, Void, 
         InputStream input;
         while (!hasToStop()) {
             String line;
-            boolean wait = true;
+            int wait = 0;
             try {
                 input = this.bluetooth.getActivity().getResources().getAssets().open("measures/" + fileName);
                 BufferedReader bfr = new BufferedReader(new InputStreamReader(input));
                 while (!hasToStop() && (line = bfr.readLine()) != null) {
                     this.bluetooth.onDataReceived(Integer.parseInt(line));
-                    if (wait) { //500 µs
-                        wait = false;
+                    if ((++wait) % 10 == 0) { //500 µs
+                        wait = 0;
                         Thread.sleep(1);
-                    } else {
-                        wait = true;
                     }
                 }
                 input.close();
