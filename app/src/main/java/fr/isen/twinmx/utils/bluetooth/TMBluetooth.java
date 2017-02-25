@@ -103,7 +103,7 @@ public class TMBluetooth extends TMSmoothBluetooth implements TMSmoothBluetooth.
             e.printStackTrace();
         }
 
-        this.onChangeInput();
+        this.notifyConnect();
 
         //BluetoothIconReceiver.sendStatusOk(String.format(TMApplication.getActivity().getResources().getString(R.string.connected_to), device.getName()));
         this.setChanged();
@@ -116,6 +116,7 @@ public class TMBluetooth extends TMSmoothBluetooth implements TMSmoothBluetooth.
         if (this.bluetoothIconReceiver != null) {
             this.bluetoothIconReceiver.disconnected();
         }
+        this.notifyDisconnect();
     }
 
     @Override
@@ -274,7 +275,7 @@ public class TMBluetooth extends TMSmoothBluetooth implements TMSmoothBluetooth.
             this.bluetoothIconReceiver.fileConnected(null);
         }
 
-        this.onChangeInput();
+        this.notifyConnect();
         this.setChanged();
         this.notifyObservers();
     }
@@ -288,6 +289,7 @@ public class TMBluetooth extends TMSmoothBluetooth implements TMSmoothBluetooth.
             this.bluetoothIconReceiver.fileDisconnected(this.isBluetoothEnabled());
         }
         fileInfiniteReaderAsyncTask = null;
+        this.notifyDisconnect();
     }
 
     public Activity getActivity() {
@@ -344,9 +346,15 @@ public class TMBluetooth extends TMSmoothBluetooth implements TMSmoothBluetooth.
         }
     }
 
-    private void onChangeInput() {
+    private void notifyConnect() {
         for(OnChangeInputListener l : onChangeInputListeners) {
             l.onConnect();
+        }
+    }
+
+    private void notifyDisconnect() {
+        for(OnChangeInputListener l : onChangeInputListeners) {
+            l.onDisconnect();
         }
     }
 

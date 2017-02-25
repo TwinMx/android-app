@@ -407,9 +407,17 @@ public class ChartFragment extends BluetoothFragment implements OnMotoHistoryCli
         this.playing = playing;
     }
 
+    /**
+     * To use with TMChart
+     */
+    public void updatePlayingState(boolean playing) {
+        this.setPlaying(playing);
+        this.setPlayPauseImage(this.playPauseImage, this.activity, playing);
+    }
+
     private void setPlayPauseImage(ImageView image, Context context, Boolean value) {
         if (value == null) {
-            return;
+            value = false;
         }
 
         if (value) {

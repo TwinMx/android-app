@@ -114,6 +114,11 @@ public class TriggerManager implements OnChangeInputListener {
         reset();
     }
 
+    @Override
+    public void onDisconnect() {
+        //Nothing to do
+    }
+
     public void reset() {
         reset(false);
     }

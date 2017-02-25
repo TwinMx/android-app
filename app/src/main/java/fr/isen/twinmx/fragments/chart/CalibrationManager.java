@@ -90,6 +90,11 @@ public class CalibrationManager implements OnPeriodListener, OnChangeInputListen
         reset();
     }
 
+    @Override
+    public void onDisconnect() {
+        //Nothing to do
+    }
+
     public void disable() {
         reset(true);
     }

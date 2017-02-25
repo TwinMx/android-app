@@ -7,11 +7,7 @@ import android.os.Bundle;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Description;
-import com.github.mikephil.charting.listener.OnChartGestureListener;
-import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -19,8 +15,7 @@ import fr.isen.twinmx.R;
 import fr.isen.twinmx.TMApplication;
 import fr.isen.twinmx.async.RawDataManagerAsyncTask;
 import fr.isen.twinmx.fragments.ChartFragment;
-import fr.isen.twinmx.listeners.OnCycleListener;
-import fr.isen.twinmx.listeners.OnTriggerListener;
+import fr.isen.twinmx.listeners.OnChangeInputListener;
 import fr.isen.twinmx.model.AcquisitionSaveRequest;
 import fr.isen.twinmx.model.ChartBundle;
 import fr.isen.twinmx.model.TMDataSets;
@@ -31,7 +26,7 @@ import fr.isen.twinmx.utils.bluetooth.TMBluetooth;
  */
 
 
-public class TMChart implements Observer {
+public class TMChart implements Observer, OnChangeInputListener {
 
     private final Activity activity;
     private final LineChart mChart;
@@ -72,6 +67,7 @@ public class TMChart implements Observer {
         mChart.getAxisRight().setAxisMinimum(0);
 
         this.mBluetooth.addOnChangeInputListener(this.dataSets);
+        this.mBluetooth.addOnChangeInputListener(this);
     }
 
 
@@ -102,7 +98,7 @@ public class TMChart implements Observer {
         }
 
         rawDataManagerAsyncTask = new RawDataManagerAsyncTask(mBluetooth.getDataManager(), this.dataSets);
-        this.chartFragment.setPlaying(true);
+        this.chartFragment.updatePlayingState(true);
         if (Build.VERSION.SDK_INT >= 11)
             rawDataManagerAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         else
@@ -116,7 +112,7 @@ public class TMChart implements Observer {
             } else {
                 rawDataManagerAsyncTask.stop();
             }
-            this.chartFragment.setPlaying(false);
+            this.chartFragment.updatePlayingState(false);
         }
         rawDataManagerAsyncTask = null;
     }
@@ -162,5 +158,15 @@ public class TMChart implements Observer {
 
     public void onStop() {
         this.dataSets.removeListeners();
+    }
+
+    @Override
+    public void onConnect() {
+        //Nothing to do
+    }
+
+    @Override
+    public void onDisconnect() {
+        this.pause(false);
     }
 }

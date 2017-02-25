@@ -170,6 +170,11 @@ public class TMDataSets implements OnChangeInputListener, OnCycleListener, OnTri
         this.calibrationManager.reset();
     }
 
+    @Override
+    public void onDisconnect() {
+        //Nothing to do
+    }
+
     private void setWaitForTrigger(boolean value) {
         if (this.getCalibratedDataSet() != null) {
             this.calibratedDataSet.setWaitForTrigger(value);
