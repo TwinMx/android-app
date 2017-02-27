@@ -7,4 +7,5 @@ public interface OnChangeInputListener {
 
     void onConnect();
 
+    void onDisconnect();
 }

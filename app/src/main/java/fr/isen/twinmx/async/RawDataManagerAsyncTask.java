@@ -1,15 +1,11 @@
 package fr.isen.twinmx.async;
 
-import android.os.AsyncTask;
-
 import com.github.mikephil.charting.data.Entry;
 
 import java.util.List;
 
-import fr.isen.twinmx.fragments.chart.RealTimeChartComponent;
 import fr.isen.twinmx.model.RawData;
 import fr.isen.twinmx.model.RawMeasures;
-import fr.isen.twinmx.model.TMDataSet;
 import fr.isen.twinmx.model.TMDataSets;
 import fr.isen.twinmx.utils.bluetooth.TMBluetoothDataManager;
 
@@ -18,6 +14,8 @@ import fr.isen.twinmx.utils.bluetooth.TMBluetoothDataManager;
  */
 
 public class RawDataManagerAsyncTask extends StoppableAsyncTask<Void, Entry, Void> {
+
+    private static final int[] PIPES_ORDER = new int[]{3,2,1,0};
 
     private static int HEADER = 128;
     private static final int AVERAGE = 4;
@@ -28,11 +26,16 @@ public class RawDataManagerAsyncTask extends StoppableAsyncTask<Void, Entry, Voi
     private final List<Integer> frames;
     private final RawData raw;
     private final RawMeasures rawMeasures;
+
     private final TMBluetoothDataManager dataManager;
     private int x = 0;
     private int nbResults = 0;
 
     private static final int REFRESH_RATE = 1; //200;
+
+    private static final int DIF_FACTOR = 0;//315;
+    private static final float CONV_FACTOR = 1.837f;
+
 
     public RawDataManagerAsyncTask(TMBluetoothDataManager dataManager, TMDataSets dataSets) {
         this.dataManager = dataManager;
@@ -95,7 +98,12 @@ public class RawDataManagerAsyncTask extends StoppableAsyncTask<Void, Entry, Voi
         nbPointsInAverage++;
 
         if (nbPointsInAverage >= AVERAGE) {
-            dataSets.addEntries(new Entry(0, sum[0] / nbPointsInAverage), new Entry(0, sum[1] / nbPointsInAverage), new Entry(0, sum[2] / nbPointsInAverage), new Entry(0, sum[3] / nbPointsInAverage));
+            dataSets.addEntries(
+                    createEntry(sum[PIPES_ORDER[0]] / nbPointsInAverage),
+                    createEntry(sum[PIPES_ORDER[1]] / nbPointsInAverage),
+                    createEntry(sum[PIPES_ORDER[2]] / nbPointsInAverage),
+                    createEntry(sum[PIPES_ORDER[3]] / nbPointsInAverage)
+            );
             for (int i = 0; i < sum.length; i++) {
                 sum[i] = 0;
             }
@@ -108,6 +116,14 @@ public class RawDataManagerAsyncTask extends StoppableAsyncTask<Void, Entry, Voi
                 }
             }
         }
+    }
+
+    private Entry createEntry(float value) {
+        return new Entry(0, convertToMBar(value));
+    }
+
+    private float convertToMBar(float value) {
+        return (value - DIF_FACTOR) / CONV_FACTOR;
     }
 
     @Override

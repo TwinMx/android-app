@@ -1,16 +1,8 @@
 package fr.isen.twinmx.async;
 
-import android.os.AsyncTask;
-import android.os.SystemClock;
-import android.util.Log;
-
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 import fr.isen.twinmx.model.TMFile;
 import fr.isen.twinmx.utils.bluetooth.TMBluetooth;
@@ -35,17 +27,15 @@ public class FileInfiniteReaderAsyncTask extends StoppableAsyncTask<Void, Void, 
         InputStream input;
         while (!hasToStop()) {
             String line;
-            boolean wait = true;
+            int wait = 0;
             try {
-                input = this.bluetooth.getContext().getResources().getAssets().open("measures/" + fileName);
+                input = this.bluetooth.getActivity().getResources().getAssets().open("measures/" + fileName);
                 BufferedReader bfr = new BufferedReader(new InputStreamReader(input));
                 while (!hasToStop() && (line = bfr.readLine()) != null) {
                     this.bluetooth.onDataReceived(Integer.parseInt(line));
-                    if (wait) { //500 µs
-                        wait = false;
+                    if ((++wait) % 10 == 0) { //500 µs
+                        wait = 0;
                         Thread.sleep(1);
-                    } else {
-                        wait = true;
                     }
                 }
                 input.close();

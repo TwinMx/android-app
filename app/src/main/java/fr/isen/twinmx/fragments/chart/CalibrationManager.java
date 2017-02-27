@@ -1,17 +1,15 @@
 package fr.isen.twinmx.fragments.chart;
 
-import android.util.Log;
 
 import com.github.mikephil.charting.charts.LineChart;
 
-import java.util.List;
-
-import fr.isen.twinmx.fragments.ChartFragment;
 import fr.isen.twinmx.model.LimitedLinkedList;
 import fr.isen.twinmx.model.TMDataSet;
 import fr.isen.twinmx.listeners.OnChangeInputListener;
 import fr.isen.twinmx.listeners.OnPeriodListener;
+
 import fr.isen.twinmx.model.TMDataSets;
+
 
 /**
  * Created by Clement on 10/02/2017.
@@ -49,11 +47,6 @@ public class CalibrationManager implements OnPeriodListener, OnChangeInputListen
         }
     }
 
-    public void setNbPoints(long twoPeriods) {
-        if (twoPeriods > 0) return;
-        makeCalibration((int) twoPeriods);
-    }
-
     private void computeCalibration() {
         if (periods.size() >= 2) {
             int period = (int) (periods.get(periods.size() - 1) + periods.get(periods.size() - 2));
@@ -72,10 +65,8 @@ public class CalibrationManager implements OnPeriodListener, OnChangeInputListen
 
     private void makeCalibration(int nbPoints) {
         calibrated = true;
-        this.nbPoints = nbPoints;
         setSizes(nbPoints);
-        mChart.getXAxis().setAxisMinimum(0);
-        mChart.getXAxis().setAxisMaximum(nbPoints);
+        this.setNbPoints(nbPoints);
     }
 
     private void setSizes(int nbPoints) {
@@ -99,10 +90,14 @@ public class CalibrationManager implements OnPeriodListener, OnChangeInputListen
         reset();
     }
 
+    @Override
+    public void onDisconnect() {
+        //Nothing to do
+    }
+
     public void disable() {
         reset(true);
     }
-
 
     public long getNbPoints() {
         return nbPoints;
@@ -120,5 +115,24 @@ public class CalibrationManager implements OnPeriodListener, OnChangeInputListen
 
     public boolean isCalibrated() {
         return calibrated;
+    }
+
+    public boolean isDisabled() {
+        return disabled;
+    }
+
+    public void setDisabled(boolean disabled) {
+        this.disabled = disabled;
+    }
+
+    public void setNbPoints(long nbPoints) {
+        this.nbPoints = nbPoints;
+        mChart.getXAxis().setAxisMinimum(0);
+        mChart.getXAxis().setAxisMaximum(nbPoints);
+        mChart.getAxisRight().setAxisMinimum(0);
+    }
+
+    public void setCalibrated(boolean calibrated) {
+        this.calibrated = calibrated;
     }
 }

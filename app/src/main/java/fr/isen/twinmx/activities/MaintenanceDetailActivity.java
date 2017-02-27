@@ -17,12 +17,8 @@ import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Description;
-import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.data.LineData;
-import com.github.mikephil.charting.data.LineDataSet;
 
 import java.text.DateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 
 import butterknife.BindView;
@@ -34,12 +30,8 @@ import fr.isen.twinmx.database.MotoRepository;
 import fr.isen.twinmx.database.exceptions.RepositoryException;
 import fr.isen.twinmx.database.model.Maintenance;
 import fr.isen.twinmx.database.model.Moto;
-import fr.isen.twinmx.database.model.RealmFloat;
-import fr.isen.twinmx.database.model.RealmGraph;
-import fr.isen.twinmx.model.TMDataSet;
-import fr.isen.twinmx.fragments.chart.RealTimeChartComponent;
+
 import fr.isen.twinmx.model.TMDataSets;
-import io.realm.RealmList;
 
 /**
  * Created by pierredfc.
@@ -169,7 +161,7 @@ public class MaintenanceDetailActivity extends AppCompatActivity {
         graph.getXAxis().setDrawLabels(false);
         graph.setDrawGridBackground(false);
         graph.setDescription(new Description() {{
-            setText("Pression (mBar)");
+            setText(getString(R.string.pressure));
         }});
         graph.getLegend().setEnabled(false);
         graph.getAxisRight().setAxisMinimum(0);

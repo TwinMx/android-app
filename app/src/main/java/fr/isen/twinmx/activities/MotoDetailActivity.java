@@ -131,13 +131,13 @@ public class MotoDetailActivity extends AppCompatActivity implements OnMotoMaint
 
     public void onMaintenanceResponseReceived(List<Maintenance> maintenances) {
         if (maintenances != null && !maintenances.isEmpty()) {
-            this.maintenanceAdapter.setMaintenances(maintenances);
             this.acquisitionsTitle.setText(getString(R.string.last_acquisitions));
         }
         else
         {
             this.acquisitionsTitle.setText(getString(R.string.no_acquisitions));
         }
+        this.maintenanceAdapter.setMaintenances(maintenances);
     }
 
     private void initRecyclerView()

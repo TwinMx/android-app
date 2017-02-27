@@ -11,8 +11,11 @@ import com.github.mikephil.charting.components.Description;
 import java.util.Observable;
 import java.util.Observer;
 
+import fr.isen.twinmx.R;
+import fr.isen.twinmx.TMApplication;
 import fr.isen.twinmx.async.RawDataManagerAsyncTask;
 import fr.isen.twinmx.fragments.ChartFragment;
+import fr.isen.twinmx.listeners.OnChangeInputListener;
 import fr.isen.twinmx.model.AcquisitionSaveRequest;
 import fr.isen.twinmx.model.ChartBundle;
 import fr.isen.twinmx.model.TMDataSets;
@@ -22,7 +25,8 @@ import fr.isen.twinmx.utils.bluetooth.TMBluetooth;
  * Created by Clement on 19/01/2017.
  */
 
-public class RealTimeChartComponent implements Observer {
+
+public class TMChart implements Observer, OnChangeInputListener {
 
     private final Activity activity;
     private final LineChart mChart;
@@ -32,7 +36,8 @@ public class RealTimeChartComponent implements Observer {
     private RawDataManagerAsyncTask rawDataManagerAsyncTask;
     private ChartFragment chartFragment;
 
-    public RealTimeChartComponent(Activity activity, ChartFragment chartFragment, LineChart chart, TMBluetooth bluetooth, ChartBundle chartBundle) {
+
+    public TMChart(Activity activity, ChartFragment chartFragment, LineChart chart, TMBluetooth bluetooth, ChartBundle chartBundle) {
         this.activity = activity;
         this.mChart = chart;
         this.chartFragment = chartFragment;
@@ -49,65 +54,65 @@ public class RealTimeChartComponent implements Observer {
     }
 
 
-
     private void initChartSettings() {
         mChart.getAxisRight().setEnabled(false);
         mChart.getXAxis().setDrawLabels(false);
         mChart.setDrawGridBackground(false);
         mChart.setDescription(new Description() {{
-            setText("Pression (mBar)");
+            setText(TMApplication.getContext().getString(R.string.pressure));
         }});
         mChart.getLegend().setEnabled(false);
-        mChart.getAxisRight().setAxisMinimum(0);
 
         dataSets.load(chartBundle);
+        mChart.getAxisRight().setAxisMinimum(0);
 
         this.mBluetooth.addOnChangeInputListener(this.dataSets);
+        this.mBluetooth.addOnChangeInputListener(this);
     }
 
 
     /**
      * onResume()
      **/
-    public void onResume(Boolean wasPlaying, boolean updateState) {
+    public void onResume(Boolean wasPlaying) {
         mBluetooth.addObserver(this);
-        update(wasPlaying, updateState);
+        update(wasPlaying != null ? wasPlaying : true);
     }
 
-    public void update(Boolean wasPlaying, boolean updateState) {
+    public void update(boolean wasPlaying) {
         if (mBluetooth.getConnectedDevice() != null || mBluetooth.hasConnectedFile()) { //If there's a connected device
-            if (wasPlaying == null || wasPlaying) {
-                play(updateState);
+            if (wasPlaying) {
+                play();
             } else { // !wasPlaying
-                pause(false, updateState);
+                pause(false);
             }
         } else {
-            pause(false, updateState);
+            pause(false);
         }
     }
 
-    public void play(boolean updateState) {
+    public void play() {
         if (rawDataManagerAsyncTask != null) {
             rawDataManagerAsyncTask.stopAndWait();
             rawDataManagerAsyncTask = null;
         }
 
         rawDataManagerAsyncTask = new RawDataManagerAsyncTask(mBluetooth.getDataManager(), this.dataSets);
-        if (updateState) this.chartFragment.setPlaying(true);
+        this.chartFragment.updatePlayingState(true);
         if (Build.VERSION.SDK_INT >= 11)
             rawDataManagerAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         else
             rawDataManagerAsyncTask.execute();
     }
 
-    public void pause(boolean wait, boolean updateState) {
+    public void pause(boolean wait) {
         if (rawDataManagerAsyncTask != null) {
             if (wait) {
                 rawDataManagerAsyncTask.stopAndWait();
             } else {
                 rawDataManagerAsyncTask.stop();
             }
-            if (updateState) this.chartFragment.setPlaying(false);
+            this.chartFragment.updatePlayingState(false);
         }
         rawDataManagerAsyncTask = null;
     }
@@ -115,7 +120,7 @@ public class RealTimeChartComponent implements Observer {
 
     @Override
     public void update(Observable observable, Object o) {
-        update(null, true);
+        update(true);
     }
 
     public void setVisible(Integer index, boolean checked) {
@@ -131,7 +136,9 @@ public class RealTimeChartComponent implements Observer {
         this.dataSets.recalibrate();
     }
 
-    public void disableCalibration() { this.dataSets.disableCalibration(); }
+    public void disableCalibration() {
+        this.dataSets.disableCalibration();
+    }
 
     public void enableCalibration() {
         this.dataSets.enableCalibration();
@@ -151,5 +158,15 @@ public class RealTimeChartComponent implements Observer {
 
     public void onStop() {
         this.dataSets.removeListeners();
+    }
+
+    @Override
+    public void onConnect() {
+        //Nothing to do
+    }
+
+    @Override
+    public void onDisconnect() {
+        this.pause(false);
     }
 }

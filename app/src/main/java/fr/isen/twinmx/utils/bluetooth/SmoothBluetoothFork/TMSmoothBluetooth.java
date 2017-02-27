@@ -17,12 +17,13 @@ import java.util.Observable;
 import java.util.Set;
 
 import fr.isen.twinmx.receivers.BluetoothIconReceiver;
+import fr.isen.twinmx.utils.SingleObservable;
 
 /**
  * Created by Clement on 26/01/2017.
  */
 
-public abstract class TMSmoothBluetooth extends Observable {
+public abstract class TMSmoothBluetooth extends SingleObservable {
 
     public Handler getmHandler() {
         return mHandler;

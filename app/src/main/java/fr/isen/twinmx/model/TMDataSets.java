@@ -33,7 +33,7 @@ public class TMDataSets implements OnChangeInputListener, OnCycleListener, OnTri
     public static int NB_POINTS = 200;
 
 
-    private final int nbGraphs;
+    private int nbGraphs;
     private final int defaultNbPoints;
     private int nbPoints;
     private List<TMDataSet> dataSets;
@@ -83,7 +83,7 @@ public class TMDataSets implements OnChangeInputListener, OnCycleListener, OnTri
         chart.setData(new LineData());
         this.nbPoints = graphs.get(0).getMeasures().size();
 
-        for(int i = 0; i < graphs.size(); i++) {
+        for (int i = 0; i < graphs.size(); i++) {
             RealmGraph graph = graphs.get(i);
             TMDataSet dataSet = addNewSet(this.activity.getString(R.string.cylinder, i + 1), i, new TMDataSet(graph, this));
             dataSets.add(dataSet);
@@ -99,8 +99,32 @@ public class TMDataSets implements OnChangeInputListener, OnCycleListener, OnTri
         if (chartBundle == null) {
             initDataSets();
         } else {
-            initDataSets();
+            initDataSetsFromChartBundle(chartBundle);
         }
+    }
+
+    private void initDataSetsFromChartBundle(ChartBundle b) {
+        this.nbGraphs = b.getTMDataSetsNbGraphs();
+        this.nbPoints = b.getTMDataSetsNbPoints();
+
+        List<TMDataSet> bundleDataSets = b.getTMDataSetsValues(this);
+
+        int i = 0;
+        while (bundleDataSets.size() > 0) {
+            TMDataSet dataSet = bundleDataSets.remove(0);
+            dataSet = addNewSet(this.activity.getString(R.string.cylinder, i + 1), i, dataSet);
+            this.dataSets.add(dataSet);
+            i++;
+        }
+
+        if (b.isTriggerManagerDisabled()) {
+            this.triggerManager.disable();
+        }
+
+        this.calibrationManager.setDisabled(b.isCalibrationManagerDisabled());
+        this.calibrationManager.setNbPoints(this.nbPoints);
+        this.calibrationManager.setCalibrated(b.isCalibrationManagerCalibrated());
+
     }
 
     private void initDataSets() {
@@ -144,6 +168,11 @@ public class TMDataSets implements OnChangeInputListener, OnCycleListener, OnTri
     public void onConnect() {
         this.triggerManager.reset();
         this.calibrationManager.reset();
+    }
+
+    @Override
+    public void onDisconnect() {
+        //Nothing to do
     }
 
     private void setWaitForTrigger(boolean value) {
@@ -221,27 +250,27 @@ public class TMDataSets implements OnChangeInputListener, OnCycleListener, OnTri
         chart.invalidate();
     }
 
-    private TMDataSet addNewSet(String title, int index, TMDataSet initEntries) {
+    private TMDataSet addNewSet(String title, int index, TMDataSet initDataSet) {
 
         int color = this.colors[index % this.colors.length];
 
-        TMDataSet entries = initEntries != null && initEntries.size() == nbPoints ? initEntries : new TMDataSet(nbPoints, this);
+        TMDataSet dataSet = initDataSet != null && initDataSet.size() == nbPoints ? initDataSet : new TMDataSet(nbPoints, this);
 
-        LineDataSet dataSet = new LineDataSet(entries, title);
-        dataSet.setColor(color);
-        dataSet.setDrawCircles(false);
-        dataSet.setValueTextSize(0);
-        dataSet.setValueTextColor(color);
-        dataSet.setCircleColor(color);
+        LineDataSet lineDataSet = new LineDataSet(dataSet, title);
+        lineDataSet.setColor(color);
+        lineDataSet.setDrawCircles(false);
+        lineDataSet.setValueTextSize(0);
+        lineDataSet.setValueTextColor(color);
+        lineDataSet.setCircleColor(color);
 
-        chart.getData().addDataSet(dataSet);
-        return entries;
+        chart.getData().addDataSet(lineDataSet);
+        return dataSet;
     }
 
     public TMDataSet getCalibratedDataSet() {
         if (calibratedDataSet == null) {
             findMostActiveDataSet();
-            Log.d("Most active", ""+calibratedIndex);
+            Log.d("Most active", "" + calibratedIndex);
         }
         return calibratedDataSet;
     }
@@ -296,9 +325,7 @@ public class TMDataSets implements OnChangeInputListener, OnCycleListener, OnTri
     }
 
     public void save(Bundle outState) {
-        ChartBundle.putNbGraphs(outState, getNbGraphs());
-        ChartBundle.putNbPoints(outState, getNbPoints());
-        ChartBundle.putGraphs(outState, dataSets);
+        ChartBundle.save(outState, this, triggerManager, calibrationManager);
     }
 
 
@@ -324,4 +351,7 @@ public class TMDataSets implements OnChangeInputListener, OnCycleListener, OnTri
     }
 
 
+    public TMDataSet getDataset(int i) {
+        return this.dataSets.get(i);
+    }
 }
