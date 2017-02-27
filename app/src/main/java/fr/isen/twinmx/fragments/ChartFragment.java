@@ -205,8 +205,8 @@ public class ChartFragment extends BluetoothFragment implements OnMotoHistoryCli
     }
 
     private void setMotorLifeCycle() {
-        this.motorLifeCycle.addSeries(new SeriesItem.Builder(ContextCompat.getColor(this.getActivity(), R.color.white))
-                .setRange(minMotorValue, maxMotorValue, 0)
+        this.motorLifeCycle.addSeries(new SeriesItem.Builder(ContextCompat.getColor(this.getActivity(), R.color.ripple))
+                .setRange(minMotorValue, maxMotorValue, maxMotorValue)
                 .setInitialVisibility(true)
                 .setLineWidth(10f)
                 .setInterpolator(new AccelerateInterpolator())
@@ -362,9 +362,10 @@ public class ChartFragment extends BluetoothFragment implements OnMotoHistoryCli
                 motorLifeCycleValue.setText(String.valueOf(value));
                 final SeriesItem seriesItem1 = new SeriesItem.Builder(ContextCompat.getColor(TMApplication.getContext(), R.color.colorPrimary), ContextCompat.getColor(TMApplication.getContext(), R.color.colorAccent))
                         .setRange(minMotorValue, maxMotorValue, value)
-                        .setLineWidth(6f)
+                        .setLineWidth(10f)
                         .build();
                 motorLifeCycle.deleteAll();
+                setMotorLifeCycle();
                 motorLifeCycle.addSeries(seriesItem1);
 
             }
