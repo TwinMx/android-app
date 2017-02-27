@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:id="@+id/bluetoothContainer"
+    android:layout_marginTop="?android:attr/actionBarSize"
+    android:layout_marginBottom="@dimen/bottom_navigation_height">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="7">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:orientation="vertical"
+            android:layout_gravity="center">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.hookedonplay.decoviewlib.DecoView
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:id="@+id/motorLifeCycle"
+                    android:layout_centerVertical="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="10dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/motorLifeCycleValue"
+                    android:text="0"
+                    android:textSize="20sp"
+                    android:textColor="@color/colorAccent"
+                    android:layout_centerVertical="true"
+                    android:layout_centerHorizontal="true"/>
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center">
+
+                <GridLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:columnCount="8"
+                    android:rowCount="1"
+                    android:layout_gravity="center"
+                    android:orientation="vertical">
+
+                    <android.support.v7.widget.AppCompatCheckBox
+                        android:id="@+id/box1"
+                        android:tag="0"
+                        android:checked="true"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:buttonTint="@color/chartBlue"/>
+
+                    <TextView
+                        android:text="1"
+                        android:layout_gravity="center"/>
+
+                    <android.support.v7.widget.AppCompatCheckBox
+                        android:id="@+id/box2"
+                        android:tag="1"
+                        android:checked="true"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:buttonTint="@color/chartGreen"/>
+
+                    <TextView
+                        android:text="2"
+                        android:layout_gravity="center"/>
+
+                    <android.support.v7.widget.AppCompatCheckBox
+                        android:id="@+id/box3"
+                        android:tag="2"
+                        android:checked="true"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:buttonTint="@color/chartBrown"/>
+
+                    <TextView
+                        android:text="3"
+                        android:layout_gravity="center"/>
+
+                    <android.support.v7.widget.AppCompatCheckBox
+                        android:id="@+id/box4"
+                        android:tag="3"
+                        android:checked="true"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:buttonTint="@color/chartRed"/>
+
+                    <TextView
+                        android:text="4"
+                        android:layout_gravity="center"/>
+
+                </GridLayout>
+
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/match_start_pause"
+                    android:tint="@color/white"
+                    android:background="@drawable/revertripple"
+                    android:src="@drawable/ic_pause_white_24dp"
+                    android:padding="10dp"
+                    android:layout_margin="4dp"/>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/auto_focus"
+                    android:tint="@color/white"
+                    android:background="@drawable/revertripple"
+                    android:src="@drawable/ic_center_focus_weak_white_24dp"
+                    android:padding="10dp"
+                    android:layout_margin="4dp"/>
+
+                    </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center">
+
+                    <ImageView
+                        android:id="@+id/refresh"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/revertripple"
+                        android:padding="10dp"
+                        android:src="@drawable/ic_update_white_24dp"
+                        android:tint="@color/white"
+                        android:layout_margin="4dp"/>
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/save_acquisition"
+                        android:tint="@color/colorAccent"
+                        android:background="@drawable/ripple"
+                        android:src="@drawable/ic_save_white_24dp"
+                        android:padding="10dp"
+                        android:layout_margin="4dp"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <com.github.mikephil.charting.charts.LineChart
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="5"
+            android:minHeight="250dp"
+            android:padding="10dp"
+            android:layout_margin="5dp"
+            android:id="@+id/graph">
+
+        </com.github.mikephil.charting.charts.LineChart>
+
+    </LinearLayout>
+
+</android.support.design.widget.CoordinatorLayout>

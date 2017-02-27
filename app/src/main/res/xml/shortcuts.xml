@@ -1,0 +1,42 @@
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <shortcut
+        android:shortcutId="shortcut_acquisition"
+        android:enabled="true"
+        android:icon="@drawable/ic_shortcut_insert_chart"
+        android:shortcutLongLabel="@string/bnav_acquisition"
+        android:shortcutShortLabel="@string/bnav_acquisition"
+        android:shortcutDisabledMessage="@string/bnav_acquisition" >
+        <intent
+            android:action="shortcut_acquisition"
+            android:targetClass="fr.isen.twinmx.activities.SplashActivity"
+            android:targetPackage="fr.isen.twinmx" />
+    </shortcut>
+
+    <shortcut
+        android:shortcutId="shortcut_history"
+        android:enabled="true"
+        android:icon="@drawable/ic_shortcut_history"
+        android:shortcutLongLabel="@string/bnav_history"
+        android:shortcutShortLabel="@string/bnav_history"
+        android:shortcutDisabledMessage="@string/bnav_history" >
+        <intent
+            android:action="shortcut_history"
+            android:targetClass="fr.isen.twinmx.activities.SplashActivity"
+            android:targetPackage="fr.isen.twinmx" />
+    </shortcut>
+
+    <shortcut
+        android:shortcutId="shortcut_instruction"
+        android:enabled="true"
+        android:icon="@drawable/ic_shortcut_help"
+        android:shortcutLongLabel="@string/bnav_instruction"
+        android:shortcutShortLabel="@string/bnav_instruction"
+        android:shortcutDisabledMessage="@string/bnav_instruction" >
+        <intent
+            android:action="shortcut_instruction"
+            android:targetClass="fr.isen.twinmx.activities.SplashActivity"
+            android:targetPackage="fr.isen.twinmx" />
+    </shortcut>
+
+</shortcuts>

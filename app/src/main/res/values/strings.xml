@@ -1,4 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">TwinMax</string>
+
+    <!-- Bottom navigation menu -->
+    <string name="bnav_acquisition">Acquisition</string>
+    <string name="bnav_history">History</string>
+    <string name="bnav_instruction">Help</string>
+
+    <string name="yes">Yes</string>
+
+    <!-- BLUETOOTH -->
+    <string name="select_bt_device">Select a bluetooth device</string>
+    <string name="start_bt">Enable bluetooth?</string>
+    <string name="connected_to">Connected to %s</string>
+    <string name="connection_failed_to">Connection failed to %s</string>
+    <string name="connection_failed">Connection failed</string>
+
+    <string name="no_history">No history found</string>
+
+    <!-- Forms -->
+    <string name="form_date">Date</string>
+    <string name="form_save">Save</string>
+    <string name="form_cancel">Cancel</string>
+    <string name="create">Create</string>
+    <string name="moto_name">Moto\'s name</string>
+    <string name="no_photo_selected">No image selected</string>
+
+    <!-- Moto detail -->
+    <string name="last_acquisitions">Last acquisitions</string>
+    <string name="menu_modify">Modify</string>
+    <string name="no_acquisitions">No acquisitions found.</string>
+
+    <!-- Moto detail dialog -->
+    <string name="modify_moto_title_dialog">New name</string>
+
+    <string name="pressure">Pressure (mBar)</string>
+    <string name="cylinder">Cylinder %d</string>
+
+    <string name="save">Save</string>
+    <string name="application">Application</string>
+    <string name="moto">Motorcycle</string>
+
+    <!-- Manual help -->
+    <string name="twinmax_title">Device help</string>
+    <string name="app_title">Application help</string>
+    <string name="select_moto">Select a moto</string>
+    <string name="new_moto">New moto&#8230;</string>
+    <string name="form_moto_name">New moto\'s name</string>
+    <string name="form_acquistion_note">Note</string>
+
+
+    <!-- Maintenance detail -->
+    <string name="note">Note</string>
+    <string name="no_note">No note.</string>
+    <string name="menu_delete">Delete</string>
 </resources>
