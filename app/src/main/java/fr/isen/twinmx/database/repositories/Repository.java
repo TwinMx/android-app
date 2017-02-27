@@ -3,7 +3,7 @@ package fr.isen.twinmx.database.repositories;
 import java.util.List;
 import java.util.concurrent.Callable;
 
-import fr.isen.twinmx.database.RealmHelper;
+import fr.isen.twinmx.database.RealmConfiguration;
 import fr.isen.twinmx.database.exceptions.RepositoryException;
 import fr.isen.twinmx.database.interfaces.AutoIncrement;
 import io.realm.Realm;
@@ -22,7 +22,7 @@ public abstract class Repository<T extends RealmObject> {
     protected final Realm realm;
 
     public Repository(Class<T> clazz) {
-        this.realm = RealmHelper.getRealm();
+        this.realm = RealmConfiguration.getRealm();
         this.clazz = clazz;
     }
 

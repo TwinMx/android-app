@@ -157,7 +157,6 @@ public class MotoFormActivity extends AppCompatActivity {
         {
             case REQUEST_IMAGE_CAPTURE:
                 if (resultCode == RESULT_OK) {
-                    //this.photoURI = getImageUri(TMApplication.getContext(), (Bitmap)data.getExtras().get("data"));
                     this.loadMotoImage(this.photoURI);
                 }
                 break;
@@ -195,6 +194,7 @@ public class MotoFormActivity extends AppCompatActivity {
                 .transform(new CircleTransformation())
                 .into(photo);
 
+        this.photoURI = uri;
         photo.setVisibility(View.VISIBLE);
         photoTextMessage.setVisibility(View.GONE);
     }

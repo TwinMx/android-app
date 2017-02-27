@@ -103,7 +103,8 @@
                     android:hint="@string/moto_name"
                     android:layout_marginTop="25dp"
                     android:layout_marginBottom="40dp"
-                    android:inputType="text"/>
+                    android:inputType="text"
+                    android:theme="@style/MyEditTextTheme"/>
 
                 <Button
                     android:layout_width="wrap_content"

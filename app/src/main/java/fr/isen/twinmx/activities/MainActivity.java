@@ -22,7 +22,7 @@ import butterknife.ButterKnife;
 
 import butterknife.OnClick;
 import butterknife.OnLongClick;
-import fr.isen.twinmx.database.RealmHelper;
+import fr.isen.twinmx.database.RealmConfiguration;
 import fr.isen.twinmx.database.TMRealmModule;
 
 
@@ -41,7 +41,6 @@ import fr.isen.twinmx.utils.bluetooth.TMBluetooth;
 import fr.isen.twinmx.utils.TMBottomNavigation;
 
 import io.realm.Realm;
-import io.realm.RealmConfiguration;
 
 import fr.isen.twinmx.model.History;
 import fr.isen.twinmx.ui.listeners.ClickListener;
@@ -57,7 +56,7 @@ public class MainActivity extends AppCompatActivity implements TMBottomNavigatio
     @BindView(R.id.fab)
     FloatingActionButton floatingActionButton;
 
-    private static RealmConfiguration realmConfiguration;
+    private static io.realm.RealmConfiguration realmConfiguration;
 
     @BindView(R.id.bluetoothIcon)
     ImageView bluetoothIcon;
@@ -94,7 +93,7 @@ public class MainActivity extends AppCompatActivity implements TMBottomNavigatio
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
         if (realmConfiguration == null) {
-            realmConfiguration = new RealmConfiguration.Builder(this)
+            realmConfiguration = new io.realm.RealmConfiguration.Builder(this)
                     .name("TwinMax")
                     .schemaVersion(7)
                     .deleteRealmIfMigrationNeeded()
@@ -102,7 +101,7 @@ public class MainActivity extends AppCompatActivity implements TMBottomNavigatio
                     .build();
         }
 
-        RealmHelper.setRealm(Realm.getInstance(realmConfiguration));
+        RealmConfiguration.setRealm(Realm.getInstance(realmConfiguration));
 
         if (savedInstanceState == null) {
             MainActivity.mBluetooth = new TMBluetooth(this);
@@ -136,6 +135,10 @@ public class MainActivity extends AppCompatActivity implements TMBottomNavigatio
                 ChartFragment chartFragment = (ChartFragment) fragment;
                 chartFragment.setBluetooth(mBluetooth);
                 chartFragment.setActivity(this);
+            }
+            else if (fragment instanceof HistoryFragment)
+            {
+                this.floatingActionButton.setVisibility(View.VISIBLE);
             }
         }
 

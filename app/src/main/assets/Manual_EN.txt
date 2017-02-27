@@ -9,7 +9,7 @@ Application//None//In order to communicate with TwinMax, you'll have to paired y
 Application//None//In order to get the carburettor's depression curves, press the bluetooth icon located on the top right corner of the app.;
 Application//None//Select TwinMax in the list. Once connected, you can visualize depression curves.;
 Application//None//You can disable some curves by deselecting their associated checkbox.;
-Application//None//Three buttons are also displayed on the interface: Pause/Restart - Auto scaling - Save.;
+Application//None//Four buttons are also displayed on the interface: Pause/Restart - Auto scaling - Calibration - Save.;
 Application//None//If you want to save an acquisition, you'll have to choose a motorcycle. If the motorcycle hasn't been created, you'll be able to create one.;
 Application//None//History tab allows you to find previous acquisitions that have been saved. They are linked to a motorcycle. You'll find a list of your motorcycle.;
 Application//None//By pressing the button "+", you'll be able to create a new motorcycle by entering a name and a photo.;
