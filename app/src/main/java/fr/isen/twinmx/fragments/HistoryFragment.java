@@ -29,7 +29,7 @@ import butterknife.ButterKnife;
 import fr.isen.twinmx.activities.MainActivity;
 import fr.isen.twinmx.R;
 import fr.isen.twinmx.activities.MotoFormActivity;
-import fr.isen.twinmx.database.MotoRepository;
+import fr.isen.twinmx.database.repositories.MotoRepository;
 import fr.isen.twinmx.database.listeners.MotoListener;
 import fr.isen.twinmx.TMApplication;
 import fr.isen.twinmx.database.model.Moto;

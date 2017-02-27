@@ -1,10 +1,5 @@
 package fr.isen.twinmx.model;
 
-import android.util.Log;
-
-import com.github.mikephil.charting.data.Entry;
-
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
 

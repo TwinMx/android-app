@@ -93,8 +93,8 @@ public class MainActivity extends AppCompatActivity implements TMBottomNavigatio
         this.navigation.manageFloatingActionButtonBehavior(this.floatingActionButton);
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
-        if (this.realmConfiguration == null) {
-            this.realmConfiguration = new RealmConfiguration.Builder(this)
+        if (realmConfiguration == null) {
+            realmConfiguration = new RealmConfiguration.Builder(this)
                     .name("TwinMax")
                     .schemaVersion(7)
                     .deleteRealmIfMigrationNeeded()
@@ -102,7 +102,7 @@ public class MainActivity extends AppCompatActivity implements TMBottomNavigatio
                     .build();
         }
 
-        RealmHelper.setRealm(Realm.getInstance(this.realmConfiguration));
+        RealmHelper.setRealm(Realm.getInstance(realmConfiguration));
 
         if (savedInstanceState == null) {
             MainActivity.mBluetooth = new TMBluetooth(this);

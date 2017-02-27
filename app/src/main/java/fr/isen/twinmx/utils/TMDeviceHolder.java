@@ -102,7 +102,7 @@ public class TMDeviceHolder extends RecyclerView.ViewHolder {
     }
 
     public TMDevice getDevice() {
-        return (TMDevice) this.device;
+        return this.device;
     }
 
     public String getName() {

@@ -5,6 +5,7 @@ import android.content.res.Resources;
 import android.graphics.Color;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.TextView;
@@ -45,7 +46,7 @@ public class TMSnackBar {
 
     public static Snackbar makeBluetooth(Context context, View view, View.OnClickListener listener) {
         final Resources r = TMApplication.getContext().getResources();
-        TMSnackBar.bluetoothSnackBar = makeTop(view, r.getString(R.string.start_bt), Snackbar.LENGTH_INDEFINITE, context.getResources().getColor(R.color.blue500), Color.WHITE, Color.WHITE, R.drawable.ic_bluetooth_white_24dp);
+        TMSnackBar.bluetoothSnackBar = makeTop(view, r.getString(R.string.start_bt), Snackbar.LENGTH_INDEFINITE, ContextCompat.getColor(context, R.color.blue500), Color.WHITE, Color.WHITE, R.drawable.ic_bluetooth_white_24dp);
         TMSnackBar.bluetoothSnackBar.setAction(r.getString(R.string.yes),listener);
         return TMSnackBar.bluetoothSnackBar;
     }

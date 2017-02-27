@@ -29,7 +29,7 @@
             android:textColor="@color/textPrimary"
             android:layout_toEndOf="@+id/history_image"
             android:layout_alignParentTop="true"
-            android:text="Acquisition's name"
+            android:text="@string/bnav_acquisition"
             android:textSize="18sp"
             android:textStyle="bold" />
 
@@ -38,7 +38,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/history_date"
             android:textColor="@color/textSecondary"
-            android:text="Date"
+            android:text="@string/form_date"
             android:layout_toEndOf="@+id/history_image"
             android:layout_below="@+id/history_name" />
     </RelativeLayout>

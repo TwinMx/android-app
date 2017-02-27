@@ -2,15 +2,10 @@ package fr.isen.twinmx.database.model;
 
 import com.github.mikephil.charting.data.Entry;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import fr.isen.twinmx.database.interfaces.AutoIncrement;
-import fr.isen.twinmx.database.measures.RealmMeasure;
 import io.realm.RealmList;
 import io.realm.RealmObject;
-import io.realm.annotations.PrimaryKey;
-import io.realm.annotations.Required;
 
 /**
  * Created by pierredfc.

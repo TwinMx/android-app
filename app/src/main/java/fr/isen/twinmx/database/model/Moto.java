@@ -2,7 +2,6 @@ package fr.isen.twinmx.database.model;
 
 import com.github.mikephil.charting.data.Entry;
 
-import java.text.DateFormat;
 import java.util.Date;
 import java.util.List;
 

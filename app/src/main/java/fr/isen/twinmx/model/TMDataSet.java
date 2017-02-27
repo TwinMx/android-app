@@ -1,12 +1,9 @@
 package fr.isen.twinmx.model;
 
-import android.util.Log;
-
 import com.github.mikephil.charting.data.Entry;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import fr.isen.twinmx.database.model.RealmFloat;
 import fr.isen.twinmx.database.model.RealmGraph;

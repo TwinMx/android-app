@@ -1,9 +1,8 @@
-package fr.isen.twinmx.database;
+package fr.isen.twinmx.database.repositories;
 
 import java.util.List;
 
 import fr.isen.twinmx.database.model.RealmDevice;
-import fr.isen.twinmx.database.model.Repository;
 import fr.isen.twinmx.utils.bluetooth.SmoothBluetoothFork.TMDevice;
 
 /**

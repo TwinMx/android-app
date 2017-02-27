@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fr.isen.twinmx.R;
-import fr.isen.twinmx.database.model.RealmFloat;
 import fr.isen.twinmx.database.model.RealmGraph;
 import fr.isen.twinmx.fragments.chart.CalibrationManager;
 import fr.isen.twinmx.fragments.chart.TriggerManager;

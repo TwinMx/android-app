@@ -1,4 +1,4 @@
-package fr.isen.twinmx.database.model;
+package fr.isen.twinmx.database.repositories;
 
 import java.util.List;
 import java.util.concurrent.Callable;

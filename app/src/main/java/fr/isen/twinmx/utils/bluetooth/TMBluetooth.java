@@ -26,7 +26,7 @@ import fr.isen.twinmx.model.TMFile;
 import fr.isen.twinmx.model.TMInput;
 import fr.isen.twinmx.receivers.BluetoothIconReceiver;
 import fr.isen.twinmx.TMApplication;
-import fr.isen.twinmx.database.RealmDeviceRepository;
+import fr.isen.twinmx.database.repositories.RealmDeviceRepository;
 import fr.isen.twinmx.database.exceptions.RepositoryException;
 import fr.isen.twinmx.database.model.RealmDevice;
 import fr.isen.twinmx.utils.bluetooth.SmoothBluetoothFork.TMBluetoothService;

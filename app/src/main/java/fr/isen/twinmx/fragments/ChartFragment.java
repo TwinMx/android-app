@@ -36,7 +36,7 @@ import fr.isen.twinmx.fragments.chart.TMChart;
 import fr.isen.twinmx.listeners.OnPeriodListener;
 import fr.isen.twinmx.model.ChartBundle;
 import fr.isen.twinmx.TMApplication;
-import fr.isen.twinmx.database.MotoRepository;
+import fr.isen.twinmx.database.repositories.MotoRepository;
 import fr.isen.twinmx.database.model.Moto;
 import fr.isen.twinmx.listeners.OnMotoHistoryClickListener;
 import fr.isen.twinmx.model.AcquisitionSaveRequest;
@@ -190,7 +190,7 @@ public class ChartFragment extends BluetoothFragment implements OnMotoHistoryCli
             this.setCheckBoxState(2, savedInstanceState, STATE_CURVE_3_ENABLED, this.checkBoxCurveThree);
             this.setCheckBoxState(3, savedInstanceState, STATE_CURVE_4_ENABLED, this.checkBoxCurveFour);
             this.setCalibrationButtonState(savedInstanceState, this.calibrationButton);
-            this.wasPlaying = savedInstanceState.getBoolean(STATE_PLAYING);
+            wasPlaying = savedInstanceState.getBoolean(STATE_PLAYING);
         }
 
         return rootView;
@@ -199,8 +199,8 @@ public class ChartFragment extends BluetoothFragment implements OnMotoHistoryCli
 
     public void onResume() {
         super.onResume();
-        this.setPlayPauseImage(this.playPauseImage, this.getActivity(), this.wasPlaying);
-        this.chartComponent.onResume(this.wasPlaying);
+        this.setPlayPauseImage(this.playPauseImage, this.getActivity(), wasPlaying);
+        this.chartComponent.onResume(wasPlaying);
         this.setMotorLifeCycle();
     }
 
@@ -219,7 +219,7 @@ public class ChartFragment extends BluetoothFragment implements OnMotoHistoryCli
     @Override
     public void onPause() {
         super.onPause();
-        this.wasPlaying = this.isPlaying();
+        wasPlaying = this.isPlaying();
         this.chartComponent.pause(false);
     }
 
@@ -236,7 +236,7 @@ public class ChartFragment extends BluetoothFragment implements OnMotoHistoryCli
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putBoolean(STATE_PLAYING, this.wasPlaying);
+        outState.putBoolean(STATE_PLAYING, wasPlaying);
         outState.putBoolean(STATE_CURVE_1_ENABLED, checkBoxCurveOne.isChecked());
         outState.putBoolean(STATE_CURVE_2_ENABLED, checkBoxCurveTwo.isChecked());
         outState.putBoolean(STATE_CURVE_3_ENABLED, checkBoxCurveThree.isChecked());

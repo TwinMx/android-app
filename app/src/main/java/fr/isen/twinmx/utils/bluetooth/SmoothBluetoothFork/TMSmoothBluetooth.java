@@ -13,7 +13,6 @@ import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Observable;
 import java.util.Set;
 
 import fr.isen.twinmx.receivers.BluetoothIconReceiver;

@@ -1,4 +1,4 @@
-package fr.isen.twinmx.database;
+package fr.isen.twinmx.database.repositories;
 
 import com.github.mikephil.charting.data.Entry;
 
@@ -8,15 +8,7 @@ import java.util.concurrent.Callable;
 
 import fr.isen.twinmx.database.exceptions.MotoRepositoryException;
 import fr.isen.twinmx.database.exceptions.RepositoryException;
-import fr.isen.twinmx.database.listeners.MotoListener;
-import fr.isen.twinmx.database.model.Maintenance;
 import fr.isen.twinmx.database.model.Moto;
-import fr.isen.twinmx.database.model.Repository;
-import io.realm.Realm;
-import io.realm.RealmChangeListener;
-import io.realm.RealmQuery;
-import io.realm.RealmResults;
-import io.realm.exceptions.RealmPrimaryKeyConstraintException;
 
 /**
  * Created by Clement on 05/01/2017.

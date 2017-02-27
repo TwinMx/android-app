@@ -46,7 +46,7 @@
                     android:id="@+id/tm_card_title"
                     android:textAllCaps="true"
                     android:textColor="@color/textSecondary"
-                    android:text="TwinMax"/>
+                    android:text="@string/app_name"/>
             </LinearLayout>
 
 
@@ -85,7 +85,7 @@
                     android:padding="10dp"
                     android:textColor="@color/textSecondary"
                     android:textAllCaps="true"
-                    android:text="Application"/>
+                    android:text="@string/application"/>
             </LinearLayout>
         </android.support.v7.widget.CardView>
 
