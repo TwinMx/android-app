@@ -59,9 +59,12 @@
 
     <string name="help_acq_pp">Pause/Restart of the acquisition.</string>
     <string name="help_acq_af">Auto scaling.</string>
-    <string name="help_acq_calibrage">Curves calibration.</string>
+    <string name="help_acq_calibrage">Curves calibration. Long press to disable.</string>
     <string name="help_acq_save">Acquisition back-up.</string>
     <string name="help_acq_curves">Hide/Show the linked curve.</string>
+
+    <string name="help_hist_add">Create a new motorcycle.</string>
+    <string name="help_hist_remove">Swipe from right-to-left to delete the selected motorcycle.</string>
 
 
     <!-- Maintenance detail -->

@@ -62,9 +62,12 @@
 
     <string name="help_acq_pp">Pause ou redémarrage de l\'acquisition.</string>
     <string name="help_acq_af">Mise à l\'échelle automatique.</string>
-    <string name="help_acq_calibrage">Calibrage des courbes.</string>
+    <string name="help_acq_calibrage">Calibrage des courbes. Appui long pour désactiver.</string>
     <string name="help_acq_save">Sauvegarde de l\'acquisition.</string>
     <string name="help_acq_curves">Affichage ou non de la courbe associée.</string>
+
+    <string name="help_hist_add">Création d\'une nouvelle moto.</string>
+    <string name="help_hist_remove">Pour supprimer une moto, réalisez un mouvement de glisse de droite à gauche.</string>
 
     <!-- Maintenance detail -->
     <string name="note">Note</string>

@@ -34,12 +34,12 @@
                     android:padding="5dp"
                     android:textColor="@color/accent"/>
 
-                <GridLayout
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:rowCount="4"
-                    android:columnCount="2"
-                    android:padding="15dp">
+                    android:orientation="horizontal"
+                    android:padding="5dp"
+                    android:paddingStart="10dp">
 
                     <ImageView
                         android:layout_width="@dimen/toolbar_bluetooth_icon_size"
@@ -56,8 +56,16 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/help_bt_grey"
-                        android:layout_gravity="center_vertical"
-                        android:ellipsize="end"/>
+                        android:layout_gravity="center_vertical" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="5dp"
+                    android:paddingStart="10dp">
 
                     <ImageView
                         android:layout_width="@dimen/toolbar_bluetooth_icon_size"
@@ -74,8 +82,16 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/help_bt_blue"
-                        android:layout_gravity="center_vertical"
-                        android:ellipsize="end"/>
+                        android:layout_gravity="center_vertical" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="5dp"
+                    android:paddingStart="10dp">
 
                     <ImageView
                         android:layout_width="@dimen/toolbar_bluetooth_icon_size"
@@ -93,8 +109,16 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/help_bt_green"
-                        android:layout_gravity="center_vertical"
-                        android:ellipsize="end"/>
+                        android:layout_gravity="center_vertical"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="5dp"
+                    android:paddingStart="10dp">
 
                     <ImageView
                         android:layout_width="@dimen/toolbar_bluetooth_icon_size"
@@ -112,11 +136,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/help_bt_red"
-                        android:layout_gravity="center_vertical"
-                        android:ellipsize="end"/>
+                        android:layout_gravity="center_vertical" />
 
-                </GridLayout>
-
+                </LinearLayout>
 
             </LinearLayout>
 
@@ -145,12 +167,13 @@
                     android:padding="5dp"
                     android:textColor="@color/accent"/>
 
-                <GridLayout
+
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:rowCount="5"
-                    android:columnCount="2"
-                    android:padding="15dp">
+                    android:orientation="horizontal"
+                    android:padding="5dp"
+                    android:paddingStart="10dp">
 
                     <ImageView
                         android:layout_width="@dimen/toolbar_bluetooth_icon_size"
@@ -167,8 +190,17 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/help_acq_pp"
-                        android:layout_gravity="center_vertical"
-                        android:ellipsize="end"/>
+                        android:layout_gravity="center_vertical" />
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="5dp"
+                    android:paddingStart="10dp">
 
                     <ImageView
                         android:layout_width="@dimen/toolbar_bluetooth_icon_size"
@@ -185,8 +217,16 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/help_acq_af"
-                        android:layout_gravity="center_vertical"
-                        android:ellipsize="end"/>
+                        android:layout_gravity="center_vertical" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="5dp"
+                    android:paddingStart="10dp">
 
                     <ImageView
                         android:layout_width="@dimen/toolbar_bluetooth_icon_size"
@@ -201,11 +241,19 @@
 
 
                     <TextView
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/help_acq_calibrage"
-                        android:layout_gravity="center_vertical"
-                        android:ellipsize="end"/>
+                        android:layout_gravity="center_vertical" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="5dp"
+                    android:paddingStart="10dp">
 
                     <ImageView
                         android:layout_width="@dimen/toolbar_bluetooth_icon_size"
@@ -224,30 +272,118 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/help_acq_save"
-                        android:layout_gravity="center_vertical"
-                        android:ellipsize="end"/>
+                        android:layout_gravity="center_vertical" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="5dp"
+                    android:paddingStart="10dp">
 
                     <android.support.v7.widget.AppCompatCheckBox
-                        android:layout_width="wrap_content"
+                        android:layout_width="@dimen/toolbar_bluetooth_icon_size"
                         android:layout_height="wrap_content"
                         android:buttonTint="@color/chartBlue"
                         android:checked="true"
-                        android:layout_marginBottom="5dp"
-                        android:clickable="false"/>
+                        android:layout_marginEnd="@dimen/toolbar_last_icon_margin_end"
+                        android:layout_marginBottom="5dp" />
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/help_acq_curves"
-                        android:layout_gravity="center_vertical"
-                        android:ellipsize="end"/>
+                        android:layout_gravity="center_vertical" />
 
-                </GridLayout>
-
+                </LinearLayout>
             </LinearLayout>
 
         </android.support.v7.widget.CardView>
 
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            card_view:cardBackgroundColor="@color/white"
+            android:layout_margin="5dp"
+            card_view:cardCornerRadius="4dp"
+            card_view:cardElevation="2dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:text="@string/bnav_history"
+                    android:textAllCaps="true"
+                    android:textStyle="bold"
+                    android:padding="5dp"
+                    android:textColor="@color/accent"/>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="5dp"
+                    android:paddingStart="10dp">
+
+                    <ImageView
+                        android:layout_width="@dimen/toolbar_bluetooth_icon_size"
+                        android:layout_height="@dimen/toolbar_bluetooth_icon_size"
+                        app:srcCompat="@drawable/ic_add_white_24dp"
+                        android:background="@drawable/revertripple"
+                        android:padding="@dimen/toolbar_bluetooth_padding"
+                        android:layout_marginEnd="@dimen/toolbar_last_icon_margin_end"
+                        android:gravity="center_vertical|center_horizontal"
+                        android:layout_marginBottom="5dp"
+                        android:elevation="3dp" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/help_hist_add"
+                        android:layout_gravity="center_vertical"
+                        android:ellipsize="end"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="5dp"
+                    android:paddingStart="10dp">
+
+                    <ImageView
+                        android:layout_width="@dimen/toolbar_bluetooth_icon_size"
+                        android:layout_height="wrap_content"
+                        app:srcCompat="@drawable/ic_delete_white_24dp"
+                        android:tint="@color/colorAccent"
+                        android:padding="@dimen/toolbar_bluetooth_padding"
+                        android:layout_marginEnd="@dimen/toolbar_last_icon_margin_end"
+                        android:gravity="center_vertical|center_horizontal"
+                        android:layout_marginBottom="5dp"
+                        android:elevation="3dp" />
+
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/help_hist_remove"
+                        android:layout_gravity="fill"
+                        android:ellipsize="end" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </android.support.v7.widget.CardView>
 
 
     </LinearLayout>
