@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -46,6 +47,11 @@ public class ManualFragment extends Fragment {
     @BindView(R.id.cardview_app)
     CardView cardApp;
 
+    @BindView(R.id.manual_Layout)
+    ScrollView manualAppLayout;
+
+    private List<ManualPage> twinmaxPages;
+
     private ManualFragmentEnum selectedCard = ManualFragmentEnum.NONE;
 
     @Override
@@ -58,27 +64,25 @@ public class ManualFragment extends Fragment {
 
             if (ManualFragmentEnum.APP.equals(this.selectedCard))
             {
-                this.loadInstructions("Application", R.string.app_title, 0.5f, 1f);
+                this.loadAppManual();
             }
             else if (ManualFragmentEnum.TM.equals((this.selectedCard)))
             {
-                this.loadInstructions("Twinmax",R.string.twinmax_title, 1f, 0.5f);
+               this.loadTwinmaxManual();
             }
         }
     }
 
     @OnClick(R.id.cardview_app)
-    public void onCardViewApp(View view)
+    public void onCardViewApp()
     {
-        this.loadInstructions("Application", R.string.app_title, 0.5f, 1f);
-        this.selectedCard = ManualFragmentEnum.APP;
+        if (!ManualFragmentEnum.APP.equals(this.selectedCard)) this.loadAppManual();
     }
 
     @OnClick(R.id.cardview_twinmax)
-    public void onCardViewTwinMax(View view)
+    public void onCardViewTwinMax()
     {
-        this.loadInstructions("Twinmax", R.string.twinmax_title, 1f, 0.5f);
-        this.selectedCard = ManualFragmentEnum.TM;
+        if (!ManualFragmentEnum.TM.equals(this.selectedCard)) this.loadTwinmaxManual();
     }
 
     @Nullable
@@ -102,14 +106,33 @@ public class ManualFragment extends Fragment {
         outState.putInt("ManualFragment", selectedCard.getValue());
     }
 
-    private void loadInstructions(String manual, int stringId, float alphaTM, float alphaApp)
+    private void loadTwinmaxManual()
     {
-        List<ManualPage> pages = ReadFileHelper.getManualFromFile(TMApplication.getContext(), manual);
-        this.manualAdapter.setItems(pages);
-        manualTitle.setText(getString(stringId));
+        if (this.twinmaxPages == null)
+        {
+            this.twinmaxPages= ReadFileHelper.getManualFromFile(TMApplication.getContext(), "Twinmax");
+        }
 
-        cardTwinMax.setAlpha(alphaTM);
-        cardApp.setAlpha(alphaApp);
+        this.manualAdapter.setItems(this.twinmaxPages);
+        manualTitle.setText(getString(R.string.twinmax_title));
+
+        cardTwinMax.setAlpha(1f);
+        cardApp.setAlpha(0.5f);
+
+        this.selectedCard = ManualFragmentEnum.TM;
+        this.manualAppLayout.setVisibility(View.GONE);
+        this.instructions.setVisibility(View.VISIBLE);
+    }
+
+    private void loadAppManual()
+    {
+        manualTitle.setText(getString(R.string.app_title));
+        cardTwinMax.setAlpha(0.5f);
+        cardApp.setAlpha(1f);
+
+        this.selectedCard = ManualFragmentEnum.APP;
+        this.manualAppLayout.setVisibility(View.VISIBLE);
+        this.instructions.setVisibility(View.GONE);
     }
 
     private enum ManualFragmentEnum

@@ -102,8 +102,12 @@
     <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/manual_recycler">
+        android:id="@+id/manual_recycler"
+        android:visibility="gone">
     </android.support.v7.widget.RecyclerView>
 
+    <include layout="@layout/app_manual"
+        android:id="@+id/manual_Layout"
+        android:visibility="gone"/>
 
 </LinearLayout>

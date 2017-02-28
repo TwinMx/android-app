@@ -49,9 +49,24 @@
     <string name="form_moto_name">New moto\'s name</string>
     <string name="form_acquistion_note">Note</string>
 
+    <string name="help_acquisition">&#8226; Acquisition tab</string>
+    <string name="help_history">&#8226; History tab</string>
+
+    <string name="help_bt_grey">Bluetooth is disabled.</string>
+    <string name="help_bt_blue">No active connection.</string>
+    <string name="help_bt_green">There is an active connection.</string>
+    <string name="help_bt_red">Failed to connect to TwinMax.</string>
+
+    <string name="help_acq_pp">Pause/Restart of the acquisition.</string>
+    <string name="help_acq_af">Auto scaling.</string>
+    <string name="help_acq_calibrage">Curves calibration.</string>
+    <string name="help_acq_save">Acquisition back-up.</string>
+    <string name="help_acq_curves">Hide/Show the linked curve.</string>
+
 
     <!-- Maintenance detail -->
     <string name="note">Note</string>
     <string name="no_note">No note.</string>
     <string name="menu_delete">Delete</string>
+    <string name="bluetooth">Bluetooth</string>
 </resources>

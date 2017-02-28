@@ -3,13 +3,3 @@ Twinmax//None//Choisissez votre cylindre de référence à l'aide des boutons n�
 Twinmax//None//Puis validez à l'aide du bouton n°2.;
 Twinmax//None//Vous pouvez redémarrer le TwinMax à l'aide du bouton n°4.;
 Twinmax//None//Si le TwinMax se met en veille, réveillez le à l'aide du bouton n°4.;
-
-Title;
-Application//None//Afin de communiquer avec le module, appareillez votre téléphone ou tablette avec le module dans les paramètres bluetooth. Le code d'appairage est "1234".;
-Application//None//Afin d'obtenir les courbes de dépressions des carburateurs, appuyez sur l'icône Bluetooth présent en haut à droite de l'application.;
-Application//None//Sélectionnez le bluetooth TwinMax présent dans la liste. Une fois connecté, vous visualisez les courbes de dépressions.;
-Application//None//Vous pouvez désactiver certaines courbes en décochant leurs cases associées.;
-Application//None//Quatre boutons sont également présents sur l'interface: Pause/Redémarrage de l'acquisition -  Mise à l'échelle automatique - Calibrage des courbes - Enregistrement de l'acquisition.;
-Application//None//L'enregistrement d'une acquisition requiert de renseigner une moto. Si la moto n'a pas encore été créé, un assistant de création vous sera proposé.;*
-Application//None//L'onglet Historique permet de retrouver les acquisitions enregistrées précédemment. Ces acquisitions sont reliées à une moto.;
-Application//None//En appuyant sur le bouton "+", vous pouvez créer une nouvelle moto en renseignant un nom et une photo.;
