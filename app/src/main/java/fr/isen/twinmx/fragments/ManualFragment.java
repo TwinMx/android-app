@@ -3,6 +3,7 @@ package fr.isen.twinmx.fragments;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
@@ -10,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -50,9 +52,30 @@ public class ManualFragment extends Fragment {
     @BindView(R.id.manual_Layout)
     ScrollView manualAppLayout;
 
+    @OnClick(R.id.play_pause)
+    public void onPlayPauseClick(View view)
+    {
+        if (view instanceof ImageView)
+        {
+            ImageView icon = (ImageView) view;
+
+            if (!playPauseButtonHandler)
+            {
+                icon.setImageDrawable(ContextCompat.getDrawable(TMApplication.getContext(), R.drawable.ic_play_arrow_white_24dp));
+            }
+            else
+            {
+                icon.setImageDrawable(ContextCompat.getDrawable(TMApplication.getContext(), R.drawable.ic_pause_white_24dp));
+            }
+            this.playPauseButtonHandler = !playPauseButtonHandler;
+        }
+    }
+
     private List<ManualPage> twinmaxPages;
 
     private ManualFragmentEnum selectedCard = ManualFragmentEnum.NONE;
+
+    private boolean playPauseButtonHandler = false;
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {

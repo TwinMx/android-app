@@ -178,12 +178,14 @@
                     <ImageView
                         android:layout_width="@dimen/toolbar_bluetooth_icon_size"
                         android:layout_height="@dimen/toolbar_bluetooth_icon_size"
+                        android:id="@+id/play_pause"
                         app:srcCompat="@drawable/ic_pause_white_24dp"
                         android:background="@drawable/revertripple"
                         android:padding="@dimen/toolbar_bluetooth_padding"
                         android:layout_marginEnd="@dimen/toolbar_last_icon_margin_end"
                         android:gravity="center_vertical|center_horizontal"
                         android:layout_marginBottom="5dp"
+                        android:tag="0"
                         android:elevation="1dp"/>
 
                     <TextView
@@ -264,8 +266,8 @@
                         android:padding="@dimen/toolbar_bluetooth_padding"
                         android:layout_marginEnd="@dimen/toolbar_last_icon_margin_end"
                         android:gravity="center_vertical|center_horizontal"
-                        android:elevation="1dp"
-                        />
+                        android:layout_marginBottom="5dp"
+                        android:elevation="1dp" />
 
 
                     <TextView
