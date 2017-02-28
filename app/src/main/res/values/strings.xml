@@ -56,6 +56,7 @@
     <string name="help_bt_blue">No active connection.</string>
     <string name="help_bt_green">There is an active connection.</string>
     <string name="help_bt_red">Failed to connect to TwinMax.</string>
+    <string name="help_bt_list">Press the bluetooth icon to access the list of devices.</string>
 
     <string name="help_acq_pp">Pause/Restart of the acquisition.</string>
     <string name="help_acq_af">Auto scaling.</string>

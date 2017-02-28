@@ -58,6 +58,7 @@
     <string name="help_bt_blue">Le bluetooth est connecté mais aucune communication est en cours.</string>
     <string name="help_bt_green">Communication en cours.</string>
     <string name="help_bt_red">Echec lors de la connexion.</string>
+    <string name="help_bt_list">Appuyer sur l\'icône de bluetooth pour accéder à la liste des appareils.</string>
 
 
     <string name="help_acq_pp">Pause ou redémarrage de l\'acquisition.</string>
