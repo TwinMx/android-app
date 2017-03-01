@@ -32,7 +32,7 @@
                     android:textAllCaps="true"
                     android:textStyle="bold"
                     android:padding="5dp"
-                    android:textColor="@color/accent"/>
+                    android:textColor="@color/colorAccent"/>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -178,7 +178,7 @@
                     android:textAllCaps="true"
                     android:textStyle="bold"
                     android:padding="5dp"
-                    android:textColor="@color/accent"/>
+                    android:textColor="@color/colorAccent"/>
 
 
                 <LinearLayout
@@ -343,7 +343,7 @@
                     android:textAllCaps="true"
                     android:textStyle="bold"
                     android:padding="5dp"
-                    android:textColor="@color/accent"/>
+                    android:textColor="@color/colorAccent"/>
 
 
                 <LinearLayout
