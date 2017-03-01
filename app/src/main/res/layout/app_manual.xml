@@ -40,6 +40,7 @@
                     android:gravity="center"
                     android:layout_gravity="center"
                     android:text="@string/help_bt_list"
+                    android:textColor="@color/textPrimary"
                     android:padding="5dp" />
 
                 <LinearLayout
@@ -64,6 +65,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/help_bt_grey"
+                        android:textColor="@color/textPrimary"
                         android:layout_gravity="center_vertical" />
 
                 </LinearLayout>
@@ -90,6 +92,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/help_bt_blue"
+                        android:textColor="@color/textPrimary"
                         android:layout_gravity="center_vertical" />
 
                 </LinearLayout>
@@ -117,6 +120,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/help_bt_green"
+                        android:textColor="@color/textPrimary"
                         android:layout_gravity="center_vertical"/>
 
                 </LinearLayout>
@@ -144,6 +148,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/help_bt_red"
+                        android:textColor="@color/textPrimary"
                         android:layout_gravity="center_vertical" />
 
                 </LinearLayout>
@@ -200,7 +205,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/help_acq_pp"
-                        android:layout_gravity="center_vertical" />
+                        android:layout_gravity="center_vertical"
+                        android:textColor="@color/textPrimary" />
 
 
                 </LinearLayout>
@@ -227,7 +233,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/help_acq_af"
-                        android:layout_gravity="center_vertical" />
+                        android:layout_gravity="center_vertical"
+                        android:textColor="@color/textPrimary" />
 
                 </LinearLayout>
 
@@ -254,7 +261,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/help_acq_calibrage"
-                        android:layout_gravity="center_vertical" />
+                        android:layout_gravity="center_vertical"
+                        android:textColor="@color/textPrimary" />
 
                 </LinearLayout>
 
@@ -282,7 +290,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/help_acq_save"
-                        android:layout_gravity="center_vertical" />
+                        android:layout_gravity="center_vertical"
+                        android:textColor="@color/textPrimary" />
 
                 </LinearLayout>
 
@@ -305,7 +314,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/help_acq_curves"
-                        android:layout_gravity="center_vertical" />
+                        android:layout_gravity="center_vertical"
+                        android:textColor="@color/textPrimary" />
 
                 </LinearLayout>
             </LinearLayout>
@@ -359,7 +369,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/help_hist_add"
                         android:layout_gravity="center_vertical"
-                        android:ellipsize="end"/>
+                        android:textColor="@color/textPrimary" />
 
                 </LinearLayout>
 
@@ -386,8 +396,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/help_hist_remove"
-                        android:layout_gravity="fill"
-                        android:ellipsize="end" />
+                        android:textColor="@color/textPrimary"
+                        android:layout_gravity="fill" />
 
                 </LinearLayout>
 
