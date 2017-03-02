@@ -41,7 +41,6 @@ import io.realm.RealmResults;
 /**
  * Created by pierredfc.
  */
-
 public class HistoryFragment extends Fragment implements MotoListener.OnCreateMotoCallback, View.OnClickListener {
 
     private View rootview;
@@ -184,7 +183,7 @@ public class HistoryFragment extends Fragment implements MotoListener.OnCreateMo
     // On Floating Action Button click
     @Override
     public void onClick(View view) {
-        Intent intent = new Intent(this.getActivity(), MotoFormActivity.class);
+        Intent intent = new Intent(TMApplication.getContext(), MotoFormActivity.class);
         startActivity(intent);
     }
 }
