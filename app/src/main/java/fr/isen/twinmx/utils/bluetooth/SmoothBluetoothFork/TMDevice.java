@@ -1,6 +1,6 @@
 package fr.isen.twinmx.utils.bluetooth.SmoothBluetoothFork;
 
-import fr.isen.twinmx.model.TMDeviceType;
+import fr.isen.twinmx.model.enums.TMDeviceType;
 import fr.isen.twinmx.model.TMInput;
 
 /**

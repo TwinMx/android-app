@@ -1,7 +1,7 @@
 package fr.isen.twinmx.listeners;
 
 
-import fr.isen.twinmx.model.GraphDirection;
+import fr.isen.twinmx.model.enums.GraphDirection;
 
 /**
  * Created by Clement on 10/02/2017.

@@ -1,4 +1,4 @@
-package fr.isen.twinmx.model;
+package fr.isen.twinmx.model.enums;
 
 /**
  * Created by Clement on 08/02/2017.

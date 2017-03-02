@@ -21,6 +21,7 @@ import fr.isen.twinmx.listeners.OnChangeInputListener;
 import fr.isen.twinmx.listeners.OnCycleListener;
 import fr.isen.twinmx.listeners.OnPeriodListener;
 import fr.isen.twinmx.listeners.OnTriggerListener;
+import fr.isen.twinmx.model.enums.GraphDirection;
 import io.realm.RealmList;
 
 /**

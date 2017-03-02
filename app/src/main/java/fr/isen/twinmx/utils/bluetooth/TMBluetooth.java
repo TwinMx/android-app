@@ -32,7 +32,6 @@ import fr.isen.twinmx.database.model.RealmDevice;
 import fr.isen.twinmx.utils.bluetooth.SmoothBluetoothFork.TMBluetoothService;
 import fr.isen.twinmx.utils.bluetooth.SmoothBluetoothFork.TMDevice;
 import fr.isen.twinmx.utils.bluetooth.SmoothBluetoothFork.TMSmoothBluetooth;
-import fr.isen.twinmx.utils.TMBluetoothDialogAdapter;
 
 /**
  * Created by cdupl on 9/27/2016.

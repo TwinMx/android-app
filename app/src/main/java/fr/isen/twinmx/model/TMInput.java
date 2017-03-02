@@ -1,5 +1,7 @@
 package fr.isen.twinmx.model;
 
+import fr.isen.twinmx.model.enums.TMDeviceType;
+
 /**
  * Created by Clement on 08/02/2017.
  */
