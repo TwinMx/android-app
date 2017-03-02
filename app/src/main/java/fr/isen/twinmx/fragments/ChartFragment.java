@@ -205,7 +205,7 @@ public class ChartFragment extends BluetoothFragment implements OnMotoHistoryCli
     }
 
     private void setMotorLifeCycle() {
-        this.motorLifeCycle.addSeries(new SeriesItem.Builder(ContextCompat.getColor(this.getActivity(), R.color.ripple))
+        this.motorLifeCycle.addSeries(new SeriesItem.Builder(ContextCompat.getColor(TMApplication.getContext(), R.color.ripple))
                 .setRange(minMotorValue, maxMotorValue, maxMotorValue)
                 .setInitialVisibility(true)
                 .setLineWidth(10f)

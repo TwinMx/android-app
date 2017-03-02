@@ -35,6 +35,7 @@ import fr.isen.twinmx.database.model.Moto;
 import fr.isen.twinmx.listeners.OnMotoMaintenanceClickListener;
 import fr.isen.twinmx.ui.adapters.MaintenanceAdapter;
 import fr.isen.twinmx.utils.CircleTransformation;
+import fr.isen.twinmx.utils.ImageConverter;
 import io.realm.RealmResults;
 
 /**
@@ -193,13 +194,14 @@ public class MotoDetailActivity extends AppCompatActivity implements OnMotoMaint
             case REQUEST_SELECT_PHOTO:
                 if (resultCode == RESULT_OK && data != null)
                 {
-                    Uri uri = data.getData();
-
                     try {
+                        Uri uri = ImageConverter.toNewUri(this, data.getData());
                         moto = MotoRepository.getInstance().updateImage(moto, uri.toString());
                         updateViewAfterMotoUpdate(true);
                     } catch (RepositoryException e) {
                         e.printStackTrace();
+                    } catch(Exception ex) {
+                        ex.printStackTrace();
                     }
                 }
                 break;

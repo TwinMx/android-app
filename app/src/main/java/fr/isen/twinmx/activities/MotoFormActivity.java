@@ -3,9 +3,13 @@ package fr.isen.twinmx.activities;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.ParcelFileDescriptor;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -19,7 +23,9 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileDescriptor;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -34,6 +40,7 @@ import fr.isen.twinmx.database.repositories.MotoRepository;
 import fr.isen.twinmx.database.exceptions.RepositoryException;
 import fr.isen.twinmx.database.model.Moto;
 import fr.isen.twinmx.utils.CircleTransformation;
+import fr.isen.twinmx.utils.ImageConverter;
 
 /**
  * Created by Clement on 06/01/2017.
@@ -45,22 +52,19 @@ public class MotoFormActivity extends AppCompatActivity {
     private static final int REQUEST_SELECT_PHOTO = 2;
 
     @OnClick(R.id.form_back)
-    public void back()
-    {
-          this.finish();
+    public void back() {
+        this.finish();
     }
 
     @OnClick(R.id.form_moto_addLibrary)
-    public void addPhotoFromLibrary()
-    {
+    public void addPhotoFromLibrary() {
         Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
         photoPickerIntent.setType("image/*");
         startActivityForResult(photoPickerIntent, REQUEST_SELECT_PHOTO);
     }
 
     @OnClick(R.id.form_moto_launchCamera)
-    public void launchCamera()
-    {
+    public void launchCamera() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
 
@@ -84,10 +88,8 @@ public class MotoFormActivity extends AppCompatActivity {
     }
 
     @OnClick(R.id.form_moto_create)
-    public void create()
-    {
-        if (this.isFormValidated())
-        {
+    public void create() {
+        if (this.isFormValidated()) {
             MotoRepository rep = MotoRepository.getInstance();
 
             try {
@@ -113,21 +115,19 @@ public class MotoFormActivity extends AppCompatActivity {
     EditText motosName;
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults)
-    {
-        if(requestCode == REQUEST_IMAGE_CAPTURE)
-        {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        if (requestCode == REQUEST_IMAGE_CAPTURE) {
+            // If request is cancelled, the result arrays are empty.
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
-                    // permission was granted, yay! Do the
-                    // contacts-related task you need to do.
+                // permission was granted, yay! Do the
+                // contacts-related task you need to do.
 
-                } else {
+            } else {
 
-                    // permission denied, boo! Disable the
-                    // functionality that depends on this permission.
-                }
+                // permission denied, boo! Disable the
+                // functionality that depends on this permission.
+            }
         }
     }
 
@@ -138,12 +138,11 @@ public class MotoFormActivity extends AppCompatActivity {
         setContentView(R.layout.activity_moto_form);
         ButterKnife.bind(this);
 
-        if (savedInstanceState != null)
-        {
+        if (savedInstanceState != null) {
             String motosName = (String) savedInstanceState.get("motosName");
             if (!motosName.isEmpty()) this.motosName.setText(motosName);
             String motosURI = (String) savedInstanceState.get("motosURI");
-            if(!motosURI.isEmpty()) this.loadMotoImage(Uri.parse(motosURI));
+            if (!motosURI.isEmpty()) this.loadMotoImage(Uri.parse(motosURI));
         }
 
         this.locationpermission();
@@ -153,18 +152,21 @@ public class MotoFormActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        switch(requestCode)
-        {
+        switch (requestCode) {
             case REQUEST_IMAGE_CAPTURE:
                 if (resultCode == RESULT_OK) {
                     this.loadMotoImage(this.photoURI);
                 }
                 break;
             case REQUEST_SELECT_PHOTO:
-                if (resultCode == RESULT_OK && data != null)
-                {
-                    this.photoURI = data.getData();
-                    this.loadMotoImage(this.photoURI);
+                if (resultCode == RESULT_OK && data != null) {
+                    try {
+                        this.photoURI = ImageConverter.toNewUri(this, data.getData());
+                        this.loadMotoImage(this.photoURI);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
                 }
                 break;
             default:
@@ -185,11 +187,10 @@ public class MotoFormActivity extends AppCompatActivity {
         );
     }
 
-    private void loadMotoImage(Uri uri)
-    {
+    private void loadMotoImage(Uri uri) {
         Picasso.with(TMApplication.getContext())
                 .load(uri)
-                .resize(200,200)
+                .resize(200, 200)
                 .centerCrop()
                 .transform(new CircleTransformation())
                 .into(photo);
@@ -199,8 +200,7 @@ public class MotoFormActivity extends AppCompatActivity {
         photoTextMessage.setVisibility(View.GONE);
     }
 
-    private boolean isFormValidated()
-    {
+    private boolean isFormValidated() {
         return !this.motosName.getText().toString().isEmpty();
     }
 
