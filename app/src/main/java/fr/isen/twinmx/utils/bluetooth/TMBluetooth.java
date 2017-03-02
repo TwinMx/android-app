@@ -164,10 +164,10 @@ public class TMBluetooth extends TMSmoothBluetooth implements TMSmoothBluetooth.
                 return 0;
             }
         });
-        this.showBluetoothDevicesDialog(deviceList, connectionCallback, true);
+        this.showBluetoothDevicesDialog(deviceList, connectionCallback, false);
     }
 
-    private void showFilesDialog() {
+    public void showFilesDialog() {
         showBluetoothDevicesDialog(new ArrayList<TMDevice>(), null, true);
     }
 

@@ -98,6 +98,7 @@ public class RawDataManagerAsyncTask extends StoppableAsyncTask<Void, Entry, Voi
         nbPointsInAverage++;
 
         if (nbPointsInAverage >= AVERAGE) {
+            //PIPES_ORDER : Gestion du numéro des tubes
             dataSets.addEntries(
                     createEntry(sum[PIPES_ORDER[0]] / nbPointsInAverage),
                     createEntry(sum[PIPES_ORDER[1]] / nbPointsInAverage),

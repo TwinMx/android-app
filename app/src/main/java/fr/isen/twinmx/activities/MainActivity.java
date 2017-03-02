@@ -97,7 +97,7 @@ public class MainActivity extends AppCompatActivity implements TMBottomNavigatio
                     .name("TwinMax")
                     .schemaVersion(7)
                     .deleteRealmIfMigrationNeeded()
-                    .modules(new TMRealmModule())
+                    .modules(new TMRealmModule()) //Register database collections
                     .build();
         }
 
@@ -249,7 +249,7 @@ public class MainActivity extends AppCompatActivity implements TMBottomNavigatio
 
     @OnLongClick(R.id.bluetoothIcon)
     public boolean onBluetoothIconLongClick(View view) {
-        mBluetooth.showDialog();
+        mBluetooth.showFilesDialog();
         return true;
     }
 }
