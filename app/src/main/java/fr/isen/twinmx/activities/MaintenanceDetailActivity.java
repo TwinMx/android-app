@@ -32,12 +32,27 @@ import fr.isen.twinmx.database.model.Maintenance;
 import fr.isen.twinmx.database.model.Moto;
 
 import fr.isen.twinmx.model.TMDataSets;
+import fr.isen.twinmx.utils.TMUtils;
 
 /**
- * Created by pierredfc.
+ * Activity that displays a maintenance
  */
-
 public class MaintenanceDetailActivity extends AppCompatActivity {
+
+    /**
+     * Motorcycle's identifier
+     */
+    private long motoId;
+
+    /**
+     * Maintenance's index
+     */
+    private int maintenanceIndex;
+
+    /**
+     * Data used on the chart
+     */
+    private TMDataSets dataSets;
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -50,26 +65,20 @@ public class MaintenanceDetailActivity extends AppCompatActivity {
 
     @OnClick({R.id.box1, R.id.box2, R.id.box3, R.id.box4})
     public void onBoxClick(View view) {
-        Integer index = Integer.valueOf((String) view.getTag());
+        final Integer index = Integer.valueOf((String) view.getTag());
 
         if (view instanceof AppCompatCheckBox)
         {
-            AppCompatCheckBox box = (AppCompatCheckBox) view;
+            final AppCompatCheckBox box = (AppCompatCheckBox) view;
             this.graph.getLineData().getDataSetByIndex(index).setVisible(box.isChecked());
             this.graph.notifyDataSetChanged();
             this.graph.invalidate();
         }
     }
 
-    private long motoId;
-
-    private int maintenanceIndex;
-
-    private TMDataSets dataSets;
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
+        final MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.maintenance_menu, menu);
         return true;
     }
@@ -79,16 +88,16 @@ public class MaintenanceDetailActivity extends AppCompatActivity {
     }
 
     public static Intent makeIntent(Context context, Long id, int maintenanceIndex) {
-        Intent intent = new Intent(context, MaintenanceDetailActivity.class);
-        intent.putExtra("motoId", id);
-        intent.putExtra("maintenanceIndex", maintenanceIndex);
+        final Intent intent = new Intent(context, MaintenanceDetailActivity.class);
+        intent.putExtra(TMUtils.MOTO_ID_INTENT, id);
+        intent.putExtra(TMUtils.MAINTENANCE_INDEX_INTENT, maintenanceIndex);
         return intent;
     }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_maintenance_detail);
+        this.setContentView(R.layout.activity_maintenance_detail);
 
         ButterKnife.bind(this);
 
@@ -97,16 +106,16 @@ public class MaintenanceDetailActivity extends AppCompatActivity {
         if (this.getSupportActionBar() != null)
         {
             final Drawable upArrow = ContextCompat.getDrawable(TMApplication.getContext(), R.drawable.ic_arrow_back_white_24dp);
-            getSupportActionBar().setHomeAsUpIndicator(upArrow);
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setDisplayShowHomeEnabled(true);
+            this.getSupportActionBar().setHomeAsUpIndicator(upArrow);
+            this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            this.getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
 
-        Bundle extras = this.getIntent().getExtras();
-        this.motoId = extras.getLong("motoId");
-        this.maintenanceIndex =  extras.getInt("maintenanceIndex");
+        final Bundle extras = this.getIntent().getExtras();
+        this.motoId = extras.getLong(TMUtils.MOTO_ID_INTENT);
+        this.maintenanceIndex =  extras.getInt(TMUtils.MAINTENANCE_INDEX_INTENT);
 
-        Maintenance maintenance = MotoRepository.getInstance().findById(motoId).getMaintenances().get(maintenanceIndex);
+        final Maintenance maintenance = MotoRepository.getInstance().findById(this.motoId).getMaintenances().get(this.maintenanceIndex);
 
         this.setTitle(DateFormat.getDateTimeInstance().format(new Date(Long.valueOf(maintenance.getDate()))));
 
@@ -119,14 +128,14 @@ public class MaintenanceDetailActivity extends AppCompatActivity {
             this.note.setText(TMApplication.getContext().getString(R.string.no_note));
         }
 
-        this.dataSets = new TMDataSets(this, graph, 4, 200);
-        initChartSettings();
+        this.dataSets = new TMDataSets(this, this.graph, 4, 200);
+        this.initChartSettings();
         this.dataSets.load(maintenance.getGraphs());
     }
 
     public void onResume() {
         super.onResume();
-        dataSets.refreshChart();
+        this.dataSets.refreshChart();
     }
 
     @Override
@@ -134,10 +143,10 @@ public class MaintenanceDetailActivity extends AppCompatActivity {
         switch (item.getItemId())
         {
             case R.id.delete_maintenance:
-                deleteMaintenance();
+                this.deleteMaintenance();
                 break;
             case android.R.id.home:
-                finish();
+                this.finish();
                 break;
             default:
                 break;
@@ -145,26 +154,32 @@ public class MaintenanceDetailActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Delete a maintenance
+     */
     private void deleteMaintenance()
     {
         try {
-            MotoRepository instance = MotoRepository.getInstance();
+            final MotoRepository instance = MotoRepository.getInstance();
             instance.deleteMaintenance(instance.findById(this.motoId), this.maintenanceIndex);
-            finish();
+            this.finish();
         } catch (RepositoryException e) {
             e.printStackTrace();
         }
     }
 
+    /**
+     * Initialize the chart
+     */
     private void initChartSettings() {
-        graph.getAxisRight().setEnabled(false);
-        graph.getXAxis().setDrawLabels(false);
-        graph.setDrawGridBackground(false);
-        graph.setDescription(new Description() {{
+        this.graph.getAxisRight().setEnabled(false);
+        this.graph.getXAxis().setDrawLabels(false);
+        this.graph.setDrawGridBackground(false);
+        this.graph.setDescription(new Description() {{
             setText(getString(R.string.pressure));
         }});
-        graph.getLegend().setEnabled(false);
-        graph.getAxisRight().setAxisMinimum(0);
+        this.graph.getLegend().setEnabled(false);
+        this.graph.getAxisRight().setAxisMinimum(0);
     }
 }
 

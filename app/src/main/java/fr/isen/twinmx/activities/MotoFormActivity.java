@@ -41,15 +41,26 @@ import fr.isen.twinmx.database.exceptions.RepositoryException;
 import fr.isen.twinmx.database.model.Moto;
 import fr.isen.twinmx.utils.CircleTransformation;
 import fr.isen.twinmx.utils.ImageConverter;
+import fr.isen.twinmx.utils.TMUtils;
 
 /**
- * Created by Clement on 06/01/2017.
+ * Activity for creating a new motorcycle
  */
-
 public class MotoFormActivity extends AppCompatActivity {
 
-    private static final int REQUEST_IMAGE_CAPTURE = 1;
-    private static final int REQUEST_SELECT_PHOTO = 2;
+    /**
+     * Photo's URI of the motorcycle
+     */
+    private Uri photoURI;
+
+    @BindView(R.id.form_moto_photo)
+    ImageView photo;
+
+    @BindView(R.id.form_moto_text)
+    TextView photoTextMessage;
+
+    @BindView(R.id.form_moto_name)
+    EditText motosName;
 
     @OnClick(R.id.form_back)
     public void back() {
@@ -58,28 +69,28 @@ public class MotoFormActivity extends AppCompatActivity {
 
     @OnClick(R.id.form_moto_addLibrary)
     public void addPhotoFromLibrary() {
-        Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
+        final Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
         photoPickerIntent.setType("image/*");
-        startActivityForResult(photoPickerIntent, REQUEST_SELECT_PHOTO);
+        this.startActivityForResult(photoPickerIntent, TMUtils.REQUEST_SELECT_PHOTO);
     }
 
     @OnClick(R.id.form_moto_launchCamera)
     public void launchCamera() {
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        final Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
 
             File photoFile;
             try {
-                photoFile = createImageFile();
+                photoFile = this.createImageFile();
 
                 // Continue only if the File was successfully created
                 if (photoFile != null) {
                     this.photoURI = FileProvider.getUriForFile(TMApplication.getContext(),
-                            "fr.isen.twinmx",
+                            TMUtils.PHOTO_PACKAGE,
                             photoFile);
 
                     takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-                    startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+                    startActivityForResult(takePictureIntent, TMUtils.REQUEST_IMAGE_CAPTURE);
                 }
             } catch (IOException ex) {
                 Log.d("launchCamera", "Won't able to create a new file.");
@@ -90,41 +101,27 @@ public class MotoFormActivity extends AppCompatActivity {
     @OnClick(R.id.form_moto_create)
     public void create() {
         if (this.isFormValidated()) {
-            MotoRepository rep = MotoRepository.getInstance();
+            final MotoRepository rep = MotoRepository.getInstance();
 
             try {
-                rep.create(new Moto(this.motosName.getText().toString(), this.photoURI != null ? this.photoURI.toString() : null));
-                Log.d("MotoFormActivity", "Moto created.");
+                final Moto moto = rep.create(new Moto(this.motosName.getText().toString(), this.photoURI != null ? this.photoURI.toString() : null));
+                Log.d("MotoFormActivity", "Motorcycle " + moto.getName() + " created.");
             } catch (RepositoryException e) {
-                Log.d("MotoFormActivity", "Couldn't create moto into database.");
+                Log.d("MotoFormActivity", "Couldn't create motorcycle into database.");
                 e.printStackTrace();
             }
             this.finish();
         }
     }
 
-    @BindView(R.id.form_moto_photo)
-    ImageView photo;
-
-    private Uri photoURI;
-
-    @BindView(R.id.form_moto_text)
-    TextView photoTextMessage;
-
-    @BindView(R.id.form_moto_name)
-    EditText motosName;
-
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
-        if (requestCode == REQUEST_IMAGE_CAPTURE) {
+        if (requestCode == TMUtils.REQUEST_IMAGE_CAPTURE) {
             // If request is cancelled, the result arrays are empty.
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
                 // permission was granted, yay! Do the
                 // contacts-related task you need to do.
-
             } else {
-
                 // permission denied, boo! Disable the
                 // functionality that depends on this permission.
             }
@@ -135,13 +132,13 @@ public class MotoFormActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_moto_form);
+        this.setContentView(R.layout.activity_moto_form);
         ButterKnife.bind(this);
 
         if (savedInstanceState != null) {
-            String motosName = (String) savedInstanceState.get("motosName");
+            final String motosName = (String) savedInstanceState.get(TMUtils.MOTO_NAME_INSTANCE);
             if (!motosName.isEmpty()) this.motosName.setText(motosName);
-            String motosURI = (String) savedInstanceState.get("motosURI");
+            final String motosURI = (String) savedInstanceState.get(TMUtils.MOTO_URI_INSTANCE);
             if (!motosURI.isEmpty()) this.loadMotoImage(Uri.parse(motosURI));
         }
 
@@ -153,12 +150,12 @@ public class MotoFormActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         switch (requestCode) {
-            case REQUEST_IMAGE_CAPTURE:
+            case TMUtils.REQUEST_IMAGE_CAPTURE:
                 if (resultCode == RESULT_OK) {
                     this.loadMotoImage(this.photoURI);
                 }
                 break;
-            case REQUEST_SELECT_PHOTO:
+            case TMUtils.REQUEST_SELECT_PHOTO:
                 if (resultCode == RESULT_OK && data != null) {
                     try {
                         this.photoURI = ImageConverter.toNewUri(this, data.getData());
@@ -174,10 +171,14 @@ public class MotoFormActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * @return a temporary file
+     * @throws IOException
+     */
     private File createImageFile() throws IOException {
         // Create an image file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
-        String imageFileName = "JPEG_" + timeStamp + "_";
+        final String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
+        final String imageFileName = "JPEG_" + timeStamp + "_";
 
         File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         return File.createTempFile(
@@ -187,6 +188,10 @@ public class MotoFormActivity extends AppCompatActivity {
         );
     }
 
+    /**
+     * Load motorcycle's photo with Picasso
+     * @param uri
+     */
     private void loadMotoImage(Uri uri) {
         Picasso.with(TMApplication.getContext())
                 .load(uri)
@@ -200,6 +205,9 @@ public class MotoFormActivity extends AppCompatActivity {
         photoTextMessage.setVisibility(View.GONE);
     }
 
+    /**
+     * @return true if the user has entered at least a motorcycle's name. False otherwise.
+     */
     private boolean isFormValidated() {
         return !this.motosName.getText().toString().isEmpty();
     }
@@ -208,10 +216,14 @@ public class MotoFormActivity extends AppCompatActivity {
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        outState.putString("motosName", this.motosName.getText() != null ? this.motosName.getText().toString() : "");
-        outState.putString("motosURI", this.photoURI != null ? this.photoURI.toString() : "");
+        outState.putString(TMUtils.MOTO_NAME_INSTANCE, this.motosName.getText() != null ? this.motosName.getText().toString() : "");
+        outState.putString(TMUtils.MOTO_URI_INSTANCE, this.photoURI != null ? this.photoURI.toString() : "");
     }
 
+    /**
+     * Ask the user for capture (camera) permission.
+     * Used for SDK >= 22
+     */
     private void locationpermission() {
         if (ContextCompat.checkSelfPermission(this
                 ,
@@ -231,7 +243,7 @@ public class MotoFormActivity extends AppCompatActivity {
                 // No explanation needed, we can request the permission.
                 ActivityCompat.requestPermissions(this,
                         new String[]{Manifest.permission.CAMERA},
-                        REQUEST_IMAGE_CAPTURE);
+                        TMUtils.REQUEST_IMAGE_CAPTURE);
             }
         }
     }

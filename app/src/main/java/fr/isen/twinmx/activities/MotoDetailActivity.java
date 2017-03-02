@@ -36,16 +36,22 @@ import fr.isen.twinmx.listeners.OnMotoMaintenanceClickListener;
 import fr.isen.twinmx.ui.adapters.MaintenanceAdapter;
 import fr.isen.twinmx.utils.CircleTransformation;
 import fr.isen.twinmx.utils.ImageConverter;
-import io.realm.RealmResults;
+import fr.isen.twinmx.utils.TMUtils;
 
 /**
- * Created by pierredfc.
+ * Activity that displays the detail about a motorcycle
  */
 public class MotoDetailActivity extends AppCompatActivity implements OnMotoMaintenanceClickListener {
 
+    /**
+     * The associated motorcycle
+     */
     private Moto moto;
 
-    private static final int REQUEST_SELECT_PHOTO = 2;
+    /**
+     * UI adapter
+     */
+    private MaintenanceAdapter maintenanceAdapter;
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -62,18 +68,14 @@ public class MotoDetailActivity extends AppCompatActivity implements OnMotoMaint
     @OnClick(R.id.moto_detail_photo)
     public void onMotoPhotoClick()
     {
-        Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
+        final Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
         photoPickerIntent.setType("image/*");
-        startActivityForResult(photoPickerIntent, REQUEST_SELECT_PHOTO);
+        this.startActivityForResult(photoPickerIntent, TMUtils.REQUEST_SELECT_PHOTO);
     }
-
-    private MaintenanceAdapter maintenanceAdapter;
-
-    private RealmResults<Maintenance> maintenanceFinder;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
+        final MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.detail_menu, menu);
         return true;
     }
@@ -83,10 +85,10 @@ public class MotoDetailActivity extends AppCompatActivity implements OnMotoMaint
         switch (item.getItemId())
         {
             case R.id.modify_moto:
-                modifyNamesMoto();
+                this.modifyNamesMoto();
                 return true;
             case android.R.id.home:
-                finish();
+                this.finish();
                 break;
             default:
                 break;
@@ -97,10 +99,10 @@ public class MotoDetailActivity extends AppCompatActivity implements OnMotoMaint
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.setContentView(R.layout.activity_moto_detail);
 
-        this.moto = MotoRepository.getInstance().findById(this.getIntent().getExtras().getLong("motoID"));
+        this.moto = MotoRepository.getInstance().findById(this.getIntent().getExtras().getLong(TMUtils.MOTO_ID_INTENT));
 
-        setContentView(R.layout.activity_moto_detail);
         ButterKnife.bind(this);
 
         this.setSupportActionBar(this.toolbar);
@@ -108,15 +110,15 @@ public class MotoDetailActivity extends AppCompatActivity implements OnMotoMaint
         if (this.getSupportActionBar() != null)
         {
             final Drawable upArrow = ContextCompat.getDrawable(TMApplication.getContext(), R.drawable.ic_arrow_back_white_24dp);
-            getSupportActionBar().setHomeAsUpIndicator(upArrow);
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setDisplayShowHomeEnabled(true);
+            this.getSupportActionBar().setHomeAsUpIndicator(upArrow);
+            this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            this.getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
 
         this.setTitle(this.moto.getName());
 
         Picasso.with(TMApplication.getContext())
-                .load(moto.getImage())
+                .load(this.moto.getImage())
                 .transform(new CircleTransformation())
                 .placeholder(R.drawable.ic_motorcycle_black_24dp)
                 .into(this.photo);
@@ -191,17 +193,15 @@ public class MotoDetailActivity extends AppCompatActivity implements OnMotoMaint
 
         switch(requestCode)
         {
-            case REQUEST_SELECT_PHOTO:
+            case TMUtils.REQUEST_SELECT_PHOTO:
                 if (resultCode == RESULT_OK && data != null)
                 {
                     try {
-                        Uri uri = ImageConverter.toNewUri(this, data.getData());
-                        moto = MotoRepository.getInstance().updateImage(moto, uri.toString());
-                        updateViewAfterMotoUpdate(true);
-                    } catch (RepositoryException e) {
+                        final Uri uri = ImageConverter.toNewUri(this, data.getData());
+                        this.moto = MotoRepository.getInstance().updateImage(this.moto, uri.toString());
+                        this.updateViewAfterMotoUpdate(true);
+                    } catch (Exception e) {
                         e.printStackTrace();
-                    } catch(Exception ex) {
-                        ex.printStackTrace();
                     }
                 }
                 break;
@@ -212,7 +212,7 @@ public class MotoDetailActivity extends AppCompatActivity implements OnMotoMaint
 
     @Override
     public void onMotoMaintenanceClick(Maintenance maintenance) {
-        Intent intent = MaintenanceDetailActivity.makeIntent(this, this.moto, maintenance);
-        startActivity(intent);
+        final Intent intent = MaintenanceDetailActivity.makeIntent(this, this.moto, maintenance);
+        this.startActivity(intent);
     }
 }

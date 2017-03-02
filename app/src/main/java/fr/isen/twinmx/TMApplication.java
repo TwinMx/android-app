@@ -11,7 +11,7 @@ import io.realm.RealmConfiguration;
  */
 public class TMApplication extends Application {
 
-    public static final int APP_VERSION = 1;
+    public static final int APP_VERSION = 7;
 
     /**
      * Context use during the app lifecycle.

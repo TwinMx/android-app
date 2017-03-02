@@ -8,6 +8,9 @@ import android.support.v7.app.AppCompatActivity;
 
 import fr.isen.twinmx.R;
 
+/**
+ * Splash Screen activity
+ */
 public class SplashActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
