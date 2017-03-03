@@ -8,12 +8,9 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-
-import android.widget.Toast;
 
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 
@@ -22,6 +19,7 @@ import butterknife.ButterKnife;
 
 import butterknife.OnClick;
 import butterknife.OnLongClick;
+import fr.isen.twinmx.TMApplication;
 import fr.isen.twinmx.database.RealmConfiguration;
 import fr.isen.twinmx.database.TMRealmModule;
 
@@ -37,15 +35,16 @@ import fr.isen.twinmx.R;
 import fr.isen.twinmx.listeners.OnMotoHistoryClickListener;
 
 import fr.isen.twinmx.receivers.BluetoothIconReceiver;
+import fr.isen.twinmx.utils.TMUtils;
 import fr.isen.twinmx.utils.bluetooth.TMBluetooth;
 import fr.isen.twinmx.utils.TMBottomNavigation;
 
 import io.realm.Realm;
 
-import fr.isen.twinmx.model.History;
-import fr.isen.twinmx.ui.listeners.ClickListener;
-
-public class MainActivity extends AppCompatActivity implements TMBottomNavigation.THBottomNavigationCallback, ClickListener, OnMotoHistoryClickListener {
+/**
+ * Main activity class
+ */
+public class MainActivity extends AppCompatActivity implements TMBottomNavigation.THBottomNavigationCallback, OnMotoHistoryClickListener {
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -56,8 +55,6 @@ public class MainActivity extends AppCompatActivity implements TMBottomNavigatio
     @BindView(R.id.fab)
     FloatingActionButton floatingActionButton;
 
-    private static io.realm.RealmConfiguration realmConfiguration;
-
     @BindView(R.id.bluetoothIcon)
     ImageView bluetoothIcon;
 
@@ -67,15 +64,28 @@ public class MainActivity extends AppCompatActivity implements TMBottomNavigatio
     @BindView(R.id.bluetoothProgressIcon)
     ProgressBar bluetoothProgressBar;
 
+    /**
+     * Realm configuration
+     */
+    private static io.realm.RealmConfiguration realmConfiguration;
+
+    /**
+     * Bluetooth icon handler
+     */
     private BluetoothIconReceiver bluetoothIconReceiver;
 
+    /**
+     * Twinmax bluetooth handler
+     */
     private static TMBluetooth mBluetooth; //Keep a pointer to avoid GC
 
+    /**
+     * Static variables for fragment and shortcuts
+     */
     private static final String FRAGMENT_TAG = "FRAGMENT_TAG";
     private static final String ACTION_SHORTCUT_ACQUISITION = "shortcut_acquisition";
     private static final String ACTION_SHORTCUT_HISTORY = "shortcut_history";
     private static final String ACTION_SHORTCUT_INSTRUCTION = "shortcut_instruction";
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,19 +100,20 @@ public class MainActivity extends AppCompatActivity implements TMBottomNavigatio
 
         final TMBottomNavigation nav = new TMBottomNavigation(this.navigation, savedInstanceState, this, this.toolbar);
         this.navigation.manageFloatingActionButtonBehavior(this.floatingActionButton);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        if (this.getSupportActionBar() != null) this.getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
         if (realmConfiguration == null) {
             realmConfiguration = new io.realm.RealmConfiguration.Builder(this)
                     .name("TwinMax")
-                    .schemaVersion(7)
+                    .schemaVersion(TMApplication.APP_VERSION)
                     .deleteRealmIfMigrationNeeded()
-                    .modules(new TMRealmModule())
+                    .modules(new TMRealmModule()) //Register database collections
                     .build();
         }
 
         RealmConfiguration.setRealm(Realm.getInstance(realmConfiguration));
 
+        // Restore an instance. For example, when changing orientation
         if (savedInstanceState == null) {
             MainActivity.mBluetooth = new TMBluetooth(this);
             this.bluetoothIconReceiver = new BluetoothIconReceiver(bluetoothIcon, bluetoothProgressBar, viewPager, mBluetooth);
@@ -141,29 +152,32 @@ public class MainActivity extends AppCompatActivity implements TMBottomNavigatio
                 this.floatingActionButton.setVisibility(View.VISIBLE);
             }
         }
-
-        final Intent intent = this.getIntent();
-        Log.d("Action: ", intent.getAction());
-
-
     }
 
+    /**
+     * @return the current fragment
+     */
     private Fragment getCurrentFragment() {
-        return getFragmentManager().findFragmentByTag(FRAGMENT_TAG);
+        return this.getFragmentManager().findFragmentByTag(FRAGMENT_TAG);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        bluetoothIconReceiver.register(this);
+        this.bluetoothIconReceiver.register(this);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        this.unregisterReceiver(bluetoothIconReceiver);
+        this.unregisterReceiver(this.bluetoothIconReceiver);
     }
 
+    /**
+     * Handling shortcut for SDK > 22
+     * @param action
+     * @return
+     */
     private int findTabPosition(String action) {
         switch(action) {
             case ACTION_SHORTCUT_ACQUISITION:
@@ -205,15 +219,10 @@ public class MainActivity extends AppCompatActivity implements TMBottomNavigatio
     }
 
     @Override
-    public void onItemClick(History history) {
-        Toast.makeText(this, history.getName(), Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
     public void onMotoHistoryClick(Moto moto) {
-        Intent intent = new Intent(this, MotoDetailActivity.class);
-        intent.putExtra("motoID", moto.getId());
-        startActivity(intent);
+        final Intent intent = new Intent(this, MotoDetailActivity.class);
+        intent.putExtra(TMUtils.MOTO_ID_INTENT, moto.getId());
+        this.startActivity(intent);
     }
 
     protected void onStop() {
@@ -232,7 +241,7 @@ public class MainActivity extends AppCompatActivity implements TMBottomNavigatio
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == TMBluetooth.REQUEST_ENABLE_BT) {
             if (resultCode == TMBluetooth.RESULT_ENABLE_BT_ALLOWED) {
-                bluetoothIconReceiver.enabled();
+                this.bluetoothIconReceiver.enabled();
             }
         }
 
@@ -249,7 +258,7 @@ public class MainActivity extends AppCompatActivity implements TMBottomNavigatio
 
     @OnLongClick(R.id.bluetoothIcon)
     public boolean onBluetoothIconLongClick(View view) {
-        mBluetooth.showDialog();
+        mBluetooth.showFilesDialog();
         return true;
     }
 }

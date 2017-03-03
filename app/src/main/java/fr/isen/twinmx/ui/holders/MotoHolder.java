@@ -66,4 +66,5 @@ public class MotoHolder extends RecyclerView.ViewHolder implements View.OnClickL
         if (this.moto != null)
             this.callback.onMotoHistoryClick(moto);
     }
+
 }

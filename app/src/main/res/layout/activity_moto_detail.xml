@@ -45,7 +45,12 @@
                 android:layout_margin="1dp"
                 android:gravity="bottom|center_horizontal"
                 android:text="@string/menu_modify"
-                android:textColor="@color/textSecondary" />
+                android:shadowColor="@color/black_transparency"
+                android:shadowDx="1"
+                android:shadowDy="1"
+                android:shadowRadius="2"
+                android:textColor="@color/white"
+                android:textStyle="bold"/>
         </RelativeLayout>
 
         <TextView

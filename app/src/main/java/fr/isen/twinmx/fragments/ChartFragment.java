@@ -205,8 +205,8 @@ public class ChartFragment extends BluetoothFragment implements OnMotoHistoryCli
     }
 
     private void setMotorLifeCycle() {
-        this.motorLifeCycle.addSeries(new SeriesItem.Builder(ContextCompat.getColor(this.getActivity(), R.color.white))
-                .setRange(minMotorValue, maxMotorValue, 0)
+        this.motorLifeCycle.addSeries(new SeriesItem.Builder(ContextCompat.getColor(TMApplication.getContext(), R.color.ripple))
+                .setRange(minMotorValue, maxMotorValue, maxMotorValue)
                 .setInitialVisibility(true)
                 .setLineWidth(10f)
                 .setInterpolator(new AccelerateInterpolator())
@@ -353,18 +353,19 @@ public class ChartFragment extends BluetoothFragment implements OnMotoHistoryCli
         period = period * (0.000001 / 60);
 
         // We need turn by minute and one period equals 2 turns
-        final double compte_tour = 2 / period;
+        final double tachometer = 2 / period;
 
         // Update views
         this.getActivity().runOnUiThread(new Runnable() {
             public void run() {
-                Integer value = (int) compte_tour;
+                Integer value = (int) tachometer;
                 motorLifeCycleValue.setText(String.valueOf(value));
                 final SeriesItem seriesItem1 = new SeriesItem.Builder(ContextCompat.getColor(TMApplication.getContext(), R.color.colorPrimary), ContextCompat.getColor(TMApplication.getContext(), R.color.colorAccent))
                         .setRange(minMotorValue, maxMotorValue, value)
-                        .setLineWidth(6f)
+                        .setLineWidth(10f)
                         .build();
                 motorLifeCycle.deleteAll();
+                setMotorLifeCycle();
                 motorLifeCycle.addSeries(seriesItem1);
 
             }

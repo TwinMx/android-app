@@ -2,6 +2,8 @@ package fr.isen.twinmx.model;
 
 import java.io.File;
 
+import fr.isen.twinmx.model.enums.TMDeviceType;
+
 /**
  * Created by Clement on 08/02/2017.
  */

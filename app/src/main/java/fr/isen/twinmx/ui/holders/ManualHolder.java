@@ -5,9 +5,13 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import fr.isen.twinmx.R;
+import fr.isen.twinmx.TMApplication;
+import fr.isen.twinmx.utils.CircleTransformation;
 import fr.isen.twinmx.utils.manual.ManualPage;
 
 /**
@@ -36,6 +40,13 @@ public class ManualHolder extends RecyclerView.ViewHolder {
         this.page = manualPage;
         this.instructionId.setText(String.valueOf(position + 1));
         this.instruction.setText(manualPage.getText());
-        // ImageView TODO
+
+        if (!"None".equals(manualPage.getPicture()))
+        {
+            Picasso.with(TMApplication.getContext())
+                    .load(this.page.getPicture())
+                    .transform(new CircleTransformation())
+                    .into(this.photo);
+        }
     }
 }

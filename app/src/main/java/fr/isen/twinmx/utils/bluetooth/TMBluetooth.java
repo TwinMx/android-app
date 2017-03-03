@@ -32,7 +32,6 @@ import fr.isen.twinmx.database.model.RealmDevice;
 import fr.isen.twinmx.utils.bluetooth.SmoothBluetoothFork.TMBluetoothService;
 import fr.isen.twinmx.utils.bluetooth.SmoothBluetoothFork.TMDevice;
 import fr.isen.twinmx.utils.bluetooth.SmoothBluetoothFork.TMSmoothBluetooth;
-import fr.isen.twinmx.utils.TMBluetoothDialogAdapter;
 
 /**
  * Created by cdupl on 9/27/2016.
@@ -164,10 +163,10 @@ public class TMBluetooth extends TMSmoothBluetooth implements TMSmoothBluetooth.
                 return 0;
             }
         });
-        this.showBluetoothDevicesDialog(deviceList, connectionCallback, true);
+        this.showBluetoothDevicesDialog(deviceList, connectionCallback, false);
     }
 
-    private void showFilesDialog() {
+    public void showFilesDialog() {
         showBluetoothDevicesDialog(new ArrayList<TMDevice>(), null, true);
     }
 

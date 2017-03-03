@@ -29,10 +29,6 @@ public class BluetoothIconReceiver extends BroadcastReceiver {
     public static final String EXTRA_STATUS_ENABLED = "status_enabled";
     public static final String EXTRA_MESSAGE = "message";
 
-    public static final String EXTRA_STATUS_FILE_CONNECTING = EXTRA_STATUS_CONNECTING;
-    public static final String EXTRA_STATUS_FILE_CONNECTED = "file_status_ok";
-
-
     private final ImageView bluetoothIcon;
     private final View container;
     private final ProgressBar progressBar;

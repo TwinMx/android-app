@@ -7,6 +7,7 @@ import java.util.List;
 
 import fr.isen.twinmx.database.model.RealmFloat;
 import fr.isen.twinmx.database.model.RealmGraph;
+import fr.isen.twinmx.model.enums.GraphDirection;
 
 /**
  * Created by Clement on 26/01/2017.

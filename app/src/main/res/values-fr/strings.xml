@@ -51,9 +51,28 @@
     <string name="form_moto_name">Nom de la nouvelle moto</string>
     <string name="form_acquistion_note">Note</string>
 
+    <string name="help_acquisition">&#8226; Onglet Acquisition</string>
+    <string name="help_history">&#8226; Onglet Historique</string>
+
+    <string name="help_bt_grey">Le bluetooth du téléphone n\'est pas activé.</string>
+    <string name="help_bt_blue">Le bluetooth est connecté mais aucune communication est en cours.</string>
+    <string name="help_bt_green">Communication en cours.</string>
+    <string name="help_bt_red">Echec lors de la connexion.</string>
+    <string name="help_bt_list">Appuyer sur l\'icône de bluetooth pour accéder à la liste des appareils.</string>
+
+
+    <string name="help_acq_pp">Pause ou redémarrage de l\'acquisition.</string>
+    <string name="help_acq_af">Mise à l\'échelle automatique.</string>
+    <string name="help_acq_calibrage">Calibrage des courbes. Appui long pour désactiver.</string>
+    <string name="help_acq_save">Sauvegarde de l\'acquisition.</string>
+    <string name="help_acq_curves">Affichage ou non de la courbe associée.</string>
+
+    <string name="help_hist_add">Création d\'une nouvelle moto.</string>
+    <string name="help_hist_remove">Pour supprimer une moto, réalisez un mouvement de glisse de droite à gauche.</string>
 
     <!-- Maintenance detail -->
     <string name="note">Note</string>
     <string name="no_note">Pas de note.</string>
     <string name="menu_delete">Supprimer</string>
+    <string name="bluetooth">Bluetooth</string>
 </resources>
