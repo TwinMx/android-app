@@ -23,7 +23,7 @@
     <string name="form_save">Save</string>
     <string name="form_cancel">Cancel</string>
     <string name="create">Create</string>
-    <string name="moto_name">Moto\'s name</string>
+    <string name="moto_name">Bike\'s name</string>
     <string name="no_photo_selected">No image selected</string>
 
     <!-- Moto detail -->
@@ -39,14 +39,14 @@
 
     <string name="save">Save</string>
     <string name="application">Application</string>
-    <string name="moto">Motorcycle</string>
+    <string name="moto">Bike</string>
 
     <!-- Manual help -->
     <string name="twinmax_title">Device help</string>
     <string name="app_title">Application help</string>
-    <string name="select_moto">Select a moto</string>
-    <string name="new_moto">New moto&#8230;</string>
-    <string name="form_moto_name">New moto\'s name</string>
+    <string name="select_moto">Select a bike</string>
+    <string name="new_moto">New bike&#8230;</string>
+    <string name="form_moto_name">New bike\'s name</string>
     <string name="form_acquistion_note">Note</string>
 
     <string name="help_acquisition">&#8226; Acquisition tab</string>
@@ -64,8 +64,8 @@
     <string name="help_acq_save">Acquisition back-up.</string>
     <string name="help_acq_curves">Hide/Show the linked curve.</string>
 
-    <string name="help_hist_add">Create a new motorcycle.</string>
-    <string name="help_hist_remove">Swipe from right-to-left to delete the selected motorcycle.</string>
+    <string name="help_hist_add">Create a new bike.</string>
+    <string name="help_hist_remove">Swipe from right-to-left to delete the selected bike.</string>
 
 
     <!-- Maintenance detail -->
